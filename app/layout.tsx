@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
-import NavMenu from '@/app/NavMenu';
+import AuthProvider from '@/app/AuthProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MTGO tracker',
+  title: 'FetchBook - MTG tracker',
   description: 'Winrates and stuff',
 };
 
@@ -17,13 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light">
-      <body className={inter.className}>
-        <Providers>
-          <NavMenu />
-          {children}
-        </Providers>
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en" className="light">
+        <head>
+          <link rel="icon" href="/fetchbook-logo2.png" />
+        </head>
+        <body className={inter.className}>
+          <Providers>{children}</Providers>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
