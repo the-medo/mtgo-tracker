@@ -1,7 +1,7 @@
 import { Bebas_Neue } from 'next/font/google';
 import Image from 'next/image';
 import { SignInButton } from '@/components/auth/SignInButton';
-import { LOGO_URL } from '@/libs/constants';
+import { LOGO_URL } from '@/lib/constants';
 import { Button } from '@nextui-org/button';
 
 const displayFont = Bebas_Neue({

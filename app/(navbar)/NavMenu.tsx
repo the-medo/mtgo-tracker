@@ -3,7 +3,7 @@ import { Link } from '@nextui-org/link';
 import Image from 'next/image';
 import { UserDropdown } from '@/components/auth/UserDropdown';
 import { Bebas_Neue } from 'next/font/google';
-import { LOGO_URL } from '@/libs/constants';
+import { LOGO_URL } from '@/lib/constants';
 
 const displayFont = Bebas_Neue({
   weight: '400',
