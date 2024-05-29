@@ -1,7 +1,3 @@
-#pocketbase
-pocketbase.exe
-pb_data/*.db
-
 # dependencies
 /node_modules
 /.pnp
