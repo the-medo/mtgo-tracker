@@ -1,19 +1,15 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar';
-import { Link } from '@nextui-org/link';
 import Image from 'next/image';
 import { UserDropdown } from '@/components/auth/UserDropdown';
 import { Bebas_Neue } from 'next/font/google';
 import { LOGO_URL } from '@/lib/constants';
-import { Button } from '@nextui-org/button';
-import { TbPlus } from 'react-icons/tb';
+import NavMenuTopActionButtons from '@/components/nav/NavMenuTop/NavMenuTopActionButtons';
 
 const displayFont = Bebas_Neue({
   weight: '400',
 });
 
-const plusIcon = <TbPlus size={18} />;
-
-export default function NavMenuTop() {
+export default async function NavMenuTop() {
   return (
     <Navbar isBordered maxWidth="full">
       <NavbarBrand>
@@ -21,21 +17,7 @@ export default function NavMenuTop() {
         <p className={`font-bold text-4xl text-inherit ${displayFont.className}`}>FetchBook</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Button startContent={plusIcon} className="text-default-700">
-            match
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button startContent={plusIcon} className="text-default-700">
-            event
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button startContent={plusIcon} className="text-default-700">
-            deck
-          </Button>
-        </NavbarItem>
+        <NavMenuTopActionButtons />
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">

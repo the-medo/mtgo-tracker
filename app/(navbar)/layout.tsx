@@ -1,5 +1,5 @@
-import NavMenuTop from '@/components/nav/NavMenuTop';
-import NavMenuLeft from '@/components/nav/NavMenuLeft';
+import NavMenuTop from '@/components/nav/NavMenuTop/NavMenuTop';
+import NavMenuLeft from '@/components/nav/NavMenuLeft/NavMenuLeft';
 
 export default async function NavbarLayout({
   children,
@@ -9,9 +9,9 @@ export default async function NavbarLayout({
   return (
     <div className="flex flex-col h-full">
       <NavMenuTop />
-      <div className="flex flex-row gap-5 grow">
+      <div className="flex flex-row grow">
         <NavMenuLeft />
-        {children}
+        <div className="w-full flex flex-col p-4">{children}</div>
       </div>
     </div>
   );
