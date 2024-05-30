@@ -4,12 +4,16 @@ import Image from 'next/image';
 import { UserDropdown } from '@/components/auth/UserDropdown';
 import { Bebas_Neue } from 'next/font/google';
 import { LOGO_URL } from '@/lib/constants';
+import { Button } from '@nextui-org/button';
+import { TbPlus } from 'react-icons/tb';
 
 const displayFont = Bebas_Neue({
   weight: '400',
 });
 
-export default function NavMenu() {
+const plusIcon = <TbPlus size={18} />;
+
+export default function NavMenuTop() {
   return (
     <Navbar isBordered maxWidth="full">
       <NavbarBrand>
@@ -18,19 +22,19 @@ export default function NavMenu() {
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link href="#" aria-current="page">
-            Latest
-          </Link>
+          <Button startContent={plusIcon} className="text-default-700">
+            match
+          </Button>
         </NavbarItem>
         <NavbarItem>
-          <Link href="#" aria-current="page">
-            Events
-          </Link>
+          <Button startContent={plusIcon} className="text-default-700">
+            event
+          </Button>
         </NavbarItem>
         <NavbarItem>
-          <Link href="#" aria-current="page">
-            Decks
-          </Link>
+          <Button startContent={plusIcon} className="text-default-700">
+            deck
+          </Button>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">

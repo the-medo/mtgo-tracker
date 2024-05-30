@@ -1,4 +1,5 @@
-import NavMenu from '@/app/(navbar)/NavMenu';
+import NavMenuTop from '@/components/nav/NavMenuTop';
+import NavMenuLeft from '@/components/nav/NavMenuLeft';
 
 export default async function NavbarLayout({
   children,
@@ -6,9 +7,12 @@ export default async function NavbarLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <NavMenu />
-      {children}
-    </>
+    <div className="flex flex-col h-full">
+      <NavMenuTop />
+      <div className="flex flex-row gap-5 grow">
+        <NavMenuLeft />
+        {children}
+      </div>
+    </div>
   );
 }
