@@ -10,19 +10,19 @@ datasource db {
 // NextAuth Schema
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
   refresh_token_expires_in Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -38,15 +38,24 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  bio           String? @db.Text
-  age           Int?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id                   String    @id @default(cuid())
+  name                 String?
+  bio                  String?   @db.Text
+  age                  Int?
+  email                String?   @unique
+  emailVerified        DateTime?
+  image                String?
+  accounts             Account[]
+  sessions             Session[]
+  tags                 Tag[]
+  mtgoUsername         String?
+  mtgoVerificationCode String?
+  mtgoVerified         Boolean   @default(false)
+  isPublic             Boolean   @default(false)
+
+  EventUsers EventUser[]
+  Matches    Match[]     @relation("User")
+  OppMatches Match[]     @relation("OppUser")
 }
 
 model VerificationToken {
@@ -55,4 +64,228 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// ====================================== FETCHBOOK ============================================
+
+// === ENUMS
+enum TagType {
+  MATCH
+  GAME
+  EVENT
+  DECK
+}
+
+enum EventType {
+  LEAGUE
+  FRIENDLY_LEAGUE
+  CHALLENGE32
+  CHALLENGE64
+  PRELIMINARY
+  TWO_PLAYER_QUEUE
+  OPEN_PLAY
+  RL_SMALL
+  RL_MEDIUM
+  RL_BIG
+  OTHER
+}
+
+enum MatchType {
+  BO1
+  BO3
+  BO5
+  OTHER
+}
+
+enum DeckServiceType {
+  MOXFIELD
+  GOLDFISH
+  MELEEGG
+}
+
+// === TABLES
+model Format {
+  id                    Int             @id @default(autoincrement())
+  name                  String
+  latestFormatVersionId Int?
+  formatVersion         FormatVersion?  @relation(fields: [latestFormatVersionId], references: [id])
+  DeckArchetype         DeckArchetype[]
+  Events                Event[]
+}
+
+model FormatVersion {
+  id            Int       @id @default(autoincrement())
+  latestRelease String?
+  latestBans    DateTime?
+  description   String?
+  validFrom     DateTime?
+
+  Formats Format[]
+  Events  Event[]
+}
+
+model ArchetypeGroup {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  DeckArchetype DeckArchetype[]
+}
+
+model DeckArchetype {
+  id               Int            @id @default(autoincrement())
+  name             String
+  formatId         Int
+  archetypeGroupId Int
+  archetypeGroup   ArchetypeGroup @relation(fields: [archetypeGroupId], references: [id])
+  format           Format         @relation(fields: [formatId], references: [id])
+
+  Decks      Deck[]
+  OppMatches Match[]
+}
+
+model Deck {
+  id              Int              @id @default(autoincrement())
+  userId          String
+  name            String?
+  link            String?
+  service         DeckServiceType?
+  serviceDeckId   String?
+  deckArchetypeId Int
+  deckArchetype   DeckArchetype    @relation(fields: [deckArchetypeId], references: [id])
+
+  Matches  Match[]
+  DeckTags DeckTag[]
+}
+
+model Event {
+  id              Int       @id @default(autoincrement())
+  mtgoId          String
+  type            EventType
+  rounds          Int
+  name            String
+  formatId        Int
+  formatVersionId Int
+  entry           Int?
+  winnings        Int?
+  date            DateTime?
+
+  EventUsers EventUser[]
+  Matches    Match[]
+  EventTags  EventTag[]
+
+  format        Format        @relation(fields: [formatId], references: [id])
+  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
+}
+
+model EventUser {
+  eventId Int
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([eventId, userId])
+}
+
+model Match {
+  id               Int       @id @default(autoincrement())
+  round            Int?
+  mtgoId           String?
+  userId           String
+  oppName          String
+  oppUserId        String?
+  oppMatchId       Int?
+  oppArchetypeId   Int?
+  oppArchetypeNote String?
+  matchType        MatchType
+  eventId          Int?
+  deckId           Int
+  isWin            Boolean?
+  startTime        DateTime
+  public           Boolean
+  notes            String?   @db.Text
+
+  OppMatch  Match[]    @relation("OppMatch")
+  Games     Game[]
+  MatchTags MatchTag[]
+
+  user         User           @relation(fields: [userId], references: [id], name: "User")
+  event        Event?         @relation(fields: [eventId], references: [id])
+  deck         Deck           @relation(fields: [deckId], references: [id])
+  oppUser      User?          @relation(fields: [oppUserId], references: [id], name: "OppUser")
+  oppMatch     Match?         @relation(fields: [oppMatchId], references: [id], name: "OppMatch")
+  oppArchetype DeckArchetype? @relation(fields: [oppArchetypeId], references: [id])
+}
+
+model Game {
+  id              Int      @id @default(autoincrement())
+  gameNumber      Int
+  matchId         Int
+  mtgoGameId      String?
+  isWin           Boolean?
+  isOnPlay        Boolean?
+  turns           Int?
+  startingHand    Int?
+  oppStartingHand Int?
+  notes           String?  @db.Text
+
+  GameTags GameTag[]
+
+  match Match @relation(fields: [matchId], references: [id])
+
+  @@unique([gameNumber, matchId])
+}
+
+model Tag {
+  id     Int     @id @default(autoincrement())
+  name   String
+  userId String
+  type   TagType
+
+  MatchTags MatchTag[]
+  GameTags  GameTag[]
+  EventTags EventTag[]
+  DeckTags  DeckTag[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MatchTag {
+  tagId   Int
+  matchId Int
+
+  tag   Tag   @relation(fields: [tagId], references: [id])
+  match Match @relation(fields: [matchId], references: [id])
+
+  @@id([tagId, matchId])
+}
+
+model GameTag {
+  tagId  Int
+  gameId Int
+
+  tag  Tag  @relation(fields: [tagId], references: [id])
+  game Game @relation(fields: [gameId], references: [id])
+
+  @@id([tagId, gameId])
+}
+
+model EventTag {
+  tagId   Int
+  eventId Int
+
+  tag   Tag   @relation(fields: [tagId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@id([tagId, eventId])
+}
+
+model DeckTag {
+  tagId  Int
+  deckId Int
+
+  tag  Tag  @relation(fields: [tagId], references: [id])
+  deck Deck @relation(fields: [deckId], references: [id])
+
+  @@id([tagId, deckId])
 }
