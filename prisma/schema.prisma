@@ -52,10 +52,11 @@ model User {
   mtgoVerificationCode String?
   mtgoVerified         Boolean   @default(false)
   isPublic             Boolean   @default(false)
+  isAdmin              Boolean   @default(false)
 
-  EventUsers EventUser[]
-  Matches    Match[]     @relation("User")
-  OppMatches Match[]     @relation("OppUser")
+  Events     Event[]
+  Matches    Match[] @relation("User")
+  OppMatches Match[] @relation("OppUser")
 }
 
 model VerificationToken {
@@ -159,6 +160,7 @@ model Deck {
 
 model Event {
   id              Int       @id @default(autoincrement())
+  userId          String
   mtgoId          String
   type            EventType
   rounds          Int
@@ -169,22 +171,12 @@ model Event {
   winnings        Int?
   date            DateTime?
 
-  EventUsers EventUser[]
-  Matches    Match[]
-  EventTags  EventTag[]
+  Matches   Match[]
+  EventTags EventTag[]
 
+  user          User          @relation(fields: [userId], references: [id])
   format        Format        @relation(fields: [formatId], references: [id])
   formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
-}
-
-model EventUser {
-  eventId Int
-  userId  String
-
-  event Event @relation(fields: [eventId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
-
-  @@id([eventId, userId])
 }
 
 model Match {
