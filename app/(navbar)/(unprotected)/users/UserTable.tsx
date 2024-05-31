@@ -5,18 +5,21 @@ import { User as UserComponent } from '@nextui-org/user';
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
 import { User } from '@prisma/client';
 import { Key } from 'react';
+import { Link } from '@nextui-org/link';
 
 const renderCell = (user: User, columnKey: Key) => {
   switch (columnKey) {
     case 'name':
       return (
-        <UserComponent
-          avatarProps={{ radius: 'md', src: user.image ?? undefined }}
-          description={user.email}
-          name={user.name}
-        >
-          {user.email}
-        </UserComponent>
+        <Link key={user.id} href={`/users/${user.id}`}>
+          <UserComponent
+            avatarProps={{ radius: 'md', src: user.image ?? undefined }}
+            description={user.email}
+            name={user.name}
+          >
+            {user.email}
+          </UserComponent>
+        </Link>
       );
     case 'matches':
       return JSON.stringify(user);

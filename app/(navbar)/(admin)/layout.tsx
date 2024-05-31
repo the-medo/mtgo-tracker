@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-export default async function ProtectedLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -11,6 +11,10 @@ export default async function ProtectedLayout({
 
   if (!session) {
     redirect('/api/auth/signin');
+  }
+
+  if (!session.user.isAdmin) {
+    return 'Only for admins.';
   }
 
   return children;

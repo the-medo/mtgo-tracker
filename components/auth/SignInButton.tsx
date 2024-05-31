@@ -12,7 +12,7 @@ export function SignInButton() {
   if (status === 'authenticated') {
     return (
       <>
-        <Link href="/stats">
+        <Link href="/your/dashboard">
           <Button variant="shadow" size="lg">
             Browse your stats
           </Button>
