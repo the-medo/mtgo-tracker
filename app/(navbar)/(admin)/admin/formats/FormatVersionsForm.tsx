@@ -50,7 +50,7 @@ export default function FormatVersionsForm() {
           <Input type="text" label="Latest bans" size="sm" name="latestBans" />
           <Input type="text" label="Description" size="sm" name="description" />
           <DatePicker label="Valid from" size="sm" name="validFrom" />
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" disabled={isPending} isLoading={isPending}>
             Create
           </Button>
         </form>
