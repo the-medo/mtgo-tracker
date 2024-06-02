@@ -117,7 +117,7 @@ model Format {
 model FormatVersion {
   id            Int       @id @default(autoincrement())
   latestRelease String?
-  latestBans    DateTime?
+  latestBans    String?
   description   String?
   validFrom     DateTime?
 
