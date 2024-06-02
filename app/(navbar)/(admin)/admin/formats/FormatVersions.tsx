@@ -1,24 +1,29 @@
-import FormatVersionsClient from '@/app/(navbar)/(admin)/admin/formats/FormatVersionsClient';
+'use server';
 
-export default function FormatVersions() {
-  return (
-    <FormatVersionsClient
-      data={[
-        {
-          id: 1,
-          latestRelease: 'OTJ',
-          latestBans: null,
-          description: 'Outlaws release',
-          validFrom: new Date('2024-04-19'),
-        },
-        {
-          id: 2,
-          latestRelease: 'MH3',
-          latestBans: null,
-          description: 'MH3 release',
-          validFrom: new Date('2024-06-07'),
-        },
-      ]}
-    />
-  );
+import FormatVersionsClient from '@/app/(navbar)/(admin)/admin/formats/FormatVersionsClient';
+import { prisma } from '@/lib/prisma';
+
+export default async function FormatVersions() {
+  try {
+    // const data = await prisma.formatVersion.findMany();
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/format-version`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: undefined,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return <FormatVersionsClient data={data} />;
+  } catch (error) {
+    console.error('Failed to fetch format versions:', error);
+    return <FormatVersionsClient data={[]} />;
+  }
 }

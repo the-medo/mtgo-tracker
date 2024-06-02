@@ -1,15 +1,13 @@
 'use client';
 
-import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { FormatVersion } from '@prisma/client';
-import { As, DatePicker, Table } from '@nextui-org/react';
+import { As, Table } from '@nextui-org/react';
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
 import { Key } from 'react';
 import { Tooltip } from '@nextui-org/tooltip';
 import { Button } from '@nextui-org/button';
 import { TbEdit, TbTrash } from 'react-icons/tb';
-import { Input } from '@nextui-org/input';
-import Title from '@/components/typography/Title';
+import FormatVersionsForm from '@/app/(navbar)/(admin)/admin/formats/FormatVersionsForm';
 
 const columns = [
   { name: 'Latest release', uid: 'latest-release' },
@@ -28,7 +26,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
     case 'description':
       return <p className="italic">{data.description ?? '- empty -'}</p>;
     case 'valid-from':
-      return data.validFrom?.getDate();
+      return data.validFrom;
     // return <DatePicker className="max-w-[150px]" value={data.validFrom} />;
     case 'actions':
       return (
@@ -71,19 +69,7 @@ export default function FormatVersionsClient({ data }: Props) {
           )}
         </TableBody>
       </Table>
-      <Card className="w-[300px]">
-        <CardHeader>
-          <Title title="New Format Version" />
-        </CardHeader>
-        {/*<Divider />*/}
-        <CardBody className="flex flex-col gap-2">
-          <Input type="text" label="Latest release" size="sm" />
-          <Input type="text" label="Latest bans" size="sm" />
-          <Input type="text" label="Description" size="sm" />
-          <DatePicker label="Valid from" size="sm" />
-          <Button>Create</Button>
-        </CardBody>
-      </Card>
+      <FormatVersionsForm />
     </div>
   );
 }
