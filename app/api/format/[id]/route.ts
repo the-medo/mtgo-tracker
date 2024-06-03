@@ -8,8 +8,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (session?.user?.isAdmin) {
     const id = parseInt(params.id as string);
     const body = await req.json();
+    body.latestFormatVersionId = parseInt(body.latestFormatVersionId);
 
-    const record = await prisma.formatVersion.update({
+    const record = await prisma.format.update({
       data: { ...body },
       where: {
         id: id,
@@ -18,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     return NextResponse.json(record);
   } else {
-    throw new Error('Only admin can patch a format version!');
+    throw new Error('Only admin can patch a format!');
   }
 }
 
@@ -27,10 +28,10 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   if (session?.user?.isAdmin) {
     const id = parseInt(params.id as string);
 
-    const deletedRow = await prisma.formatVersion.delete({ where: { id: id } });
+    const deletedRow = await prisma.format.delete({ where: { id: id } });
 
     return NextResponse.json(deletedRow);
   } else {
-    throw new Error('Only admin can add delete a format version!');
+    throw new Error('Only admin can delete a format!');
   }
 }

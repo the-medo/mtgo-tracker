@@ -1,3 +1,5 @@
+import { DateValue, fromDate } from '@internationalized/date';
+
 export function parseString(
   s: string | null | undefined,
   allowEmptyString: boolean = false,
@@ -25,7 +27,7 @@ export function parseDate(
   return new Date(s);
 }
 
-type Stringify<T> = {
+export type Stringify<T> = {
   [P in keyof T]: T[P] extends null ? null : T[P] extends undefined ? undefined : string;
 };
 
