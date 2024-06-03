@@ -4,12 +4,8 @@ import TableFieldString, {
   TableFieldStringProps,
 } from '@/components/form/table-form/TableFieldString';
 import TableFieldDate, { TableFieldDateProps } from '@/components/form/table-form/TableFieldDate';
-import {
-  getPatchRequest,
-  TableFieldPatchRequest,
-} from '@/components/form/table-form/tableFieldEvents';
-import { ReactNode, useCallback, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { TableFieldPatchRequest } from '@/components/form/table-form/tableFieldEvents';
+import { ReactNode, useCallback } from 'react';
 import TableFieldSelect, {
   TableFieldSelectProps,
 } from '@/components/form/table-form/TableFieldSelect';
@@ -30,11 +26,7 @@ export type TableFieldProps = {
 
 type Props = TableFieldStringProps | TableFieldDateProps | TableFieldSelectProps;
 
-//type: 'number' | 'string' | 'select' | 'toggle' | 'date';
-
 export default function TableField(props: Props) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
   const { mutate } = useSimplePatch(props.qk);
 
   const onChange = useCallback(
@@ -48,7 +40,7 @@ export default function TableField(props: Props) {
     },
     [mutate, props],
   );
-  const isPending = props.isPending ?? pending;
+  const isPending = props.isPending;
 
   switch (props.type) {
     case 'string':

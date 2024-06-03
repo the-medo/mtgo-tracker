@@ -4,14 +4,14 @@ import { Input } from '@nextui-org/input';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import Title from '@/components/typography/Title';
-import { useCallback, useRef, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCallback, useRef } from 'react';
 import SelectFormatVersion from '@/components/form/select/SelectFormatVersion';
+import useSimplePost from '@/app/api/useSimplePost';
+import { QK } from '@/app/api/queryHelpers';
 
 export default function FormatsForm() {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLFormElement>(null);
+  const { mutate } = useSimplePost(QK.FORMATS);
 
   const createFormat = useCallback(
     async (formData: FormData) => {
@@ -24,19 +24,9 @@ export default function FormatsForm() {
         latestFormatVersionId: latestFormatVersionId ? parseInt(latestFormatVersionId) : undefined,
       };
 
-      const res = await fetch('/api/format', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      startTransition(() => {
-        router.refresh();
-      });
+      mutate(data);
     },
-    [router],
+    [mutate],
   );
 
   return (
@@ -48,9 +38,7 @@ export default function FormatsForm() {
         <form ref={ref} action={createFormat} className="flex flex-col gap-2">
           <Input type="text" label="Name" size="sm" name="name" />
           <SelectFormatVersion name="latestFormatVersionId" />
-          <Button type="submit" disabled={isPending} isLoading={isPending}>
-            Create
-          </Button>
+          <Button type="submit">Create</Button>
         </form>
       </CardBody>
     </Card>

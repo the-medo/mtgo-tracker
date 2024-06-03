@@ -13,7 +13,6 @@ import { getFormats } from '@/app/api/format/getFormats';
 import { QK } from '@/app/api/queryHelpers';
 
 const TABLE_ID = 'FORMATS';
-const PATH = 'format';
 
 const columns = [
   { name: 'Name', uid: 'name' },
@@ -52,7 +51,7 @@ const renderCell = (data: Format, columnKey: Key) => {
     case 'actions':
       return (
         <div className="relative flex items-center gap-2">
-          <DeleteButton id={data.id} path={PATH} />
+          <DeleteButton id={data.id} qk={QK.FORMATS} />
         </div>
       );
   }
@@ -62,7 +61,7 @@ interface Props {}
 
 export default function FormatsClient({}: Props) {
   const { data } = useQuery({
-    queryKey: ['formats'],
+    queryKey: [QK.FORMATS],
     queryFn: getFormats,
   });
 

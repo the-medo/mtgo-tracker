@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QK, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 
-export type SimplePostRequest = Record<string, FormDataEntryValue | null | undefined>;
+export type SimplePostRequest = Record<string, FormDataEntryValue | number | null | undefined>;
 
 export default function useSimplePost<T extends QK>(qk: QK) {
   const queryClient = useQueryClient();

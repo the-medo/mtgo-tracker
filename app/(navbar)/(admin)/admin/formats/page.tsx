@@ -1,6 +1,5 @@
 'use server';
 
-import { Card, CardBody } from '@nextui-org/card';
 import FormatVersions from '@/app/(navbar)/(admin)/admin/formats/FormatVersions';
 import Title from '@/components/typography/Title';
 import Formats from '@/app/(navbar)/(admin)/admin/formats/Formats';

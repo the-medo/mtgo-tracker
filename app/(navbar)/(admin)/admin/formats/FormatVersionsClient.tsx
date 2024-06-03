@@ -9,7 +9,6 @@ import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
 import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
-import { FORMAT_VERSIONS_QUERY_KEY } from '@/app/api/format-version/usePostFormatVersion';
 
 import { QK } from '@/app/api/queryHelpers';
 
@@ -80,7 +79,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
     case 'actions':
       return (
         <div className="relative flex items-center gap-2">
-          <DeleteButton id={data.id} path="format-version" />
+          <DeleteButton id={data.id} qk={QK.FORMAT_VERSIONS} />
         </div>
       );
   }
@@ -90,7 +89,7 @@ interface Props {}
 
 export default function FormatVersionsClient({}: Props) {
   const { data } = useQuery({
-    queryKey: [FORMAT_VERSIONS_QUERY_KEY],
+    queryKey: [QK.FORMAT_VERSIONS],
     queryFn: getFormatVersions,
   });
 

@@ -11,7 +11,7 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: SimplePatchRequest): Promise<QTypes[T]> => {
+    mutationFn: async (data: SimplePatchRequest): Promise<QTypes[T][number]> => {
       const res = await fetch(`/api/${qk}/${data.id}`, {
         method: 'PATCH',
         body: JSON.stringify({
