@@ -3,6 +3,7 @@ import { ChangeEventHandler, Key, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
 import { FormatVersion } from '@prisma/client';
+import { FORMAT_VERSIONS_QUERY_KEY } from '@/app/api/format-version/usePostFormatVersion';
 
 export function textValueFormatVersion(fv: FormatVersion | undefined): string {
   if (!fv) return ` - no value - `;
@@ -19,7 +20,7 @@ type Props = {
 
 export default function SelectFormatVersion({ textOnly, value, isLoading, name, onChange }: Props) {
   const { isPending, data } = useQuery({
-    queryKey: ['format-versions'],
+    queryKey: [FORMAT_VERSIONS_QUERY_KEY],
     queryFn: getFormatVersions,
   });
 

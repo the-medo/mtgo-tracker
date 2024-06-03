@@ -13,10 +13,12 @@ import { useRouter } from 'next/navigation';
 import TableFieldSelect, {
   TableFieldSelectProps,
 } from '@/components/form/table-form/TableFieldSelect';
+import useSimplePatch from '@/app/api/useSimplePatch';
+import { QK } from '@/app/api/queryHelpers';
 
 export type TableFieldProps = {
   tableId: string;
-  path: string;
+  qk: QK;
   id: number;
   fieldName: string;
   label: string;
@@ -33,10 +35,18 @@ type Props = TableFieldStringProps | TableFieldDateProps | TableFieldSelectProps
 export default function TableField(props: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { mutate } = useSimplePatch(props.qk);
 
   const onChange = useCallback(
-    props.onChange ?? getPatchRequest(props.path, router, startTransition),
-    [router, props.path, props.onChange],
+    (id: string | number, field: string, value: string | number) => {
+      if (props.onChange) return props.onChange(id, field, value);
+      mutate({
+        id,
+        field,
+        value,
+      });
+    },
+    [mutate, props],
   );
   const isPending = props.isPending ?? pending;
 

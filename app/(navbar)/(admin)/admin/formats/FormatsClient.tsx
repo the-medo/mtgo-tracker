@@ -10,6 +10,8 @@ import FormatsForm from '@/app/(navbar)/(admin)/admin/formats/FormatsForm';
 import { useQuery } from '@tanstack/react-query';
 import { getFormats } from '@/app/api/format/getFormats';
 
+import { QK } from '@/app/api/queryHelpers';
+
 const TABLE_ID = 'FORMATS';
 const PATH = 'format';
 
@@ -24,9 +26,9 @@ const renderCell = (data: Format, columnKey: Key) => {
     case 'name':
       return (
         <TableField
+          qk={QK.FORMATS}
           type="string"
           tableId={TABLE_ID}
-          path={PATH}
           id={data.id}
           fieldName="name"
           label="Name"
@@ -37,9 +39,9 @@ const renderCell = (data: Format, columnKey: Key) => {
     case 'latestFormatVersionId':
       return (
         <TableField
+          qk={QK.FORMATS}
           type="select"
           tableId={TABLE_ID}
-          path={PATH}
           id={data.id}
           fieldName="latestFormatVersionId"
           label="Latest format version"

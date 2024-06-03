@@ -9,6 +9,9 @@ import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
 import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
+import { FORMAT_VERSIONS_QUERY_KEY } from '@/app/api/format-version/usePostFormatVersion';
+
+import { QK } from '@/app/api/queryHelpers';
 
 const TABLE_ID = 'FORMAT_VERSIONS';
 
@@ -26,7 +29,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
       return (
         <TableField
           tableId={TABLE_ID}
-          path="format-version"
+          qk={QK.FORMAT_VERSIONS}
           id={data.id}
           fieldName="latestRelease"
           label="Latest release"
@@ -39,7 +42,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
       return (
         <TableField
           tableId={TABLE_ID}
-          path="format-version"
+          qk={QK.FORMAT_VERSIONS}
           id={data.id}
           fieldName="latestBans"
           label="Latest bans"
@@ -52,7 +55,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
       return (
         <TableField
           tableId={TABLE_ID}
-          path="format-version"
+          qk={QK.FORMAT_VERSIONS}
           id={data.id}
           fieldName="description"
           label="Description"
@@ -65,7 +68,7 @@ const renderCell = (data: FormatVersion, columnKey: Key) => {
       return (
         <TableField
           tableId={TABLE_ID}
-          path="format-version"
+          qk={QK.FORMAT_VERSIONS}
           id={data.id}
           fieldName="validFrom"
           label="Valid from"
@@ -87,7 +90,7 @@ interface Props {}
 
 export default function FormatVersionsClient({}: Props) {
   const { data } = useQuery({
-    queryKey: ['format-versions'],
+    queryKey: [FORMAT_VERSIONS_QUERY_KEY],
     queryFn: getFormatVersions,
   });
 

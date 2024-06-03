@@ -7,11 +7,13 @@ import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import Title from '@/components/typography/Title';
 import { useCallback, useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import usePostFormatVersion from '@/app/api/format-version/usePostFormatVersion';
+import useSimplePost from '@/app/api/useSimplePost';
+import { QK } from '@/app/api/queryHelpers';
 
 export default function FormatVersionsForm() {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLFormElement>(null);
+  const { mutate } = useSimplePost(QK.FORMAT_VERSIONS);
 
   const createFormatVersion = useCallback(
     async (formData: FormData) => {
@@ -24,19 +26,9 @@ export default function FormatVersionsForm() {
         validFrom: formData.get('validFrom'),
       };
 
-      const res = await fetch('/api/format-version', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      startTransition(() => {
-        router.refresh();
-      });
+      mutate(data);
     },
-    [router],
+    [mutate],
   );
 
   return (
@@ -50,9 +42,7 @@ export default function FormatVersionsForm() {
           <Input type="text" label="Latest bans" size="sm" name="latestBans" />
           <Input type="text" label="Description" size="sm" name="description" />
           <DatePicker label="Valid from" size="sm" name="validFrom" />
-          <Button type="submit" disabled={isPending} isLoading={isPending}>
-            Create
-          </Button>
+          <Button type="submit">Create</Button>
         </form>
       </CardBody>
     </Card>
