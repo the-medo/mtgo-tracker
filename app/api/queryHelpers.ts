@@ -1,13 +1,17 @@
-import { Format, FormatVersion } from '@prisma/client';
+import { ArchetypeGroup, DeckArchetype, Format, FormatVersion } from '@prisma/client';
 
 export enum QK {
   FORMAT_VERSIONS = 'format-version',
   FORMATS = 'format',
+  ARCHETYPE_GROUPS = 'archetype-group',
+  DECK_ARCHETYPE = 'deck-archetype',
 }
 
 export type QTypes = {
   [QK.FORMAT_VERSIONS]: FormatVersion[];
   [QK.FORMATS]: Format[];
+  [QK.ARCHETYPE_GROUPS]: ArchetypeGroup[];
+  [QK.DECK_ARCHETYPE]: DeckArchetype[];
 };
 
 const dateParser = (value: string | undefined): Date | undefined =>

@@ -10,11 +10,12 @@ export function parseString(
 }
 
 export function parseNumber(
-  s: string | null | undefined,
+  s: number | string | null | undefined,
   allowEmptyString: boolean = false,
 ): number | undefined {
   if (!allowEmptyString && s === '') return undefined;
   if (!s) return undefined;
+  if (typeof s === 'number') return s;
   return parseFloat(s);
 }
 
