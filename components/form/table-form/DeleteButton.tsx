@@ -1,29 +1,23 @@
-import { useRouter } from 'next/navigation';
-import { useCallback, useState, useTransition } from 'react';
-import { getDeleteRequest } from '@/components/form/table-form/tableFieldEvents';
+import { useCallback } from 'react';
 import { TbTrash } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
+import useSimpleDelete from '@/app/api/useSimpleDelete';
+import { QK } from '@/app/api/queryHelpers';
 
 interface Props {
   id: number | string;
-  path: string;
+  qk: QK;
 }
 
-export default function DeleteButton({ id, path }: Props) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+export default function DeleteButton({ id, qk }: Props) {
+  const { mutate } = useSimpleDelete(qk);
 
-  const onDelete = useCallback(getDeleteRequest(path, router, startTransition), [router, path]);
+  const onDelete = useCallback(() => {
+    mutate({ id });
+  }, [mutate, id]);
 
   return (
-    <Button
-      isIconOnly
-      color="danger"
-      size="sm"
-      onClick={() => onDelete(id)}
-      isLoading={isPending}
-      disabled={isPending}
-    >
+    <Button isIconOnly color="danger" size="sm" onClick={onDelete}>
       <TbTrash size={16} />
     </Button>
   );
