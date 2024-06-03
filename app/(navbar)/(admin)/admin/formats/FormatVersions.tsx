@@ -1,15 +1,16 @@
 'use server';
 
 import FormatVersionsClient from '@/app/(navbar)/(admin)/admin/formats/FormatVersionsClient';
-import { prisma } from '@/lib/prisma';
+import { QueryClient } from '@tanstack/react-query';
+import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
 
 export default async function FormatVersions() {
-  try {
-    const data = await prisma.formatVersion.findMany();
+  const queryClient = new QueryClient();
 
-    return <FormatVersionsClient data={data} />;
-  } catch (error) {
-    console.error('Failed to fetch format versions:', error);
-    return <FormatVersionsClient data={[]} />;
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ['format-versions'],
+    queryFn: getFormatVersions,
+  });
+
+  return <FormatVersionsClient />;
 }

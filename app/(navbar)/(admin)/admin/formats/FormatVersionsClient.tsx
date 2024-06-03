@@ -3,82 +3,108 @@
 import { FormatVersion } from '@prisma/client';
 import { As, Table } from '@nextui-org/react';
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
-import { Key, useCallback, useState } from 'react';
-import { Tooltip } from '@nextui-org/tooltip';
-import { Button } from '@nextui-org/button';
-import { TbEdit, TbTrash } from 'react-icons/tb';
+import { Key } from 'react';
 import FormatVersionsForm from '@/app/(navbar)/(admin)/admin/formats/FormatVersionsForm';
+import TableField from '@/components/form/table-form/TableField';
+import DeleteButton from '@/components/form/table-form/DeleteButton';
+import { useQuery } from '@tanstack/react-query';
+import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
+
+const TABLE_ID = 'FORMAT_VERSIONS';
 
 const columns = [
-  { name: 'Latest release', uid: 'latest-release' },
-  { name: 'Latest bans', uid: 'latest-bans' },
+  { name: 'Latest release', uid: 'latest-release', maxWidth: 180 },
+  { name: 'Latest bans', uid: 'latest-bans', maxWidth: 180 },
   { name: 'Description', uid: 'description' },
-  { name: 'Valid from', uid: 'valid-from' },
-  { name: 'Actions', uid: 'actions' },
+  { name: 'Valid from', uid: 'valid-from', maxWidth: 180 },
+  { name: 'Actions', uid: 'actions', maxWidth: 120 },
 ];
 
-const renderCell = (
-  data: FormatVersion,
-  columnKey: Key,
-  selected: boolean,
-  onChange: () => void,
-  onDelete: () => void,
-) => {
+const renderCell = (data: FormatVersion, columnKey: Key) => {
   switch (columnKey) {
     case 'latest-release':
-      return data.latestRelease ?? <p className="text-xs italic">- empty -</p>;
+      return (
+        <TableField
+          tableId={TABLE_ID}
+          path="format-version"
+          id={data.id}
+          fieldName="latestRelease"
+          label="Latest release"
+          type="string"
+          value={data.latestRelease ?? undefined}
+          editable={true}
+        />
+      );
     case 'latest-bans':
-      return data.latestBans ?? <p className="text-xs italic">- empty -</p>;
+      return (
+        <TableField
+          tableId={TABLE_ID}
+          path="format-version"
+          id={data.id}
+          fieldName="latestBans"
+          label="Latest bans"
+          type="string"
+          value={data.latestBans ?? undefined}
+          editable={true}
+        />
+      );
     case 'description':
-      return <p className="italic">{data.description ?? '- empty -'}</p>;
+      return (
+        <TableField
+          tableId={TABLE_ID}
+          path="format-version"
+          id={data.id}
+          fieldName="description"
+          label="Description"
+          type="string"
+          value={data.description ?? undefined}
+          editable={true}
+        />
+      );
     case 'valid-from':
-      return data.validFrom?.toDateString();
+      return (
+        <TableField
+          tableId={TABLE_ID}
+          path="format-version"
+          id={data.id}
+          fieldName="validFrom"
+          label="Valid from"
+          type="date"
+          value={data.validFrom ?? undefined}
+          editable={true}
+        />
+      );
     case 'actions':
       return (
         <div className="relative flex items-center gap-2">
-          <Button isIconOnly color="danger" size="sm" onClick={onDelete}>
-            <TbTrash size={16} />
-          </Button>
+          <DeleteButton id={data.id} path="format-version" />
         </div>
       );
   }
 };
 
-interface Props {
-  data: FormatVersion[];
-}
+interface Props {}
 
-export default function FormatVersionsClient({ data }: Props) {
-  const [selectedKey, setSelectedKey] = useState<Key>();
-
-  const onSelectionChange = (keys: Set<Key> | string) => {
-    if (typeof keys !== 'string') {
-      const arr = Array.from(keys);
-      setSelectedKey(arr.length > 0 ? arr[0] : undefined);
-    }
-  };
-
-  const onChange = useCallback(() => {}, []);
-  const onDelete = useCallback(() => {}, []);
+export default function FormatVersionsClient({}: Props) {
+  const { data } = useQuery({
+    queryKey: ['format-versions'],
+    queryFn: getFormatVersions,
+  });
 
   return (
     <div className="flex flex-row gap-4">
-      <Table<As<FormatVersion>>
-        onSelectionChange={onSelectionChange}
-        selectionMode="single"
-        aria-label="Example table with custom cells"
-      >
+      <Table<As<FormatVersion>> aria-label="Example table with custom cells">
         <TableHeader columns={columns}>
-          {column => <TableColumn key={column.uid}>{column.name}</TableColumn>}
+          {column => (
+            <TableColumn key={column.uid} width={column.maxWidth}>
+              {column.name}
+            </TableColumn>
+          )}
         </TableHeader>
-        <TableBody items={data}>
+        <TableBody items={data ?? []}>
           {item => (
-            <TableRow key={item.id}>
-              {columnKey => (
-                <TableCell>
-                  {renderCell(item, columnKey, item.id === selectedKey, onChange, onDelete)}
-                </TableCell>
-              )}
+            <TableRow key={item.id} className="hover:bg-zinc-50">
+              {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
