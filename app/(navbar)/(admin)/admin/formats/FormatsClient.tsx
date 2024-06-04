@@ -39,6 +39,7 @@ const renderCell = (data: Format, columnKey: Key) => {
       return (
         <TableField
           qk={QK.FORMATS}
+          selectType={QK.FORMAT_VERSIONS}
           type="select"
           tableId={TABLE_ID}
           id={data.id}

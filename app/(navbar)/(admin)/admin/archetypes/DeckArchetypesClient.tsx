@@ -40,6 +40,7 @@ const renderCell = (data: DeckArchetype, columnKey: Key) => {
       return (
         <TableField
           qk={QK.DECK_ARCHETYPE}
+          selectType={QK.FORMATS}
           type="select"
           tableId={TABLE_ID}
           id={data.id}
@@ -53,6 +54,7 @@ const renderCell = (data: DeckArchetype, columnKey: Key) => {
       return (
         <TableField
           qk={QK.DECK_ARCHETYPE}
+          selectType={QK.ARCHETYPE_GROUPS}
           type="select"
           tableId={TABLE_ID}
           id={data.id}

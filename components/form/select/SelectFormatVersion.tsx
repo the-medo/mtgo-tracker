@@ -4,21 +4,26 @@ import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
 import { FormatVersion } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
+import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 
 export function textValueFormatVersion(fv: FormatVersion | undefined): string {
   if (!fv) return ` - no value - `;
   return `${fv.latestRelease ? `[${fv.latestRelease}]` : ''} ${fv.latestBans}`;
 }
 
-type Props = {
-  textOnly?: boolean;
-  value?: number | string;
-  isLoading?: boolean;
-  name?: string;
-  onChange?: (x: number | string) => void;
+export type SelectFormatVersionPropsOuter = {
+  selectType: QK.FORMAT_VERSIONS;
 };
 
-export default function SelectFormatVersion({ textOnly, value, isLoading, name, onChange }: Props) {
+type SelectFormatVersionProps = BaseSelectProps & Omit<SelectFormatVersionPropsOuter, 'selectType'>;
+
+export default function SelectFormatVersion({
+  textOnly,
+  value,
+  isLoading,
+  name,
+  onChange,
+}: SelectFormatVersionProps) {
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMAT_VERSIONS],
     queryFn: getFormatVersions,

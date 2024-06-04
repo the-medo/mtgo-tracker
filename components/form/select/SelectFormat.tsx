@@ -4,21 +4,26 @@ import { useQuery } from '@tanstack/react-query';
 import { Format } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { getFormats } from '@/app/api/format/getFormats';
+import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 
 export function textValueFormat(f: Format | undefined): string {
   if (!f) return ` - no format - `;
   return f.name;
 }
 
-type Props = {
-  textOnly?: boolean;
-  value?: number | string;
-  isLoading?: boolean;
-  name?: string;
-  onChange?: (x: number | string) => void;
+export type SelectFormatPropsOuter = {
+  selectType: QK.FORMATS;
 };
 
-export default function SelectFormat({ textOnly, value, isLoading, name, onChange }: Props) {
+type SelectFormatVersionProps = BaseSelectProps & Omit<SelectFormatPropsOuter, 'selectType'>;
+
+export default function SelectFormat({
+  textOnly,
+  value,
+  isLoading,
+  name,
+  onChange,
+}: SelectFormatVersionProps) {
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMATS],
     queryFn: getFormats,

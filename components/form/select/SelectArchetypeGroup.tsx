@@ -4,19 +4,19 @@ import { useQuery } from '@tanstack/react-query';
 import { ArchetypeGroup } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { getArchetypeGroups } from '@/app/api/archetype-group/getArchetypeGroups';
+import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 
 export function textValueArchetypeGroup(f: ArchetypeGroup | undefined): string {
   if (!f) return ` - no arch. group - `;
   return f.name;
 }
 
-type Props = {
-  textOnly?: boolean;
-  value?: number | string;
-  isLoading?: boolean;
-  name?: string;
-  onChange?: (x: number | string) => void;
+export type SelectArchetypeGroupPropsOuter = {
+  selectType: QK.ARCHETYPE_GROUPS;
 };
+
+type SelectArchetypeGroupProps = BaseSelectProps &
+  Omit<SelectArchetypeGroupPropsOuter, 'selectType'>;
 
 export default function SelectArchetypeGroup({
   textOnly,
@@ -24,7 +24,7 @@ export default function SelectArchetypeGroup({
   isLoading,
   name,
   onChange,
-}: Props) {
+}: SelectArchetypeGroupProps) {
   const { isPending, data } = useQuery({
     queryKey: [QK.ARCHETYPE_GROUPS],
     queryFn: getArchetypeGroups,

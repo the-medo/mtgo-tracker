@@ -1,17 +1,30 @@
 'use client';
 
 import { TableFieldProps } from '@/components/form/table-form/TableField';
-import { Input } from '@nextui-org/input';
 import useStore from '@/store/store';
-import { ChangeEventHandler, useCallback, useMemo, useRef } from 'react';
-import debounce from 'lodash.debounce';
-import FieldCircularProgress from '@/components/form/table-form/FieldCircularProgress';
-import SelectFormatVersion from '@/components/form/select/SelectFormatVersion';
+import { useCallback, useMemo } from 'react';
+import SelectFormatVersion, {
+  SelectFormatVersionPropsOuter,
+} from '@/components/form/select/SelectFormatVersion';
+import SelectFormat, { SelectFormatPropsOuter } from '@/components/form/select/SelectFormat';
+import SelectArchetypeGroup, {
+  SelectArchetypeGroupPropsOuter,
+} from '@/components/form/select/SelectArchetypeGroup';
+import { QK } from '@/app/api/queryHelpers';
+
+export type BaseSelectProps = {
+  textOnly?: boolean;
+  value?: number | string;
+  isLoading?: boolean;
+  name?: string;
+  onChange?: (x: number | string) => void;
+};
 
 export type TableFieldSelectProps = {
   type: 'select';
   value?: string | number;
-} & TableFieldProps;
+} & TableFieldProps &
+  (SelectFormatPropsOuter | SelectFormatVersionPropsOuter | SelectArchetypeGroupPropsOuter);
 
 export default function TableFieldSelect({
   tableId,
@@ -23,6 +36,7 @@ export default function TableFieldSelect({
   onChange,
   endContent,
   isPending,
+  selectType,
 }: TableFieldSelectProps) {
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
   const setSelectedId = useStore(state => state.setSelectedId);
@@ -39,16 +53,36 @@ export default function TableFieldSelect({
   );
 
   const content = useMemo(() => {
-    return (
-      <SelectFormatVersion
-        textOnly={!isSelected}
-        name={fieldName}
-        value={value}
-        onChange={changeHandler}
-        // endContent={isPending ? <FieldCircularProgress /> : endContent}
-      />
-    );
-  }, [isSelected, fieldName, value, changeHandler]);
+    switch (selectType) {
+      case QK.FORMATS:
+        return (
+          <SelectFormat
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+          />
+        );
+      case QK.FORMAT_VERSIONS:
+        return (
+          <SelectFormatVersion
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+          />
+        );
+      case QK.ARCHETYPE_GROUPS:
+        return (
+          <SelectArchetypeGroup
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+          />
+        );
+    }
+  }, [isSelected, fieldName, value, changeHandler, selectType]);
 
   const selectRow = useCallback(() => {
     if (editable && !isSelected) {
