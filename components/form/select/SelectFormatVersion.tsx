@@ -1,5 +1,5 @@
 import { Select, SelectItem } from '@nextui-org/select';
-import { ChangeEventHandler, Key, useCallback, useMemo } from 'react';
+import { ChangeEventHandler, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
 import { FormatVersion } from '@prisma/client';
@@ -7,7 +7,7 @@ import { QK } from '@/app/api/queryHelpers';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 
 export function textValueFormatVersion(fv: FormatVersion | undefined): string {
-  if (!fv) return ` - no value - `;
+  if (!fv) return ` - no version - `;
   return `${fv.latestRelease ? `[${fv.latestRelease}]` : ''} ${fv.latestBans}`;
 }
 
@@ -23,7 +23,9 @@ export default function SelectFormatVersion({
   isLoading,
   name,
   onChange,
+  description,
 }: SelectFormatVersionProps) {
+  const [selectedValue, setSelectedValue] = useState(value?.toString());
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMAT_VERSIONS],
     queryFn: getFormatVersions,
@@ -31,7 +33,8 @@ export default function SelectFormatVersion({
 
   const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
     e => {
-      console.log('onChangeHandler', e);
+      console.log('onChangeHandler SelectFormatVersion', e);
+      setSelectedValue(e.target.value);
       if (onChange) {
         onChange(e.target.value);
       }
@@ -39,38 +42,47 @@ export default function SelectFormatVersion({
     [onChange],
   );
 
-  const selectedValue = useMemo(() => {
-    if (value) return data?.find(fv => fv.id === value);
-  }, [value, data]);
+  useEffect(() => {
+    if (value) setSelectedValue(value?.toString());
+  }, [value]);
 
   if (textOnly) {
     return textValueFormatVersion(selectedValue);
   }
 
   return (
-    <Select
-      size="sm"
-      label="Format version"
-      selectionMode="single"
-      className="max-w-xs"
-      onChange={onChangeHandler}
-      name={name}
-      isLoading={isLoading || isPending}
-      // @ts-ignore
-      defaultSelectedKeys={[selectedValue?.id.toString()]}
-    >
-      {(data ?? []).map(fv => (
-        <SelectItem key={fv.id} textValue={textValueFormatVersion(fv)} description={fv.description}>
-          <div className="flex flex-row gap-2">
-            {fv.latestRelease && fv.latestRelease !== '' ? (
-              <p className="text-medium">[{fv.latestRelease}]</p>
-            ) : undefined}
-            {fv.latestBans && fv.latestBans !== '' ? (
-              <p className="text-medium">({fv.latestBans})</p>
-            ) : undefined}
-          </div>
-        </SelectItem>
-      ))}
-    </Select>
+    <>
+      <Select
+        size="sm"
+        label="Format version"
+        selectionMode="single"
+        className="max-w-xs"
+        onChange={onChangeHandler}
+        name={name}
+        isLoading={isLoading || isPending}
+        // @ts-ignore
+        selectedKeys={[selectedValue]}
+        defaultSelectedKeys={[selectedValue]}
+        description={description}
+      >
+        {(data ?? []).map(fv => (
+          <SelectItem
+            key={fv.id}
+            textValue={textValueFormatVersion(fv)}
+            description={fv.description}
+          >
+            {fv.id}
+            <div className="flex flex-row gap-2">
+              {fv.latestRelease && fv.latestRelease !== '' ? (
+                <p className="text-medium">[{fv.latestRelease}]</p>
+              ) : undefined}
+              {fv.latestBans && fv.latestBans !== '' ? (
+                <p className="text-medium">({fv.latestBans})</p>
+              ) : undefined}
+            </div>
+          </SelectItem>
+        ))}
+      </Select>
+    </>
   );
 }

@@ -15,7 +15,7 @@ export type SelectFormatPropsOuter = {
   selectType: QK.FORMATS;
 };
 
-type SelectFormatVersionProps = BaseSelectProps & Omit<SelectFormatPropsOuter, 'selectType'>;
+type SelectFormatProps = BaseSelectProps & Omit<SelectFormatPropsOuter, 'selectType'>;
 
 export default function SelectFormat({
   textOnly,
@@ -23,7 +23,7 @@ export default function SelectFormat({
   isLoading,
   name,
   onChange,
-}: SelectFormatVersionProps) {
+}: SelectFormatProps) {
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMATS],
     queryFn: getFormats,

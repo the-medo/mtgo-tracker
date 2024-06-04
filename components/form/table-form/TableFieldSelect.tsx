@@ -17,6 +17,7 @@ export type BaseSelectProps = {
   value?: number | string;
   isLoading?: boolean;
   name?: string;
+  description?: string;
   onChange?: (x: number | string) => void;
 };
 
