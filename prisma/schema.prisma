@@ -106,12 +106,14 @@ enum DeckServiceType {
 
 // === TABLES
 model Format {
-  id                    Int             @id @default(autoincrement())
+  id                    Int            @id @default(autoincrement())
   name                  String
   latestFormatVersionId Int?
-  formatVersion         FormatVersion?  @relation(fields: [latestFormatVersionId], references: [id])
-  DeckArchetype         DeckArchetype[]
-  Events                Event[]
+  formatVersion         FormatVersion? @relation(fields: [latestFormatVersionId], references: [id])
+
+  Decks         Deck[]
+  DeckArchetype DeckArchetype[]
+  Events        Event[]
 }
 
 model FormatVersion {
@@ -121,6 +123,7 @@ model FormatVersion {
   description   String?
   validFrom     DateTime?
 
+  Decks   Deck[]
   Formats Format[]
   Events  Event[]
 }
@@ -145,14 +148,20 @@ model DeckArchetype {
 }
 
 model Deck {
-  id              Int              @id @default(autoincrement())
-  userId          String
-  name            String?
-  link            String?
-  service         DeckServiceType?
-  serviceDeckId   String?
+  id            Int              @id @default(autoincrement())
+  userId        String
+  name          String?
+  link          String?
+  service       DeckServiceType?
+  serviceDeckId String?
+
+  formatId        Int
+  formatVersionId Int
   deckArchetypeId Int
-  deckArchetype   DeckArchetype    @relation(fields: [deckArchetypeId], references: [id])
+
+  format        Format        @relation(fields: [formatId], references: [id])
+  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
+  deckArchetype DeckArchetype @relation(fields: [deckArchetypeId], references: [id])
 
   Matches  Match[]
   DeckTags DeckTag[]
