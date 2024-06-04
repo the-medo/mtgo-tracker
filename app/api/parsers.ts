@@ -1,4 +1,6 @@
 import { DateValue, fromDate } from '@internationalized/date';
+import { $Enums, Deck } from '@prisma/client';
+import DeckServiceType = $Enums.DeckServiceType;
 
 export function parseString(
   s: string | null | undefined,
@@ -26,6 +28,47 @@ export function parseDate(
   if (!allowEmptyString && s === '') return undefined;
   if (!s) return undefined;
   return new Date(s);
+}
+
+/*
+  //https://www.moxfield.com/decks/NGXLX-zQk0KMgxziaUyc5g#paper
+  //https://www.mtggoldfish.com/deck/6395126#paper
+  //https://melee.gg/Decklist/View/381376
+ */
+export function parseDeckLink(
+  link: string | undefined,
+): Pick<Deck, 'service' | 'serviceDeckId' | 'link'> | false {
+  if (!link) return false;
+
+  // Patterns to match each service and extract deck IDs
+  const patterns = [
+    {
+      regex: /https:\/\/www\.moxfield\.com\/decks\/([^#?]+)/,
+      service: DeckServiceType.MOXFIELD,
+    },
+    {
+      regex: /https:\/\/www\.mtggoldfish\.com\/deck\/(\d+)/,
+      service: DeckServiceType.GOLDFISH,
+    },
+    {
+      regex: /https:\/\/melee\.gg\/Decklist\/View\/(\d+)/,
+      service: DeckServiceType.MELEEGG,
+    },
+  ];
+
+  for (const pattern of patterns) {
+    const match = link.match(pattern.regex);
+    if (match && match[1]) {
+      return {
+        service: pattern.service,
+        serviceDeckId: match[1],
+        link: match[0],
+      };
+    }
+  }
+
+  // If no pattern matches, return false
+  return false;
 }
 
 export type Stringify<T> = {
