@@ -11,6 +11,9 @@ import SelectArchetypeGroup, {
   SelectArchetypeGroupPropsOuter,
 } from '@/components/form/select/SelectArchetypeGroup';
 import { QK } from '@/app/api/queryHelpers';
+import SelectDeckArchetype, {
+  SelectDeckArchetypePropsOuter,
+} from '@/components/form/select/SelectDeckArchetype';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -25,7 +28,12 @@ export type TableFieldSelectProps = {
   type: 'select';
   value?: string | number;
 } & TableFieldProps &
-  (SelectFormatPropsOuter | SelectFormatVersionPropsOuter | SelectArchetypeGroupPropsOuter);
+  (
+    | SelectFormatPropsOuter
+    | SelectFormatVersionPropsOuter
+    | SelectArchetypeGroupPropsOuter
+    | SelectDeckArchetypePropsOuter
+  );
 
 export default function TableFieldSelect({
   tableId,
@@ -37,7 +45,8 @@ export default function TableFieldSelect({
   onChange,
   endContent,
   isPending,
-  selectType,
+  qk,
+  ...other
 }: TableFieldSelectProps) {
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
   const setSelectedId = useStore(state => state.setSelectedId);
@@ -54,7 +63,7 @@ export default function TableFieldSelect({
   );
 
   const content = useMemo(() => {
-    switch (selectType) {
+    switch (other.selectType) {
       case QK.FORMATS:
         return (
           <SelectFormat
@@ -82,8 +91,18 @@ export default function TableFieldSelect({
             onChange={changeHandler}
           />
         );
+      case QK.DECK_ARCHETYPE:
+        return (
+          <SelectDeckArchetype
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+            {...other}
+          />
+        );
     }
-  }, [isSelected, fieldName, value, changeHandler, selectType]);
+  }, [isSelected, fieldName, value, changeHandler, other]);
 
   const selectRow = useCallback(() => {
     if (editable && !isSelected) {

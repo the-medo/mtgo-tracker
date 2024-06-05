@@ -46,8 +46,11 @@ export default function SelectFormatVersion({
     if (value) setSelectedValue(value?.toString());
   }, [value]);
 
+  const selectedItem = data?.find(i => i.id.toString() === selectedValue);
+  const selectedKeys = selectedValue ? [selectedValue] : undefined;
+
   if (textOnly) {
-    return textValueFormatVersion(selectedValue);
+    return textValueFormatVersion(selectedItem);
   }
 
   return (
@@ -61,8 +64,8 @@ export default function SelectFormatVersion({
         name={name}
         isLoading={isLoading || isPending}
         // @ts-ignore
-        selectedKeys={[selectedValue]}
-        defaultSelectedKeys={[selectedValue]}
+        selectedKeys={selectedKeys}
+        defaultSelectedKeys={selectedKeys}
         description={description}
       >
         {(data ?? []).map(fv => (
