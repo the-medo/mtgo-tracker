@@ -19,6 +19,17 @@ export const authOptions: NextAuthOptions = {
       return { ...session, user: { ...session.user, id: user.id, isAdmin: user.isAdmin } };
     },
   },
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      if (isNewUser) {
+        await prisma.userQOL.create({
+          data: {
+            userId: user.id,
+          },
+        });
+      }
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

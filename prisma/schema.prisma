@@ -54,6 +54,7 @@ model User {
   isPublic             Boolean   @default(false)
   isAdmin              Boolean   @default(false)
 
+  UserInfo     UserQOL[]
   Events     Event[]
   Matches    Match[] @relation("User")
   OppMatches Match[] @relation("OppUser")
@@ -154,6 +155,7 @@ model Deck {
   link          String?
   service       DeckServiceType?
   serviceDeckId String?
+  lastPlayed DateTime?
 
   formatId        Int
   formatVersionId Int
@@ -289,4 +291,13 @@ model DeckTag {
   deck Deck @relation(fields: [deckId], references: [id])
 
   @@id([tagId, deckId])
+}
+
+model UserQOL {
+  userId String @id
+
+  lastUsedIds Json?
+  filters Json?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
