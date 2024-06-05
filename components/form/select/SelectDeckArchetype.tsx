@@ -3,10 +3,7 @@ import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'r
 import { DeckArchetype, Format } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
-import {
-  useDeckArchetypes,
-  useInfiniteDeckArchetypes,
-} from '@/app/api/deck-archetype/getDeckArchetypes';
+import { useInfiniteDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { parseNumber } from '@/app/api/parsers';
 

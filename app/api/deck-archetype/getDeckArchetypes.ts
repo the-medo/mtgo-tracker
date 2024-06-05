@@ -11,8 +11,6 @@ export async function getDeckArchetypes({ where, orderBy, skip, take }: GetDeckA
   const params = createQueryApiParams({ where, orderBy, skip, take });
   const f = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/deck-archetype${params}`);
 
-  // return await f.json();
-  // //==
   const jsonData = (await f.json()) as Stringify<DeckArchetype>[];
   return jsonData.map(j => ({
     ...j,
@@ -20,15 +18,6 @@ export async function getDeckArchetypes({ where, orderBy, skip, take }: GetDeckA
     formatId: parseNumber(j.formatId),
     archetypeGroupId: parseNumber(j.archetypeGroupId),
   })) as DeckArchetype[];
-}
-
-export function useDeckArchetypes(request: GetDeckArchetypesRequest = {}) {
-  const queryFn = useCallback(() => getDeckArchetypes(request), [request]);
-
-  return useQuery({
-    queryKey: [QK.DECK_ARCHETYPE, request],
-    queryFn,
-  });
 }
 
 export function useInfiniteDeckArchetypes(request: GetDeckArchetypesRequest = {}) {

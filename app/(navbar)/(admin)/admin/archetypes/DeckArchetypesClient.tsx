@@ -7,10 +7,7 @@ import { Key } from 'react';
 import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
 import { QK } from '@/app/api/queryHelpers';
-import {
-  useDeckArchetypes,
-  useInfiniteDeckArchetypes,
-} from '@/app/api/deck-archetype/getDeckArchetypes';
+import { useInfiniteDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
 import DeckArchetypesForm from '@/app/(navbar)/(admin)/admin/archetypes/DeckArchetypesForm';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { Spinner } from '@nextui-org/spinner';

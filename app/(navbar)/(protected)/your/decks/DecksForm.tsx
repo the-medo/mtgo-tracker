@@ -4,19 +4,22 @@ import { Input } from '@nextui-org/input';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import Title from '@/components/typography/Title';
-import { useCallback, useRef, useState } from 'react';
+import { ChangeEventHandler, useCallback, useRef, useState } from 'react';
 import SelectFormatVersion from '@/components/form/select/SelectFormatVersion';
 import useSimplePost from '@/app/api/useSimplePost';
 import { QK } from '@/app/api/queryHelpers';
 import SelectFormat from '@/components/form/select/SelectFormat';
-import SelectArchetypeGroup from '@/components/form/select/SelectArchetypeGroup';
 import { useQuery } from '@tanstack/react-query';
 import { getFormats } from '@/app/api/format/getFormats';
+import { parseDeckLink } from '@/app/api/parsers';
+import SelectDeckArchetype from '@/components/form/select/SelectDeckArchetype';
 
 export default function DecksForm() {
   const ref = useRef<HTMLFormElement>(null);
   const { mutate } = useSimplePost(QK.DECK);
-  const [selectedFormatVersion, setSelectedFormatVersion] = useState();
+  const [selectedFormatVersion, setSelectedFormatVersion] = useState<string>();
+  const [validatedLink, setValidatedLink] = useState(true);
+  const [formatId, setFormatId] = useState<number>();
 
   const { isPending, data: formats } = useQuery({
     queryKey: [QK.FORMATS],
@@ -25,14 +28,19 @@ export default function DecksForm() {
 
   const createDeck = useCallback(
     async (formData: FormData) => {
-      ref.current?.reset();
-
-      const latestFormatVersionId = formData.get('latestFormatVersionId') as string | undefined;
+      const formatId = formData.get('formatId') as string | undefined;
+      const formatVersionId = formData.get('formatVersionId') as string | undefined;
+      const deckArchetypeId = formData.get('deckArchetypeId') as string | undefined;
 
       const data = {
         name: formData.get('name'),
-        latestFormatVersionId: latestFormatVersionId ? parseInt(latestFormatVersionId) : undefined,
+        link: formData.get('link'),
+        formatId: formatId ? parseInt(formatId) : undefined,
+        formatVersionId: formatVersionId ? parseInt(formatVersionId) : undefined,
+        deckArchetypeId: deckArchetypeId ? parseInt(deckArchetypeId) : undefined,
       };
+
+      ref.current?.reset();
 
       mutate(data);
     },
@@ -40,16 +48,19 @@ export default function DecksForm() {
   );
 
   const onFormatChange = useCallback(
-    id => {
-      console.log('FORMAT CHANGED!', id);
+    (id: string | number) => {
       const newFormat = formats?.find(f => f.id.toString() === id);
       if (newFormat) {
-        console.log('new format found');
-        setSelectedFormatVersion(newFormat.latestFormatVersionId);
+        setFormatId(newFormat.id);
+        setSelectedFormatVersion(newFormat.latestFormatVersionId?.toString());
       }
     },
     [formats],
   );
+
+  const onLinkChange: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
+    setValidatedLink(parseDeckLink(e.target.value) !== false);
+  }, []);
 
   return (
     <Card className="w-[300px]">
@@ -65,6 +76,9 @@ export default function DecksForm() {
             size="sm"
             name="link"
             description="Link from Moxfield or MtgGoldfish"
+            onChange={onLinkChange}
+            isInvalid={!validatedLink}
+            errorMessage="Invalid deck link"
           />
           <SelectFormat name="formatId" onChange={onFormatChange} />
           <SelectFormatVersion
@@ -72,6 +86,7 @@ export default function DecksForm() {
             value={selectedFormatVersion}
             description='Automatically changes to "latest" after format change'
           />
+          {formatId && <SelectDeckArchetype name="deckArchetypeId" formatId={formatId} />}
           <Button type="submit">Create</Button>
         </form>
       </CardBody>
