@@ -41,9 +41,10 @@ export default function useSimplePost<T extends QK>(qk: QK) {
       queryClient.setQueryData([qk], context?.previousData);
     },
     onSuccess: data => {
-      queryClient.setQueryData([qk], (old: QTypes[T]) => [
-        ...(old ?? []).map(o => (o.id === -1 ? { ...o, id: data.id } : o)),
-      ]);
+      // queryClient.setQueryData([qk], (old: QTypes[T]) => [
+      //   ...(old ?? []).map(o => (o.id === -1 ? { ...o, id: data.id } : o)),
+      // ]);
+      queryClient.invalidateQueries({ queryKey: [qk] });
     },
   });
 }

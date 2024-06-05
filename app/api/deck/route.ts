@@ -9,21 +9,27 @@ export async function POST(req: Request) {
   const data = await req.json();
 
   if (session?.user) {
+    let linkObject = {};
     const parsedLink = parseDeckLink(data.link);
-    if (!parsedLink) {
-      return NextResponse.json({ error: 'Incorrect link to the deck' }, { status: 403 });
+    if (parsedLink) {
+      linkObject = {
+        link: parsedLink.link,
+        service: parsedLink.service,
+        serviceDeckId: parsedLink.serviceDeckId,
+      };
     }
 
     const record = await prisma.deck.create({
       data: {
+        ...linkObject,
         userId: session.user?.id,
-        link: parsedLink.link,
-        service: parsedLink.service,
-        serviceDeckId: parsedLink.serviceDeckId,
         name: parseString(data.name) ?? '',
-        formatId: parseNumber(data.formatId),
-        formatVersionId: parseNumber(data.formatVersionId),
-        deckArchetypeId: parseNumber(data.deckArchetypeId),
+        formatId: parseNumber(data.formatId)!,
+        formatVersionId: parseNumber(data.formatVersionId)!,
+        deckArchetypeId: parseNumber(data.deckArchetypeId)!,
+      },
+      include: {
+        deckArchetype: true,
       },
     });
 
@@ -34,6 +40,9 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const data = await prisma.deck.findMany({ orderBy: { name: 'asc' } });
+  const data = await prisma.deck.findMany({
+    orderBy: { name: 'asc' },
+    include: { deckArchetype: true },
+  });
   return NextResponse.json(data);
 }
