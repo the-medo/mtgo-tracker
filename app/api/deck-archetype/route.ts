@@ -3,6 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber, parseString } from '@/app/api/parsers';
+import { parseQueryApiParamsForPrisma } from '@/types/api-params';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -31,6 +32,15 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const data = await prisma.deckArchetype.findMany({ orderBy: { name: 'asc' } });
+  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'DeckArchetype'>(req.url);
+
+  console.log('where', where, 'orderBy', orderBy);
+
+  const data = await prisma.deckArchetype.findMany({
+    where,
+    orderBy: orderBy ?? { name: 'asc' },
+    skip,
+    take,
+  });
   return NextResponse.json(data);
 }
