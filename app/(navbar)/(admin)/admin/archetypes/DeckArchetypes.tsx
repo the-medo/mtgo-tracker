@@ -10,7 +10,7 @@ export default async function DeckArchetypes() {
 
   await queryClient.prefetchQuery({
     queryKey: [QK.DECK_ARCHETYPE],
-    queryFn: getDeckArchetypes,
+    queryFn: () => getDeckArchetypes,
   });
 
   return <DeckArchetypesClient />;

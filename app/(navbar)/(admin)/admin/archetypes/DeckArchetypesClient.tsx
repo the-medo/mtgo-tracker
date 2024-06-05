@@ -6,11 +6,14 @@ import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextu
 import { Key } from 'react';
 import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
-import { useQuery } from '@tanstack/react-query';
-
 import { QK } from '@/app/api/queryHelpers';
-import { getDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
+import {
+  useDeckArchetypes,
+  useInfiniteDeckArchetypes,
+} from '@/app/api/deck-archetype/getDeckArchetypes';
 import DeckArchetypesForm from '@/app/(navbar)/(admin)/admin/archetypes/DeckArchetypesForm';
+import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
+import { Spinner } from '@nextui-org/spinner';
 
 const TABLE_ID = 'DECK_ARCHETYPES';
 
@@ -76,14 +79,33 @@ const renderCell = (data: DeckArchetype, columnKey: Key) => {
 interface Props {}
 
 export default function DeckArchetypesClient({}: Props) {
-  const { data } = useQuery({
-    queryKey: [QK.DECK_ARCHETYPE],
-    queryFn: getDeckArchetypes,
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDeckArchetypes();
+
+  const [loaderRef, scrollerRef] = useInfiniteScroll({
+    hasMore: hasNextPage,
+    onLoadMore: fetchNextPage,
   });
+
+  const items = data?.pages?.flat() ?? [];
 
   return (
     <div className="flex flex-row gap-4">
-      <Table<As<DeckArchetype>> aria-label="Table of Deck archetypes">
+      <Table<As<DeckArchetype>>
+        isHeaderSticky
+        aria-label="Table of Deck archetypes"
+        baseRef={scrollerRef}
+        bottomContent={
+          hasNextPage ? (
+            <div className="flex w-full justify-center">
+              <Spinner ref={loaderRef} />
+            </div>
+          ) : null
+        }
+        classNames={{
+          base: 'max-h-[520px]',
+          // table: 'min-h-[400px]',
+        }}
+      >
         <TableHeader columns={columns}>
           {column => (
             <TableColumn key={column.uid} width={column.maxWidth}>
@@ -91,7 +113,11 @@ export default function DeckArchetypesClient({}: Props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={data ?? []}>
+        <TableBody
+          emptyContent="No deck archetypes to display."
+          isLoading={isFetching}
+          items={items}
+        >
           {item => (
             <TableRow key={item.id} className="hover:bg-zinc-50">
               {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
