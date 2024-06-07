@@ -128,7 +128,6 @@ export default function DecksClient({}: Props) {
           )}
         </TableBody>
       </Table>
-      <DecksForm />
     </div>
   );
 }

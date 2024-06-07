@@ -2,8 +2,6 @@
 
 import { Input } from '@nextui-org/input';
 import { Button } from '@nextui-org/button';
-import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import Title from '@/components/typography/Title';
 import { ChangeEventHandler, useCallback, useRef, useState } from 'react';
 import SelectFormatVersion from '@/components/form/select/SelectFormatVersion';
 import useSimplePost from '@/app/api/useSimplePost';
@@ -63,33 +61,26 @@ export default function DecksForm() {
   }, []);
 
   return (
-    <Card className="w-[300px]">
-      <CardHeader>
-        <Title title="New Deck" />
-      </CardHeader>
-      <CardBody>
-        <form ref={ref} action={createDeck} className="flex flex-col gap-2">
-          <Input type="text" label="Name" size="sm" name="name" />
-          <Input
-            type="text"
-            label="Link"
-            size="sm"
-            name="link"
-            description="Link from Moxfield or MtgGoldfish"
-            onChange={onLinkChange}
-            isInvalid={!validatedLink}
-            errorMessage="Invalid deck link"
-          />
-          <SelectFormat name="formatId" onChange={onFormatChange} />
-          <SelectFormatVersion
-            name="formatVersionId"
-            value={selectedFormatVersion}
-            description='Automatically changes to "latest" after format change'
-          />
-          {formatId && <SelectDeckArchetype name="deckArchetypeId" formatId={formatId} />}
-          <Button type="submit">Create</Button>
-        </form>
-      </CardBody>
-    </Card>
+    <form ref={ref} action={createDeck} className="flex flex-col gap-2">
+      <Input type="text" label="Name" size="sm" name="name" />
+      <Input
+        type="text"
+        label="Link"
+        size="sm"
+        name="link"
+        description="Link from Moxfield or MtgGoldfish"
+        onChange={onLinkChange}
+        isInvalid={!validatedLink}
+        errorMessage="Invalid deck link"
+      />
+      <SelectFormat name="formatId" onChange={onFormatChange} />
+      <SelectFormatVersion
+        name="formatVersionId"
+        value={selectedFormatVersion}
+        description='Automatically changes to "latest" after format change'
+      />
+      {formatId && <SelectDeckArchetype name="deckArchetypeId" formatId={formatId} />}
+      <Button type="submit">Create</Button>
+    </form>
   );
 }

@@ -11,7 +11,7 @@ export default async function NavbarLayout({
       <NavMenuTop />
       <div className="flex flex-row grow">
         <NavMenuLeft />
-        <div className="w-full flex flex-col p-4">{children}</div>
+        {children}
       </div>
     </div>
   );

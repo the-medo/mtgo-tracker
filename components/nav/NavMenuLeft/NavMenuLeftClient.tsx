@@ -33,7 +33,7 @@ interface Props {
 
 export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
   return (
-    <div className="w-[280px] border-r-1 flex flex-col p-4 text-default-600">
+    <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600">
       {isAuthenticated && (
         <Listbox variant="flat" aria-label="Side menu">
           <ListboxSection title="YOUR STUFF">
