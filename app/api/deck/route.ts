@@ -47,7 +47,7 @@ export async function GET(req: Request) {
 
   const data = await prisma.deck.findMany({
     where,
-    orderBy: orderBy ?? { name: 'asc' },
+    orderBy: orderBy ?? { createdAt: 'desc' },
     skip,
     take,
     include: { deckArchetype: true },

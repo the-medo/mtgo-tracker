@@ -155,7 +155,8 @@ model Deck {
   link          String?
   service       DeckServiceType?
   serviceDeckId String?
-  lastPlayed DateTime?
+  lastPlayedAt DateTime?
+  createdAt DateTime? @default(now())
 
   formatId        Int
   formatVersionId Int
