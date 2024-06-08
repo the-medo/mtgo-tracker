@@ -5,29 +5,30 @@ import { parseDate, today } from '@internationalized/date';
 import { TbX } from 'react-icons/tb';
 import { Divider } from '@nextui-org/divider';
 
-type DateOrRangeValue =
+export type DateOrRangeValue =
   | {
       type: 'date';
-      value: string;
+      value?: string;
     }
   | {
       type: 'range';
-      valueFrom: string;
-      valueTo: string;
+      valueFrom?: string;
+      valueTo?: string;
     };
 
 type DateOrRangePickerProps = {
   label: string;
   value?: DateOrRangeValue;
+  onChange?: (v: DateOrRangeValue) => void;
 };
 
 const parseDateOrRangeValueToDateFrom = (s: DateOrRangeValue | undefined): CalendarDate | null => {
   if (!s) return null;
   switch (s.type) {
     case 'date':
-      return parseDate(s.value);
+      return s.value ? parseDate(s.value) : null;
     case 'range':
-      return parseDate(s.valueFrom);
+      return s.valueFrom ? parseDate(s.valueFrom) : null;
   }
 };
 
@@ -37,35 +38,73 @@ const parseDateOrRangeValueToDateTo = (s: DateOrRangeValue | undefined): Calenda
     case 'date':
       return today('GMT');
     case 'range':
-      return parseDate(s.valueTo);
+      return s.valueTo ? parseDate(s.valueTo) : null;
   }
 };
 
-export default function DateOrRangePicker({ label, value }: DateOrRangePickerProps) {
+export default function DateOrRangePicker({ label, value, onChange }: DateOrRangePickerProps) {
   const [type, setType] = useState<DateOrRangeValue['type']>(value?.type || 'date');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [dateFrom, setDateFrom] = useState(parseDateOrRangeValueToDateFrom(value));
   const [dateTo, setDateTo] = useState(parseDateOrRangeValueToDateTo(value));
 
-  const onDateChange = useCallback((e: CalendarDate) => {
-    console.log('onDateChange', e);
-    setDateFrom(e);
-    setIsOpen(false);
-  }, []);
+  const onDateChange = useCallback(
+    (e: CalendarDate) => {
+      console.log('onDateChange', e, e.toString());
+      setDateFrom(e);
+      setIsOpen(false);
+      if (onChange) {
+        onChange({
+          type: 'date',
+          value: e.toString(),
+        });
+      }
+    },
+    [onChange],
+  );
 
-  const onDateRangeChange = useCallback((e: RangeValue<CalendarDate>) => {
-    console.log('onDateRangeChange', e);
-    setDateFrom(e.start);
-    setDateTo(e.end);
-    setIsOpen(false);
-  }, []);
+  const onDateRangeChange = useCallback(
+    (e: RangeValue<CalendarDate>) => {
+      console.log('onDateRangeChange', e, 'start', e.start.toString(), 'end', e.end.toString());
+      setDateFrom(e.start);
+      setDateTo(e.end);
+      setIsOpen(false);
+
+      if (onChange) {
+        onChange({
+          type: 'range',
+          valueFrom: e.start.toString(),
+          valueTo: e.end.toString(),
+        });
+      }
+    },
+    [onChange],
+  );
 
   const onClear = useCallback(() => {
     setDateFrom(null);
     setDateTo(null);
     setIsOpen(false);
-  }, []);
+
+    if (onChange) {
+      switch (type) {
+        case 'date':
+          onChange({
+            type: 'date',
+            value: undefined,
+          });
+          break;
+        case 'range':
+          onChange({
+            type: 'range',
+            valueFrom: undefined,
+            valueTo: undefined,
+          });
+          break;
+      }
+    }
+  }, [onChange, type]);
 
   const toggleType = useCallback(() => {
     setType(p => (p === 'date' ? 'range' : 'date'));
@@ -86,7 +125,7 @@ export default function DateOrRangePicker({ label, value }: DateOrRangePickerPro
 
   const calendarBottomContent = useMemo(() => {
     return (
-      <div className="flex flex-col w-[500px] p-4 gap-2 items-center">
+      <div className="flex flex-col max-w-[500px] p-4 gap-2 items-center">
         <Divider />
         <span className="text-xs">
           "Date from" always take time period from selected date till today.
@@ -113,7 +152,7 @@ export default function DateOrRangePicker({ label, value }: DateOrRangePickerPro
         <DatePicker<CalendarDate>
           key="DateOrRangePicker"
           size="sm"
-          label={label}
+          label={`${label} (from)`}
           value={dateFrom}
           onChange={onDateChange}
           isOpen={isOpen}
@@ -131,7 +170,7 @@ export default function DateOrRangePicker({ label, value }: DateOrRangePickerPro
       return (
         <DateRangePicker
           key="DateOrRangePicker"
-          label={label}
+          label={`${label} (range)`}
           onChange={onDateRangeChange}
           value={rangeValue}
           visibleMonths={2}

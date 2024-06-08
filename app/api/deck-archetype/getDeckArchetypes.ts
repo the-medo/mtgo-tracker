@@ -1,7 +1,14 @@
 import { parseNumber, Stringify } from '@/app/api/parsers';
 import { DeckArchetype, Prisma } from '@prisma/client';
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
-import { QueryFunction, QueryKey, useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  QueryFunction,
+  QueryKey,
+  SkipToken,
+  skipToken,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import { useCallback } from 'react';
 
@@ -20,7 +27,10 @@ export async function getDeckArchetypes({ where, orderBy, skip, take }: GetDeckA
   })) as DeckArchetype[];
 }
 
-export function useInfiniteDeckArchetypes(request: GetDeckArchetypesRequest = {}) {
+export function useInfiniteDeckArchetypes(
+  request: GetDeckArchetypesRequest = {},
+  skipQuery?: boolean,
+) {
   const queryFn: QueryFunction<DeckArchetype[], QueryKey, number> = useCallback(
     ({ pageParam }) => getDeckArchetypes({ ...request, skip: pageParam, take: request.take ?? 10 }),
     [request],
@@ -28,7 +38,7 @@ export function useInfiniteDeckArchetypes(request: GetDeckArchetypesRequest = {}
 
   return useInfiniteQuery({
     queryKey: [QK.DECK_ARCHETYPE, request],
-    queryFn,
+    queryFn: skipQuery ? skipToken : queryFn,
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const entryCount = pages.reduce((p, c) => p + c.length, 0);

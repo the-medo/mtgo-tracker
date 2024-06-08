@@ -22,8 +22,9 @@ export default function DecksFilters() {
     <div className="flex flex-col gap-4 pb-4">
       <Input size="sm" label="Search..." />
       <SelectFormat onChange={onFormatChange} />
-      {formatId && <SelectDeckArchetype formatId={formatId} onChange={onDeckArchetypeChange} />}
+      <SelectDeckArchetype formatId={formatId} onChange={onDeckArchetypeChange} />
       <DateOrRangePicker label="Last played" />
+      <DateOrRangePicker label="Created" />
     </div>
   );
 }

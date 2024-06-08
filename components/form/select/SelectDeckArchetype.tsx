@@ -14,7 +14,7 @@ export function textValueDeckArchetype(f: DeckArchetype | undefined): string {
 
 export type SelectDeckArchetypePropsOuter = {
   selectType: QK.DECK_ARCHETYPE;
-  formatId: number;
+  formatId?: number;
   preselectedItem?: DeckArchetype;
 };
 
@@ -30,9 +30,12 @@ export default function SelectDeckArchetype({
 }: SelectDeckArchetypeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDeckArchetypes({
-    where: { formatId: parseNumber(formatId) },
-  });
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDeckArchetypes(
+    {
+      where: { formatId: parseNumber(formatId) },
+    },
+    formatId === undefined,
+  );
 
   const [, scrollerRef] = useInfiniteScroll({
     hasMore: hasNextPage,
@@ -80,6 +83,7 @@ export default function SelectDeckArchetype({
         name={name}
         scrollRef={scrollerRef}
         isLoading={isLoading || isFetching}
+        isDisabled={!data}
         // @ts-ignore
         selectedKeys={selectedKeys}
         defaultSelectedKeys={selectedKeys}
