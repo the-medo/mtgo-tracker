@@ -6,7 +6,7 @@ import SelectFormat from '@/components/form/select/SelectFormat';
 import SelectDeckArchetype from '@/components/form/select/SelectDeckArchetype';
 import { useCallback, useState } from 'react';
 import { parseNumber } from '@/app/api/parsers';
-import { DatePicker } from '@nextui-org/react';
+import DateOrRangePicker from '@/components/form/DateOrRangePicker';
 
 export default function DecksFilters() {
   const [formatId, setFormatId] = useState<number>();
@@ -23,7 +23,7 @@ export default function DecksFilters() {
       <Input size="sm" label="Search..." />
       <SelectFormat onChange={onFormatChange} />
       {formatId && <SelectDeckArchetype formatId={formatId} onChange={onDeckArchetypeChange} />}
-      <DatePicker size="sm" label="Last changed" />
+      <DateOrRangePicker label="Last played" />
     </div>
   );
 }
