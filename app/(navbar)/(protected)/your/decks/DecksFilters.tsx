@@ -3,12 +3,13 @@
 import { Input } from '@nextui-org/input';
 import SelectFormat from '@/components/form/select/SelectFormat';
 import SelectDeckArchetype from '@/components/form/select/SelectDeckArchetype';
-import { ChangeEventHandler, useCallback } from 'react';
+import { ChangeEventHandler, useCallback, useState } from 'react';
 import { parseNumber } from '@/app/api/parsers';
 import DateOrRangePicker, { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { TbSearch } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import useStore from '@/store/store';
+import debounce from 'lodash.debounce';
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
@@ -19,6 +20,8 @@ const label = (
 
 export default function DecksFilters() {
   const deckName = useStore(state => state.decks.deckName);
+  const [localDeckName, setLocalDeckName] = useState(deckName);
+
   const formatId = useStore(state => state.decks.formatId);
   const deckArchetypeId = useStore(state => state.decks.deckArchetypeId);
   const lastPlayedAt = useStore(state => state.decks.lastPlayedAt);
@@ -27,10 +30,19 @@ export default function DecksFilters() {
   const clearFilter = useStore(state => state.clearFilter);
   const setFilter = useStore(state => state.setFilter);
 
-  const onDeckNameChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    e => setFilter('decks', 'deckName', e.target.value),
+  const onDeckNameChangeDebounced: ChangeEventHandler<HTMLInputElement> = useCallback(
+    debounce(e => setFilter('decks', 'deckName', e.target.value), 1000),
     [setFilter],
   );
+
+  const onDeckNameChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    e => {
+      setLocalDeckName(e.target.value);
+      onDeckNameChangeDebounced(e);
+    },
+    [onDeckNameChangeDebounced],
+  );
+
   const onFormatChange = useCallback(
     (id: string | number) => setFilter('decks', 'formatId', parseNumber(id)),
     [setFilter],
@@ -48,11 +60,14 @@ export default function DecksFilters() {
     [setFilter],
   );
 
-  const onClear = useCallback(() => clearFilter('decks'), [clearFilter]);
+  const onClear = useCallback(() => {
+    setLocalDeckName('');
+    clearFilter('decks');
+  }, [clearFilter]);
 
   return (
     <div className="flex flex-col gap-4 pb-4">
-      <Input size="sm" label={label} value={deckName ?? ''} onChange={onDeckNameChange} />
+      <Input size="sm" label={label} value={localDeckName ?? ''} onChange={onDeckNameChange} />
       <SelectFormat value={formatId} onChange={onFormatChange} />
       <SelectDeckArchetype
         value={deckArchetypeId}

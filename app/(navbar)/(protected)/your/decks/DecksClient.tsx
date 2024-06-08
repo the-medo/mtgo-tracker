@@ -1,19 +1,17 @@
 'use client';
 
 import { Deck } from '@prisma/client';
-import { As, Table } from '@nextui-org/react';
+import { As, SortDescriptor, Table } from '@nextui-org/react';
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
-import { Key } from 'react';
+import { Key, useCallback } from 'react';
 import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
-import { useQuery } from '@tanstack/react-query';
 
 import { QK } from '@/app/api/queryHelpers';
-import { getDecks, useInfiniteDecks } from '@/app/api/deck/getDecks';
-import DecksForm from '@/app/(navbar)/(protected)/your/decks/DecksForm';
+import { useInfiniteDecks } from '@/app/api/deck/getDecks';
 import { Spinner } from '@nextui-org/spinner';
-import { useInfiniteDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
+import useDeckFilters from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
 
 const TABLE_ID = 'DECKS';
 
@@ -84,7 +82,8 @@ const renderCell = (data: Deck, columnKey: Key) => {
 interface Props {}
 
 export default function DecksClient({}: Props) {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDecks();
+  const filter = useDeckFilters();
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteDecks(filter);
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore: hasNextPage,
@@ -93,8 +92,12 @@ export default function DecksClient({}: Props) {
 
   const items = data?.pages?.flat() ?? [];
 
+  const onSortChange = useCallback((descriptor: SortDescriptor) => {
+    console.log('onSortChange', descriptor);
+  }, []);
+
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-col gap-4">
       <Table<As<Deck>>
         isHeaderSticky
         aria-label="Table of decks"
@@ -109,15 +112,21 @@ export default function DecksClient({}: Props) {
         classNames={{
           base: 'max-h-[520px]',
         }}
+        onSortChange={onSortChange}
       >
         <TableHeader columns={columns}>
           {column => (
-            <TableColumn key={column.uid} width={column.maxWidth}>
+            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting>
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent="No decks to display." isLoading={isFetching} items={items}>
+        <TableBody
+          emptyContent="No decks to display."
+          isLoading={isLoading}
+          loadingContent={<Spinner color="default" label="Loading..." />}
+          items={items}
+        >
           {item => (
             <TableRow
               key={item.id}

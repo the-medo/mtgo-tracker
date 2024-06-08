@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 
 /* prettier-ignore */
 export type WhereInput<T> = T extends 'DeckArchetype' ? Prisma.DeckArchetypeWhereInput
@@ -71,4 +72,32 @@ export const parseQueryApiParamsForPrisma = <T extends Prisma.ModelName>(
     take: parsedTake,
     skip: parsedSkip,
   };
+};
+
+export const parseDateOrRangeValueToCondition = (i: DateOrRangeValue | undefined) => {
+  if (!i) return undefined;
+  if (i.type === 'date' && i.value) {
+    return {
+      gte: new Date(i.value),
+    };
+  } else if (i.type === 'range' && i.valueFrom && i.valueTo) {
+    return {
+      gte: new Date(i.valueFrom),
+      lte: new Date(i.valueTo),
+    };
+  }
+  return undefined;
+};
+
+export const parseStringToContainsCondition = (
+  i: string | undefined,
+): Prisma.StringNullableFilter | undefined => {
+  if (!i) return undefined;
+  if (i.length > 0) {
+    return {
+      contains: i,
+      mode: 'insensitive',
+    };
+  }
+  return undefined;
 };
