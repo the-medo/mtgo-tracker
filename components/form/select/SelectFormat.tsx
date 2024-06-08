@@ -1,10 +1,13 @@
 import { Select, SelectItem } from '@nextui-org/select';
-import { ChangeEventHandler, useCallback, useMemo } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Format } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { getFormats } from '@/app/api/format/getFormats';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
+import { TbTower } from 'react-icons/tb';
+import { parseNumber } from '@/app/api/parsers';
+import useSelect from '@/components/form/select/useSelect';
 
 export function textValueFormat(f: Format | undefined): string {
   if (!f) return ` - no format - `;
@@ -15,6 +18,13 @@ export type SelectFormatPropsOuter = {
   selectType: QK.FORMATS;
 };
 
+const label = (
+  <div className="flex flex-row gap-2 items-center">
+    <TbTower size={20} />
+    Format
+  </div>
+);
+
 type SelectFormatProps = BaseSelectProps & Omit<SelectFormatPropsOuter, 'selectType'>;
 
 export default function SelectFormat({
@@ -24,40 +34,34 @@ export default function SelectFormat({
   name,
   onChange,
 }: SelectFormatProps) {
+  const { localValue, onChangeHandler, getSelection } = useSelect<Format>({ value, onChange });
+
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMATS],
     queryFn: getFormats,
   });
 
-  const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
-    e => {
-      console.log('onChangeHandler', e);
-      if (onChange) {
-        onChange(e.target.value);
-      }
-    },
-    [onChange],
+  const { selectedItem, selectedKeys } = useMemo(
+    () => getSelection(data, localValue),
+    [getSelection, data, localValue],
   );
 
-  const selectedValue = useMemo(() => {
-    if (value) return data?.find(fv => fv.id === value);
-  }, [value, data]);
-
   if (textOnly) {
-    return textValueFormat(selectedValue);
+    return textValueFormat(selectedItem);
   }
 
   return (
     <Select
       size="sm"
-      label="Format"
+      label={label}
       selectionMode="single"
       className="max-w-xs"
       onChange={onChangeHandler}
       name={name}
       isLoading={isLoading || isPending}
       // @ts-ignore
-      defaultSelectedKeys={[selectedValue?.id.toString()]}
+      defaultSelectedKeys={selectedKeys}
+      selectedKeys={selectedKeys}
     >
       {(data ?? []).map(fv => (
         <SelectItem key={fv.id}>{textValueFormat(fv)}</SelectItem>

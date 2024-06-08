@@ -1,26 +1,26 @@
 import { Prisma } from '@prisma/client';
 
 /* prettier-ignore */
-type WhereInput<T> =  T extends 'DeckArchetype' ? Prisma.DeckArchetypeWhereInput
-                    : T extends 'Deck'          ? Prisma.DeckWhereInput
-                    : T extends 'Event'         ? Prisma.EventWhereInput
-                    : T extends 'Game'          ? Prisma.GameWhereInput
-                    : T extends 'Match'         ? Prisma.MatchWhereInput
-                    : T extends 'Tag'           ? Prisma.TagWhereInput
-                    : T extends 'Format'        ? Prisma.FormatWhereInput
-                    : T extends 'User'          ? Prisma.UserWhereInput
-                    : never;
+export type WhereInput<T> = T extends 'DeckArchetype' ? Prisma.DeckArchetypeWhereInput
+                          : T extends 'Deck'          ? Prisma.DeckWhereInput
+                          : T extends 'Event'         ? Prisma.EventWhereInput
+                          : T extends 'Game'          ? Prisma.GameWhereInput
+                          : T extends 'Match'         ? Prisma.MatchWhereInput
+                          : T extends 'Tag'           ? Prisma.TagWhereInput
+                          : T extends 'Format'        ? Prisma.FormatWhereInput
+                          : T extends 'User'          ? Prisma.UserWhereInput
+                          : never;
 
 /* prettier-ignore */
-type OrderByInput<T> =    T extends 'DeckArchetype' ? Prisma.DeckArchetypeOrderByWithRelationInput
-                        : T extends 'Deck'          ? Prisma.DeckOrderByWithRelationInput
-                        : T extends 'Event'         ? Prisma.EventOrderByWithRelationInput
-                        : T extends 'Game'          ? Prisma.GameOrderByWithRelationInput
-                        : T extends 'Match'         ? Prisma.MatchOrderByWithRelationInput
-                        : T extends 'Tag'           ? Prisma.TagOrderByWithRelationInput
-                        : T extends 'Format'        ? Prisma.FormatOrderByWithRelationInput
-                        : T extends 'User'          ? Prisma.UserOrderByWithRelationInput
-                        : never;
+export type OrderByInput<T> =   T extends 'DeckArchetype' ? Prisma.DeckArchetypeOrderByWithRelationInput
+                              : T extends 'Deck'          ? Prisma.DeckOrderByWithRelationInput
+                              : T extends 'Event'         ? Prisma.EventOrderByWithRelationInput
+                              : T extends 'Game'          ? Prisma.GameOrderByWithRelationInput
+                              : T extends 'Match'         ? Prisma.MatchOrderByWithRelationInput
+                              : T extends 'Tag'           ? Prisma.TagOrderByWithRelationInput
+                              : T extends 'Format'        ? Prisma.FormatOrderByWithRelationInput
+                              : T extends 'User'          ? Prisma.UserOrderByWithRelationInput
+                              : never;
 
 export type PrismaQueryApiParams<T extends Prisma.ModelName> = {
   where?: WhereInput<T>;

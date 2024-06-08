@@ -6,6 +6,7 @@ import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 import { useInfiniteDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { parseNumber } from '@/app/api/parsers';
+import { TbZeppelin } from 'react-icons/tb';
 
 export function textValueDeckArchetype(f: DeckArchetype | undefined): string {
   if (!f) return ` - no deck archetype - `;
@@ -19,6 +20,13 @@ export type SelectDeckArchetypePropsOuter = {
 };
 
 type SelectDeckArchetypeProps = BaseSelectProps & Omit<SelectDeckArchetypePropsOuter, 'selectType'>;
+
+const label = (
+  <div className="flex flex-row gap-2 items-center">
+    <TbZeppelin size={20} />
+    Deck archetype
+  </div>
+);
 
 export default function SelectDeckArchetype({
   textOnly,
@@ -68,7 +76,7 @@ export default function SelectDeckArchetype({
   const selectedKeys = selectedValue ? [selectedValue.id.toString()] : undefined;
 
   if (textOnly) {
-    console.log('textOnly', preselectedItem, selectedValue);
+    // console.log('textOnly', preselectedItem, selectedValue);
     return textValueDeckArchetype(selectedValue);
   }
 
@@ -76,7 +84,7 @@ export default function SelectDeckArchetype({
     <>
       <Select
         size="sm"
-        label="Deck archetype"
+        label={label}
         selectionMode="single"
         className="max-w-xs"
         onChange={onChangeHandler}

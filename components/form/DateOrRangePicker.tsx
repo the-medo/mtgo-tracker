@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CalendarDate, DatePicker, DateRangePicker, RangeValue } from '@nextui-org/react';
 import { Button } from '@nextui-org/button';
 import { parseDate, today } from '@internationalized/date';
@@ -48,6 +48,12 @@ export default function DateOrRangePicker({ label, value, onChange }: DateOrRang
 
   const [dateFrom, setDateFrom] = useState(parseDateOrRangeValueToDateFrom(value));
   const [dateTo, setDateTo] = useState(parseDateOrRangeValueToDateTo(value));
+
+  useEffect(() => {
+    setType(value?.type || 'date');
+    setDateFrom(parseDateOrRangeValueToDateFrom(value));
+    setDateTo(parseDateOrRangeValueToDateTo(value));
+  }, [value]);
 
   const onDateChange = useCallback(
     (e: CalendarDate) => {

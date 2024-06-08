@@ -47,7 +47,7 @@ export default function SelectFormatVersion({
   }, [value]);
 
   const selectedItem = data?.find(i => i.id.toString() === selectedValue);
-  const selectedKeys = selectedValue ? [selectedValue] : undefined;
+  const selectedKeys = selectedItem ? [selectedItem.id?.toString()] : undefined;
 
   if (textOnly) {
     return textValueFormatVersion(selectedItem);
