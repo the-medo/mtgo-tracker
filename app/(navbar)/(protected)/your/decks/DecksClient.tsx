@@ -12,6 +12,7 @@ import { useInfiniteDecks } from '@/app/api/deck/getDecks';
 import { Spinner } from '@nextui-org/spinner';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import useDeckFilters from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
+import DateDisplay from '@/components/typography/DateDisplay';
 
 const TABLE_ID = 'DECKS';
 
@@ -19,6 +20,8 @@ const columns = [
   { name: 'Name', uid: 'name' },
   { name: 'Format', uid: 'formatId', maxWidth: 180 },
   { name: 'Archetype', uid: 'deckArchetypeId', maxWidth: 180 },
+  { name: 'Last played at', uid: 'lastPlayedAt', maxWidth: 120 },
+  { name: 'Created at', uid: 'createdAt', maxWidth: 120 },
   { name: 'Actions', uid: 'actions', maxWidth: 80 },
 ];
 
@@ -70,6 +73,10 @@ const renderCell = (data: Deck, columnKey: Key) => {
           editable={true}
         />
       );
+    case 'lastPlayedAt':
+      return <DateDisplay date={data.lastPlayedAt} />;
+    case 'createdAt':
+      return <DateDisplay date={data.createdAt} />;
     case 'actions':
       return (
         <div className="relative flex items-center gap-2">
