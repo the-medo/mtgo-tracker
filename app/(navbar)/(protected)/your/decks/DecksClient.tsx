@@ -13,6 +13,7 @@ import { Spinner } from '@nextui-org/spinner';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import useDeckFilters from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
 import DateDisplay from '@/components/typography/DateDisplay';
+import EditButton from '@/components/form/table-form/EditButton';
 
 const TABLE_ID = 'DECKS';
 
@@ -39,7 +40,6 @@ const renderCell = (data: Deck, columnKey: Key) => {
             fieldName="name"
             label="Name"
             value={data.name ?? undefined}
-            editable={false}
           />
         </div>
       );
@@ -54,7 +54,6 @@ const renderCell = (data: Deck, columnKey: Key) => {
           fieldName="formatId"
           label="Format"
           value={data.formatId ?? undefined}
-          editable={true}
         />
       );
     case 'deckArchetypeId':
@@ -70,7 +69,6 @@ const renderCell = (data: Deck, columnKey: Key) => {
           label="Archetype"
           // @ts-ignore
           preselectedItem={data.deckArchetype}
-          editable={true}
         />
       );
     case 'lastPlayedAt':
@@ -79,7 +77,8 @@ const renderCell = (data: Deck, columnKey: Key) => {
       return <DateDisplay date={data.createdAt} />;
     case 'actions':
       return (
-        <div className="relative flex items-center gap-2">
+        <div className="relative flex flex-row items-center gap-2">
+          <EditButton tableId={TABLE_ID} id={data.id} qk={QK.DECK} />
           <DeleteButton id={data.id} qk={QK.DECK} />
         </div>
       );
