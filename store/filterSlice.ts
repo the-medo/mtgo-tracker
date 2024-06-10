@@ -12,7 +12,7 @@ export type FilterState = {
     deckArchetypeId?: number;
     lastPlayedAt?: DateOrRangeValue;
     createdAt?: DateOrRangeValue;
-    order?: OrderByInput<Deck>;
+    orderBy?: OrderByInput<'Deck'>;
   };
 };
 

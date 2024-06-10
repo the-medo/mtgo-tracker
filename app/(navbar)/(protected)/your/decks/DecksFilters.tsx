@@ -10,6 +10,9 @@ import { TbSearch } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import useStore from '@/store/store';
 import debounce from 'lodash.debounce';
+import SelectSorter from '@/components/form/select/SelectSorter';
+import { deckSorterOptions } from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
+import { OrderByInput } from '@/types/api-params';
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
@@ -26,6 +29,7 @@ export default function DecksFilters() {
   const deckArchetypeId = useStore(state => state.decks.deckArchetypeId);
   const lastPlayedAt = useStore(state => state.decks.lastPlayedAt);
   const createdAt = useStore(state => state.decks.createdAt);
+  const orderBy = useStore(state => state.decks.orderBy);
 
   const clearFilter = useStore(state => state.clearFilter);
   const setFilter = useStore(state => state.setFilter);
@@ -59,6 +63,10 @@ export default function DecksFilters() {
     (v: DateOrRangeValue) => setFilter('decks', 'createdAt', v),
     [setFilter],
   );
+  const onOrderByChange = useCallback(
+    (v: OrderByInput<'Deck'>) => setFilter('decks', 'orderBy', v),
+    [setFilter],
+  );
 
   const onClear = useCallback(() => {
     setLocalDeckName('');
@@ -67,6 +75,7 @@ export default function DecksFilters() {
 
   return (
     <div className="flex flex-col gap-4 pb-4">
+      <span className="pl-1 text-tiny text-foreground-500">FILTERS</span>
       <Input size="sm" label={label} value={localDeckName ?? ''} onChange={onDeckNameChange} />
       <SelectFormat value={formatId} onChange={onFormatChange} />
       <SelectDeckArchetype
@@ -76,8 +85,10 @@ export default function DecksFilters() {
       />
       <DateOrRangePicker label="Last played" value={lastPlayedAt} onChange={onLastPlayedAtChange} />
       <DateOrRangePicker label="Created" value={createdAt} onChange={onCreatedAtChange} />
+      <span className="pl-1 text-tiny text-foreground-500">SORT</span>
+      <SelectSorter data={deckSorterOptions} value={orderBy} onChange={onOrderByChange} />
       <Button onClick={onClear} size="sm">
-        Clear filters
+        Clear filters & sorting
       </Button>
     </div>
   );

@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
+import { ReactNode } from 'react';
 
 /* prettier-ignore */
 export type WhereInput<T> = T extends 'DeckArchetype' ? Prisma.DeckArchetypeWhereInput
@@ -22,6 +23,13 @@ export type OrderByInput<T> =   T extends 'DeckArchetype' ? Prisma.DeckArchetype
                               : T extends 'Format'        ? Prisma.FormatOrderByWithRelationInput
                               : T extends 'User'          ? Prisma.UserOrderByWithRelationInput
                               : never;
+
+export type SorterOption<T extends Prisma.ModelName> = {
+  field: string;
+  label: ReactNode | string;
+  orderBy: (direction?: 'desc' | 'asc') => OrderByInput<T>;
+  textValue?: string;
+};
 
 export type PrismaQueryApiParams<T extends Prisma.ModelName> = {
   where?: WhereInput<T>;

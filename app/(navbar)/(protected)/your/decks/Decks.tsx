@@ -1,6 +1,5 @@
 'use server';
 
-import FormatsClient from '@/app/(navbar)/(admin)/admin/formats/FormatsClient';
 import { QueryClient } from '@tanstack/react-query';
 import { getFormats } from '@/app/api/format/getFormats';
 import { QK } from '@/app/api/queryHelpers';
