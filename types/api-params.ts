@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { ReactNode } from 'react';
+import { SortDirection } from '@react-types/shared/src/collections';
 
 /* prettier-ignore */
 export type WhereInput<T> = T extends 'DeckArchetype' ? Prisma.DeckArchetypeWhereInput
@@ -109,3 +110,6 @@ export const parseStringToContainsCondition = (
   }
   return undefined;
 };
+
+export const transformTableSorterDirection = (input?: SortDirection): 'asc' | 'desc' =>
+  input === 'ascending' ? 'asc' : 'desc';

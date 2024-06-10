@@ -17,11 +17,11 @@ import DateDisplay from '@/components/typography/DateDisplay';
 const TABLE_ID = 'DECKS';
 
 const columns = [
-  { name: 'Name', uid: 'name' },
+  { name: 'Name', uid: 'name', sortable: true },
   { name: 'Format', uid: 'formatId', maxWidth: 180 },
-  { name: 'Archetype', uid: 'deckArchetypeId', maxWidth: 180 },
-  { name: 'Last played at', uid: 'lastPlayedAt', maxWidth: 120 },
-  { name: 'Created at', uid: 'createdAt', maxWidth: 120 },
+  { name: 'Archetype', uid: 'deckArchetypeId', maxWidth: 180, sortable: true },
+  { name: 'Last played at', uid: 'lastPlayedAt', maxWidth: 120, sortable: true },
+  { name: 'Created at', uid: 'createdAt', maxWidth: 120, sortable: true },
   { name: 'Actions', uid: 'actions', maxWidth: 80 },
 ];
 
@@ -89,8 +89,8 @@ const renderCell = (data: Deck, columnKey: Key) => {
 interface Props {}
 
 export default function DecksClient({}: Props) {
-  const filter = useDeckFilters();
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteDecks(filter);
+  const { filters, sortDescriptor, onSortChange } = useDeckFilters();
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteDecks(filters);
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore: hasNextPage,
@@ -98,10 +98,6 @@ export default function DecksClient({}: Props) {
   });
 
   const items = data?.pages?.flat() ?? [];
-
-  const onSortChange = useCallback((descriptor: SortDescriptor) => {
-    console.log('onSortChange', descriptor);
-  }, []);
 
   return (
     <div className="flex flex-col gap-4">
@@ -119,11 +115,12 @@ export default function DecksClient({}: Props) {
         classNames={{
           base: 'max-h-[520px]',
         }}
+        sortDescriptor={sortDescriptor}
         onSortChange={onSortChange}
       >
         <TableHeader columns={columns}>
           {column => (
-            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting>
+            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting={column.sortable}>
               {column.name}
             </TableColumn>
           )}
