@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { anyParser, QK, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 
 export type SimpleDeleteRequest = {
   id: string | number;
@@ -10,7 +10,7 @@ export default function useSimpleDelete<T extends QK>(qk: QK) {
 
   return useMutation({
     mutationFn: async (data: SimpleDeleteRequest): Promise<QTypes[T][number]> => {
-      const res = await fetch(`/api/${qk}/${data.id}`, {
+      const res = await fetch(`/api/${qkRedirect[qk] ?? qk}/${data.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

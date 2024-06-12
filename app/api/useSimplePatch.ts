@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { anyParser, QK, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 
 export type SimplePatchRequest = {
   id: string | number;
@@ -12,7 +12,7 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
 
   return useMutation({
     mutationFn: async (data: SimplePatchRequest): Promise<QTypes[T][number]> => {
-      const res = await fetch(`/api/${qk}/${data.id}`, {
+      const res = await fetch(`/api/${qkRedirect[qk] ?? qk}/${data.id}`, {
         method: 'PATCH',
         body: JSON.stringify({
           [data.field]: data.value,

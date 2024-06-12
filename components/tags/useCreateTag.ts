@@ -2,6 +2,7 @@ import { QK } from '@/app/api/queryHelpers';
 import useSimplePost from '@/app/api/useSimplePost';
 import { RefObject, useCallback } from 'react';
 import { TagType } from '@prisma/client';
+import { tagTypeToQK } from '@/app/api/tag/getTags';
 
 type Props = {
   type: TagType;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export default function useCreateTag({ type, formRef, inputRef }: Props) {
-  const { mutate, isPending } = useSimplePost(QK.TAG);
+  const { mutate, isPending } = useSimplePost(tagTypeToQK[type]);
 
   const createTag = useCallback(
     async (formData: FormData) => {

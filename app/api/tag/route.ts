@@ -41,6 +41,11 @@ export async function GET(req: Request) {
   }
 
   const data = await prisma.tag.findMany({
+    select: {
+      id: true,
+      name: true,
+      type: true,
+    },
     where: {
       ...where,
       userId: session?.user.id,

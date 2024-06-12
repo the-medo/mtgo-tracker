@@ -7,6 +7,10 @@ export enum QK {
   DECK_ARCHETYPE = 'deck-archetype',
   DECK = 'deck',
   TAG = 'tag',
+  TAG_DECK = 'tag-deck',
+  TAG_EVENT = 'tag-event',
+  TAG_MATCH = 'tag-match',
+  TAG_GAME = 'tag-game',
 }
 
 export type QTypes = {
@@ -16,6 +20,17 @@ export type QTypes = {
   [QK.DECK_ARCHETYPE]: DeckArchetype[];
   [QK.DECK]: Deck[];
   [QK.TAG]: Tag[];
+  [QK.TAG_DECK]: Tag[];
+  [QK.TAG_EVENT]: Tag[];
+  [QK.TAG_MATCH]: Tag[];
+  [QK.TAG_GAME]: Tag[];
+};
+
+export const qkRedirect: Partial<Record<QK, QK>> = {
+  [QK.TAG_DECK]: QK.TAG,
+  [QK.TAG_EVENT]: QK.TAG,
+  [QK.TAG_MATCH]: QK.TAG,
+  [QK.TAG_GAME]: QK.TAG,
 };
 
 const dateParser = (value: string | undefined): Date | undefined =>

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { QK, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 
 export type SimplePostRequest = Record<string, FormDataEntryValue | number | null | undefined>;
 
@@ -8,7 +8,7 @@ export default function useSimplePost<T extends QK>(qk: QK) {
 
   return useMutation({
     mutationFn: async (data: SimplePostRequest): Promise<QTypes[T][number]> => {
-      const res = await fetch(`/api/${qk}`, {
+      const res = await fetch(`/api/${qkRedirect[qk] ?? qk}`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -21,6 +21,7 @@ export default function useSimplePost<T extends QK>(qk: QK) {
     onMutate: async data => {
       await queryClient.cancelQueries({ queryKey: [qk] });
       const previousData = queryClient.getQueryData([qk]);
+      console.log('MUTATION!', previousData);
 
       const newData = {
         ...data,
