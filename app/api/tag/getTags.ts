@@ -47,8 +47,13 @@ export async function getTags({ where, orderBy, skip, take }: GetTagsRequest) {
 //   });
 // }
 
-export function useTags(tagType: TagType, request: GetTagsRequest = {}, skipQuery?: boolean) {
-  console.log('INSIDE useTags');
+const emptyRequest = {};
+
+export function useTags(
+  tagType: TagType,
+  request: GetTagsRequest = emptyRequest,
+  skipQuery?: boolean,
+) {
   const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(() => getTags({}), [request]);
 
   return useQuery({

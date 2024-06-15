@@ -8,7 +8,7 @@ import { TagType } from '@prisma/client';
 import { Spinner } from '@nextui-org/spinner';
 import { tagTypeToQK, useTags } from '@/app/api/tag/getTags';
 import { Chip } from '@nextui-org/chip';
-import { TbTag } from 'react-icons/tb';
+import { TbTag, TbTrash } from 'react-icons/tb';
 import useSimpleDelete from '@/app/api/useSimpleDelete';
 import useSimplePatch from '@/app/api/useSimplePatch';
 
@@ -21,7 +21,7 @@ export default function TagAdmin({ type }: TagAdminProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedId, setSelectedId] = useState<number>();
 
-  const value = inputRef?.current?.value ?? '';
+  const [value, setValue] = useState('');
 
   const { createTag, isPending } = useCreateTag({ type, formRef, inputRef });
   const { mutate: patchTag, isPending: isPendingPatch } = useSimplePatch(tagTypeToQK[type]);
@@ -56,16 +56,25 @@ export default function TagAdmin({ type }: TagAdminProps) {
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter') {
       formRef.current?.requestSubmit();
+    } else if (e.key === 'Escape') {
+      formRef.current?.reset();
+      setSelectedId(undefined);
     }
   };
 
   const selectTag = useCallback((id: number, name: string) => {
     setSelectedId(id);
     if (inputRef.current) {
-      console.log('Selecting... ', name);
-      inputRef.current.value = name;
+      setValue(name);
+      inputRef?.current?.focus();
     }
   }, []);
+
+  const onDelete = useCallback(() => {
+    if (selectedId) {
+      deleteTag({ id: selectedId });
+    }
+  }, [selectedId, deleteTag]);
 
   const buttonText = selectedId ? 'Update' : 'Create';
   const loading = isPending || isPendingPatch;
@@ -80,18 +89,36 @@ export default function TagAdmin({ type }: TagAdminProps) {
           name="name"
           startContent={<TbTag size={20} />}
           onKeyDown={handleKeyDown}
+          value={value}
+          onValueChange={setValue}
+          autoComplete="off"
         />
         <Button type="submit" size="sm" disabled={value.length === 0}>
           {loading ? <Spinner size="sm" color="primary" /> : buttonText}
+        </Button>
+        <Button
+          isIconOnly
+          disabled={!selectedId}
+          variant={selectedId ? undefined : 'flat'}
+          color="danger"
+          size="sm"
+          onClick={onDelete}
+        >
+          <TbTrash size={16} />
         </Button>
       </form>
       <div className="flex gap-2 flex-wrap">
         {data?.map((tag, index) => (
           <Chip
             key={tag.id}
-            variant={selectedId === tag.id ? 'shadow' : 'flat'}
+            variant={selectedId === tag.id ? 'bordered' : 'flat'}
             onClick={() => selectTag(tag.id, tag.name)}
-            onClose={() => deleteTag({ id: tag.id })}
+            // onClose={() => deleteTag({ id: tag.id })}
+            className={
+              selectedId === tag.id
+                ? 'cursor-pointer'
+                : 'border-2 border-transparent cursor-pointer'
+            }
           >
             {tag.name}
           </Chip>
