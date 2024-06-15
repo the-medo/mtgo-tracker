@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       },
       include: {
         deckArchetype: true,
+        DeckTags: true,
       },
     });
 
@@ -50,7 +51,7 @@ export async function GET(req: Request) {
     orderBy: orderBy ?? { createdAt: 'desc' },
     skip,
     take,
-    include: { deckArchetype: true },
+    include: { deckArchetype: true, DeckTags: true },
   });
 
   return NextResponse.json(data);
