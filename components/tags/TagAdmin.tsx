@@ -53,15 +53,6 @@ export default function TagAdmin({ type }: TagAdminProps) {
     [createTag, selectedId, patchTag],
   );
 
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
-    if (e.key === 'Enter') {
-      formRef.current?.requestSubmit();
-    } else if (e.key === 'Escape') {
-      formRef.current?.reset();
-      setSelectedId(undefined);
-    }
-  };
-
   const selectTag = useCallback((id: number, name: string) => {
     setSelectedId(id);
     if (inputRef.current) {
@@ -73,8 +64,20 @@ export default function TagAdmin({ type }: TagAdminProps) {
   const onDelete = useCallback(() => {
     if (selectedId) {
       deleteTag({ id: selectedId });
+      formRef?.current?.reset();
+      inputRef?.current?.focus();
+      setSelectedId(undefined);
     }
   }, [selectedId, deleteTag]);
+
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === 'Enter') {
+      formRef.current?.requestSubmit();
+    } else if (e.key === 'Escape') {
+      formRef.current?.reset();
+      setSelectedId(undefined);
+    }
+  };
 
   const buttonText = selectedId ? 'Update' : 'Create';
   const loading = isPending || isPendingPatch;

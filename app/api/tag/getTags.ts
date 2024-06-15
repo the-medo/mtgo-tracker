@@ -17,6 +17,13 @@ export const tagTypeToQK: Record<TagType, QK> = {
   [TagType.GAME]: QK.TAG_GAME,
 };
 
+export const qkToTagType: Partial<Record<QK, TagType>> = {
+  [QK.DECK]: TagType.DECK,
+  [QK.EVENT]: TagType.EVENT,
+  [QK.MATCH]: TagType.MATCH,
+  [QK.GAME]: TagType.GAME,
+} as const;
+
 export type GetTagsRequest = PrismaQueryApiParams<'Tag'>;
 
 export async function getTags({ where, orderBy, skip, take }: GetTagsRequest) {
@@ -47,14 +54,19 @@ export async function getTags({ where, orderBy, skip, take }: GetTagsRequest) {
 //   });
 // }
 
-const emptyRequest = {};
+export const emptyRequest = {};
 
 export function useTags(
-  tagType: TagType,
+  tagType: TagType | undefined,
   request: GetTagsRequest = emptyRequest,
   skipQuery?: boolean,
 ) {
-  const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(() => getTags({}), [request]);
+  if (!tagType) throw new Error('No tag type provided');
+
+  const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(
+    () => getTags(request),
+    [request],
+  );
 
   return useQuery({
     queryKey: [tagTypeToQK[tagType]],

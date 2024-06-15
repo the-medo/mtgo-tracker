@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDeckLink, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
+import { Prisma } from '@prisma/client';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -41,17 +42,26 @@ export async function POST(req: Request) {
   }
 }
 
+const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
+  include: {
+    deckArchetype: true,
+    DeckTags: true,
+  },
+});
+
+export type DeckExtended = Prisma.DeckGetPayload<typeof deckExtension>;
+
 export async function GET(req: Request) {
   const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Deck'>(req.url);
 
   console.log('where', where, 'orderBy', orderBy);
 
-  const data = await prisma.deck.findMany({
+  const data: DeckExtended[] = await prisma.deck.findMany({
     where,
     orderBy: orderBy ?? { createdAt: 'desc' },
     skip,
     take,
-    include: { deckArchetype: true, DeckTags: true },
+    ...deckExtension,
   });
 
   return NextResponse.json(data);

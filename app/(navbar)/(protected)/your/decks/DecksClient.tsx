@@ -14,11 +14,13 @@ import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import useDeckFilters from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
 import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
+import { DeckExtended } from '@/app/api/deck/route';
 
 const TABLE_ID = 'DECKS';
 
 const columns = [
   { name: 'Name', uid: 'name', sortable: true },
+  { name: 'Tags', uid: 'tags', maxWidth: 200 },
   { name: 'Format', uid: 'formatId', maxWidth: 180 },
   { name: 'Archetype', uid: 'deckArchetypeId', maxWidth: 180, sortable: true },
   { name: 'Last played at', uid: 'lastPlayedAt', maxWidth: 120, sortable: true },
@@ -26,7 +28,7 @@ const columns = [
   { name: 'Actions', uid: 'actions', maxWidth: 80 },
 ];
 
-const renderCell = (data: Deck, columnKey: Key) => {
+const renderCell = (data: DeckExtended, columnKey: Key) => {
   switch (columnKey) {
     case 'name':
       return (
@@ -42,6 +44,19 @@ const renderCell = (data: Deck, columnKey: Key) => {
             value={data.name ?? undefined}
           />
         </div>
+      );
+    case 'tags':
+      return (
+        <TableField
+          qk={QK.DECK}
+          type="tags"
+          tableId={TABLE_ID}
+          id={data.id}
+          fieldName="tags"
+          label="Tags"
+          // @ts-ignore
+          values={data.DeckTags}
+        />
       );
     case 'formatId':
       return (
@@ -100,7 +115,7 @@ export default function DecksClient({}: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Table<As<Deck>>
+      <Table<As<DeckExtended>>
         isHeaderSticky
         aria-label="Table of decks"
         baseRef={scrollerRef}

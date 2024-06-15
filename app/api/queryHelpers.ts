@@ -1,4 +1,13 @@
-import { ArchetypeGroup, Deck, DeckArchetype, Format, FormatVersion, Tag } from '@prisma/client';
+import {
+  ArchetypeGroup,
+  Deck,
+  DeckArchetype,
+  Format,
+  FormatVersion,
+  Game,
+  Match,
+  Tag,
+} from '@prisma/client';
 
 export enum QK {
   FORMAT_VERSIONS = 'format-version',
@@ -6,6 +15,9 @@ export enum QK {
   ARCHETYPE_GROUPS = 'archetype-group',
   DECK_ARCHETYPE = 'deck-archetype',
   DECK = 'deck',
+  EVENT = 'event',
+  MATCH = 'match',
+  GAME = 'game',
   TAG = 'tag',
   TAG_DECK = 'tag-deck',
   TAG_EVENT = 'tag-event',
@@ -19,6 +31,9 @@ export type QTypes = {
   [QK.ARCHETYPE_GROUPS]: ArchetypeGroup[];
   [QK.DECK_ARCHETYPE]: DeckArchetype[];
   [QK.DECK]: Deck[];
+  [QK.EVENT]: Event[];
+  [QK.MATCH]: Match[];
+  [QK.GAME]: Game[];
   [QK.TAG]: Tag[];
   [QK.TAG_DECK]: Tag[];
   [QK.TAG_EVENT]: Tag[];
