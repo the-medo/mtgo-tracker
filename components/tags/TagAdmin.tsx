@@ -111,7 +111,7 @@ export default function TagAdmin({ type }: TagAdminProps) {
         </Button>
       </form>
       <div className="flex gap-2 flex-wrap">
-        {data?.map((tag, index) => (
+        {(data ?? []).map((tag, index) => (
           <Chip
             key={tag.id}
             variant={selectedId === tag.id ? 'bordered' : 'flat'}

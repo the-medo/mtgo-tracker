@@ -33,27 +33,6 @@ export async function getTags({ where, orderBy, skip, take }: GetTagsRequest) {
   return await f.json();
 }
 
-// export function useInfiniteTags(
-//   request: GetTagsRequest = {},
-//   tagType: TagType,
-//   skipQuery?: boolean,
-// ) {
-//   const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(
-//     ({ pageParam }) => getTags({ ...request, skip: pageParam, take: request.take ?? 10 }),
-//     [request],
-//   );
-//
-//   return useInfiniteQuery({
-//     queryKey: [tagTypeToQK[tagType], request],
-//     queryFn: skipQuery ? skipToken : queryFn,
-//     initialPageParam: 0,
-//     getNextPageParam: (lastPage, pages, lastPageParam) => {
-//       const entryCount = pages.reduce((p, c) => p + c.length, 0);
-//       return entryCount === lastPageParam ? undefined : entryCount;
-//     },
-//   });
-// }
-
 export const emptyRequest = {};
 
 export function useTags(

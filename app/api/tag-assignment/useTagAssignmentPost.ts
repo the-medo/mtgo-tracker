@@ -1,14 +1,18 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { Tag, TagType } from '@prisma/client';
+import { NextResponse } from 'next/server';
 
-export type SimplePostRequest = Record<string, FormDataEntryValue | number | null | undefined>;
+export type TagAssignmentPostRequest = Record<string, FormDataEntryValue | number | null | undefined>;
 
-export default function useSimplePost<T extends QK>(qk: QK) {
+
+export default function useTagAssignmentPost(tagType: TagType | undefined, qk: QK) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: SimplePostRequest): Promise<QTypes[T][number]> => {
-      const res = await fetch(`/api/${qkRedirect[qk] ?? qk}`, {
+    mutationFn: async (data: TagAssignmentPostRequest): Promise<Tag> => {
+      if (!tagType) throw new Error("No tag type present in useTagAssignmentPost")
+      const res = await fetch(`/api/tag-assignment`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -19,10 +23,19 @@ export default function useSimplePost<T extends QK>(qk: QK) {
       return await res.json();
     },
     onMutate: async data => {
-      await queryClient.cancelQueries({ queryKey: [qk] });
-      const previousData = queryClient.getQueryData([qk]);
+      const previousData = queryClient.getQueriesData({
+        type: 'all',
+        exact: false,
+        queryKey: [qk]
+      });
 
-      const newData = {
+      console.log(previousData);
+      previousData.forEach(pd => {
+        console.log("pd", pd)
+      });
+
+
+      /*const newData = {
         ...data,
       };
 
@@ -33,7 +46,7 @@ export default function useSimplePost<T extends QK>(qk: QK) {
         }
       });
 
-      queryClient.setQueryData([qk], (old: QTypes[T]) => [...(old ?? []), { ...newData, id: -1 }]);
+      queryClient.setQueryData([qk], (old: QTypes[T]) => [...(old ?? []), { ...newData, id: -1 }]);*/
 
       return { previousData };
     },
