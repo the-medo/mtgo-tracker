@@ -54,10 +54,10 @@ model User {
   isPublic             Boolean   @default(false)
   isAdmin              Boolean   @default(false)
 
-  UserInfo     UserQOL[]
-  Events     Event[]
-  Matches    Match[] @relation("User")
-  OppMatches Match[] @relation("OppUser")
+  UserInfo   UserQOL[]
+  Matches    Match[]   @relation("User")
+  OppMatches Match[]   @relation("OppUser")
+  Events  Event[]
 }
 
 model VerificationToken {
@@ -155,8 +155,8 @@ model Deck {
   link          String?
   service       DeckServiceType?
   serviceDeckId String?
-  lastPlayedAt DateTime?
-  createdAt DateTime? @default(now())
+  lastPlayedAt  DateTime?
+  createdAt     DateTime?        @default(now())
 
   formatId        Int
   formatVersionId Int
@@ -298,7 +298,7 @@ model UserQOL {
   userId String @id
 
   lastUsedIds Json?
-  filters Json?
+  filters     Json?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

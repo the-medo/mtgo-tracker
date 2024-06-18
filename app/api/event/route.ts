@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { parseDate, parseDeckLink, parseNumber, parseString } from '@/app/api/parsers';
+import { parseDatePickerToIso, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
 import { Prisma } from '@prisma/client';
 
@@ -11,18 +11,66 @@ export async function POST(req: Request) {
   const data = await req.json();
 
   if (session?.user) {
-    const record = await prisma.event.create({
+    console.log({
       data: {
-        userId: session.user?.id,
+        // userId: session.user.id!,
         mtgoId: '',
         name: parseString(data.name) ?? '',
         type: data.type,
-        date: parseDate(data.date),
+        date: parseDatePickerToIso(data.date),
         rounds: parseNumber(data.rounds) ?? 0,
         entry: parseNumber(data.entry) ?? 0,
         winnings: parseNumber(data.winnings) ?? 0,
-        formatId: parseNumber(data.formatId)!,
-        formatVersionId: parseNumber(data.formatVersionId)!,
+        // formatId: parseNumber(data.formatId)!,
+        // formatVersionId: parseNumber(data.formatVersionId)!,
+        user: {
+          connect: {
+            id: session.user.id!,
+          },
+        },
+        format: {
+          connect: {
+            id: parseNumber(data.formatId)!,
+          },
+        },
+        formatVersion: {
+          connect: {
+            id: parseNumber(data.formatVersionId)!,
+          },
+        },
+      },
+      include: {
+        EventTags: true,
+      },
+    });
+
+    const record = await prisma.event.create({
+      data: {
+        mtgoId: '',
+        name: parseString(data.name) ?? '',
+        type: data.type,
+        date: parseDatePickerToIso(data.date),
+        rounds: parseNumber(data.rounds) ?? 0,
+        entry: parseNumber(data.entry) ?? 0,
+        winnings: parseNumber(data.winnings) ?? 0,
+        // userId: session.user.id!,
+        // formatId: parseNumber(data.formatId)!,
+        // formatVersionId: parseNumber(data.formatVersionId)!,
+        user: {
+          connect: {
+            id: session.user.id!,
+          },
+        },
+        format: {
+          connect: {
+            id: parseNumber(data.formatId)!,
+          },
+        },
+        formatVersion: {
+          connect: {
+            id: parseNumber(data.formatVersionId)!,
+          },
+        },
       },
       include: {
         EventTags: true,

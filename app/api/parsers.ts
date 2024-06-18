@@ -30,6 +30,15 @@ export function parseDate(
   return new Date(s);
 }
 
+export function parseDatePickerToIso(
+  s: string | null | undefined,
+  allowEmptyString: boolean = false,
+): string | undefined {
+  if (!allowEmptyString && s === '') return undefined;
+  if (!s) return undefined;
+  return s.replace('+00:00[GMT]', 'Z');
+}
+
 /*
   //https://www.moxfield.com/decks/NGXLX-zQk0KMgxziaUyc5g#paper
   //https://www.mtggoldfish.com/deck/6395126#paper
