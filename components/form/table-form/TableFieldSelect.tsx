@@ -14,6 +14,9 @@ import { QK } from '@/app/api/queryHelpers';
 import SelectDeckArchetype, {
   SelectDeckArchetypePropsOuter,
 } from '@/components/form/select/SelectDeckArchetype';
+import SelectEventType, {
+  SelectEventTypePropsOuter,
+} from '@/components/form/select/SelectEventType';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -33,6 +36,7 @@ export type TableFieldSelectProps = {
     | SelectFormatVersionPropsOuter
     | SelectArchetypeGroupPropsOuter
     | SelectDeckArchetypePropsOuter
+    | SelectEventTypePropsOuter
   );
 
 export default function TableFieldSelect({
@@ -94,6 +98,16 @@ export default function TableFieldSelect({
       case QK.DECK_ARCHETYPE:
         return (
           <SelectDeckArchetype
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+            {...other}
+          />
+        );
+      case 'EVENT_TYPE':
+        return (
+          <SelectEventType
             textOnly={!isSelected}
             name={fieldName}
             value={value}

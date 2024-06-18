@@ -3,6 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { TagType } from '@prisma/client';
+import { parseNumber } from '@/app/api/parsers';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -11,6 +12,8 @@ export async function POST(req: Request) {
   if (!data.type) {
     return NextResponse.json({ error: 'type is mandatory' }, { status: 403 });
   }
+
+  data.tagId = parseNumber(data.tagId);
 
   if (session) {
     if (!data.tagId) return NextResponse.json({ error: 'tagId not provided' }, { status: 403 });
@@ -28,6 +31,7 @@ export async function POST(req: Request) {
       case TagType.DECK: {
         if (!data.deckId)
           return NextResponse.json({ error: 'deckId not provided' }, { status: 403 });
+        data.deckId = parseNumber(data.deckId);
         const deck = await prisma.deck.findFirst({
           where: {
             userId: session.user.id,
@@ -48,6 +52,7 @@ export async function POST(req: Request) {
       case TagType.EVENT: {
         if (!data.eventId)
           return NextResponse.json({ error: 'eventId not provided' }, { status: 403 });
+        data.eventId = parseNumber(data.eventId);
         const event = await prisma.event.findFirst({
           where: {
             userId: session.user.id,
@@ -68,6 +73,7 @@ export async function POST(req: Request) {
       case TagType.MATCH: {
         if (!data.matchId)
           return NextResponse.json({ error: 'matchId not provided' }, { status: 403 });
+        data.matchId = parseNumber(data.matchId);
         const match = await prisma.match.findFirst({
           where: {
             userId: session.user.id,
@@ -88,6 +94,7 @@ export async function POST(req: Request) {
       case TagType.GAME: {
         if (!data.gameId)
           return NextResponse.json({ error: 'gameId not provided' }, { status: 403 });
+        data.gameId = parseNumber(data.gameId);
         const game = await prisma.game.findFirst({
           where: {
             match: { userId: session.user.id },

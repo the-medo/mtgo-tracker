@@ -5,20 +5,12 @@ import {
   parseStringToContainsCondition,
   SorterOption,
   transformTableSorterDirection,
-  WhereInput,
 } from '@/types/api-params';
 import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { parseNumber } from '@/app/api/parsers';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
-
-type DeckFilter = {
-  filters: {
-    where?: WhereInput<'Deck'>;
-    orderBy?: OrderByInput<'Deck'>;
-  };
-};
 
 export const deckSorterOptions: SorterOption<'Deck'>[] = [
   {

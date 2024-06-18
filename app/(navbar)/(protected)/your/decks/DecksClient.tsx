@@ -1,9 +1,8 @@
 'use client';
 
-import { Deck } from '@prisma/client';
-import { As, SortDescriptor, Table } from '@nextui-org/react';
+import { As, Table } from '@nextui-org/react';
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
-import { Key, useCallback } from 'react';
+import { Key } from 'react';
 import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
 

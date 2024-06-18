@@ -1,9 +1,8 @@
-import { SingleTableState, TableActions, TableSlice, TableState } from '@/store/tableSlice';
-import { OrderByInput, WhereInput } from '@/types/api-params';
-import { Deck } from '@prisma/client';
+import { OrderByInput } from '@/types/api-params';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
+import { EventType } from '@prisma/client';
 
 export type FilterState = {
   decks: {
@@ -13,6 +12,15 @@ export type FilterState = {
     lastPlayedAt?: DateOrRangeValue;
     createdAt?: DateOrRangeValue;
     orderBy?: OrderByInput<'Deck'>;
+  };
+  events: {
+    eventName?: string;
+    type?: EventType;
+    rounds?: number;
+    entry?: number;
+    winnings?: number;
+    date?: DateOrRangeValue;
+    orderBy?: OrderByInput<'Event'>;
   };
 };
 
@@ -31,6 +39,7 @@ export type FilterSlice = FilterState & FilterActions;
 
 export const createFilterSlice: StateCreator<AllSlices, [], [], FilterSlice> = set => ({
   decks: { filter: {} },
+  events: { filter: {} },
   clearFilter: filterType => {
     set(state => ({
       ...state,

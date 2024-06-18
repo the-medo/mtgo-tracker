@@ -99,7 +99,6 @@ export default function EventsForm() {
   return (
     <form ref={ref} action={createEvent} className="flex flex-col gap-2">
       <SelectEventType name="type" onChange={onEventTypeChange} />
-      <DatePicker label="Date" size="sm" name="date" defaultValue={defaultDate} granularity="day" />
       <SelectFormat name="formatId" onChange={onFormatChange} />
       <SelectFormatVersion
         name="formatVersionId"
@@ -125,6 +124,7 @@ export default function EventsForm() {
         onChange={onEntryChange}
       />
       <Input type="number" label="Winnings" size="sm" name="winnings" />
+      <DatePicker label="Date" size="sm" name="date" defaultValue={defaultDate} granularity="day" />
       <Button type="submit">Create</Button>
     </form>
   );
