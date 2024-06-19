@@ -4,11 +4,10 @@ import {
   QueryFunction,
   QueryKey,
   skipToken,
-  useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const tagTypeToQK: Record<TagType, QK> = {
   [TagType.DECK]: QK.TAG_DECK,
@@ -40,12 +39,20 @@ export function useTags(
   request: GetTagsRequest = emptyRequest,
   skipQuery?: boolean,
 ) {
+  const req = useMemo(
+    () => ({
+      ...request,
+      where: {
+        ...request.where,
+        type: tagType,
+      },
+    }),
+    [tagType, request],
+  );
+
   if (!tagType) throw new Error('No tag type provided');
 
-  const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(
-    () => getTags(request),
-    [request],
-  );
+  const queryFn: QueryFunction<Tag[], QueryKey, number> = useCallback(() => getTags(req), [req]);
 
   return useQuery({
     queryKey: [tagTypeToQK[tagType]],
