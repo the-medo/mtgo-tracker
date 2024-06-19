@@ -49,16 +49,13 @@ export default function useTagAssignmentPost(tagType: TagType | undefined, qk: Q
       };
 
       queryClient.setQueriesData(filters, (old: unknown) => {
-        console.log('checking array... ', old.pages, data);
-
+        // @ts-ignore
         if ('pages' in old && Array.isArray(old.pages)) {
-          console.log('IS ARRAY!', old.pages[0]);
           if (propertyName in old.pages[0]?.[0]) {
-            console.log(propertyName + ' IS IN PAGES!');
             const result = {
               ...old,
               pages: old.pages.map(o => {
-                console.log('o', o, o[propertyName]);
+                // @ts-ignore
                 return o.map(x => ({
                   ...x,
                   [propertyName]:
@@ -66,8 +63,6 @@ export default function useTagAssignmentPost(tagType: TagType | undefined, qk: Q
                 }));
               }),
             };
-
-            console.log('RESULT', result);
             return result;
           }
         }

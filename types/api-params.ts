@@ -100,7 +100,7 @@ export const parseDateOrRangeValueToCondition = (i: DateOrRangeValue | undefined
 
 export const parseStringToContainsCondition = (
   i: string | undefined,
-): Prisma.StringNullableFilter | undefined => {
+): Prisma.StringFilter | undefined => {
   if (!i) return undefined;
   if (i.length > 0) {
     return {

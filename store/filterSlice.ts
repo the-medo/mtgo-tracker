@@ -21,6 +21,7 @@ export type FilterState = {
     entry?: number;
     winnings?: number;
     date?: DateOrRangeValue;
+    tagIds?: number[];
     orderBy?: OrderByInput<'Event'>;
   };
 };

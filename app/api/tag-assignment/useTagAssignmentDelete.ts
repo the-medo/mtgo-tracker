@@ -39,16 +39,19 @@ export default function useTagAssignmentDelete(tagType: TagType | undefined, qk:
       }
 
       queryClient.setQueriesData(filters, (old: unknown) => {
+        // @ts-ignore
         if ('pages' in old && Array.isArray(old.pages)) {
           if (propertyName in old.pages[0]?.[0]) {
             const result = {
               ...old,
               pages: old.pages.map(o => {
+                // @ts-ignore
                 return o.map(x => ({
                   ...x,
                   [propertyName]:
                     x.id === data.entityId
-                      ? x[propertyName].filter(y => y.tagId !== data.tagId)
+                      ? // @ts-ignore
+                        x[propertyName].filter(y => y.tagId !== data.tagId)
                       : x[propertyName],
                 }));
               }),

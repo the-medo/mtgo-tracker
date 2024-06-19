@@ -7,6 +7,7 @@ import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
 import DecksTags from '@/app/(navbar)/(protected)/your/decks/DecksTags';
 import EventsTags from '@/app/(navbar)/(protected)/your/events/EventsTags';
 import EventsForm from '@/app/(navbar)/(protected)/your/events/EventsForm';
+import EventsFilters from '@/app/(navbar)/(protected)/your/events/EventsFilters';
 
 export default function EventsLeftNav() {
   return (
@@ -23,7 +24,7 @@ export default function EventsLeftNav() {
           aria-label="Filters for events"
           title="Filter and sort"
         >
-          {/*<EventFilters />*/}
+          <EventsFilters />
         </AccordionItem>
         <AccordionItem indicator={<TbTag size={20} />} key="2" aria-label="Tags" title="Event tags">
           <EventsTags />

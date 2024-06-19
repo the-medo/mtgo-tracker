@@ -20,6 +20,7 @@ const TABLE_ID = 'EVENTS';
 const columns = [
   { name: 'Name', uid: 'name', sortable: true },
   { name: 'Type', uid: 'type', sortable: true },
+  { name: 'Tags', uid: 'tags', maxWidth: 180 },
   { name: 'Rounds', uid: 'rounds', maxWidth: 80, sortable: true },
   { name: 'Entry', uid: 'entry', maxWidth: 80, sortable: true },
   { name: 'Winnings', uid: 'winnings', maxWidth: 80, sortable: true },
@@ -55,6 +56,19 @@ const renderCell = (data: EventExtended, columnKey: Key) => {
           fieldName="type"
           label="Type"
           value={data.type.toString() ?? undefined}
+        />
+      );
+    case 'tags':
+      return (
+        <TableField
+          qk={QK.EVENT}
+          type="tags"
+          tableId={TABLE_ID}
+          id={data.id}
+          fieldName="tags"
+          label="Tags"
+          // @ts-ignore
+          values={data.EventTags}
         />
       );
     case 'rounds':

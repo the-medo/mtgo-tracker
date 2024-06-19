@@ -10,7 +10,10 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
-import { EventType } from '@prisma/client';
+import { EventType, Prisma } from '@prisma/client';
+import { GetDecksRequest } from '@/app/api/deck/getDecks';
+import GetEvents = Prisma.GetEvents;
+import { GetEventsRequest } from '@/app/api/event/getEvents';
 
 export const eventSorterOptions: SorterOption<'Event'>[] = [
   {
@@ -72,6 +75,7 @@ export default function useEventFilters() {
   const entry = useStore(state => state.events.entry);
   const winnings = useStore(state => state.events.winnings);
   const date = useStore(state => state.events.date);
+  const tagIds = useStore(state => state.events.tagIds);
   const orderBy = useStore(state => state.events.orderBy);
 
   const setFilter = useStore(state => state.setFilter);
@@ -91,17 +95,27 @@ export default function useEventFilters() {
   );
 
   const onTypeChange = useCallback(
-    (id: string) => setFilter('events', 'type', id as EventType),
+    (id: string | number) => setFilter('events', 'type', id === '' ? undefined : (id as EventType)),
     [setFilter],
   );
-  const onRoundsChange = useCallback((v: number) => setFilter('events', 'rounds', v), [setFilter]);
-  const onEntryChange = useCallback((v: number) => setFilter('events', 'entry', v), [setFilter]);
+  const onRoundsChange = useCallback(
+    (v: number | undefined) => setFilter('events', 'rounds', v),
+    [setFilter],
+  );
+  const onEntryChange = useCallback(
+    (v: number | undefined) => setFilter('events', 'entry', v),
+    [setFilter],
+  );
   const onWinningsChange = useCallback(
-    (v: number) => setFilter('events', 'winnings', v),
+    (v: number | undefined) => setFilter('events', 'winnings', v),
     [setFilter],
   );
   const onDateChange = useCallback(
     (v: DateOrRangeValue) => setFilter('events', 'date', v),
+    [setFilter],
+  );
+  const onTagIdsChange = useCallback(
+    (v: number[]) => setFilter('events', 'tagIds', v),
     [setFilter],
   );
   const onOrderByChange = useCallback(
@@ -127,7 +141,22 @@ export default function useEventFilters() {
     );
   }, []);
 
-  const filters = useMemo(
+  const tagIdsFilter: GetEventsRequest['where'] = useMemo(() => {
+    if (!tagIds || tagIds.length === 0) return {};
+    return {
+      AND: [
+        ...tagIds.map(tid => ({
+          EventTags: {
+            some: {
+              tagId: tid,
+            },
+          },
+        })),
+      ],
+    };
+  }, [tagIds]);
+
+  const filters: GetEventsRequest = useMemo(
     () => ({
       where: {
         name: parseStringToContainsCondition(eventName),
@@ -136,10 +165,11 @@ export default function useEventFilters() {
         entry,
         winnings,
         date: parseDateOrRangeValueToCondition(date),
+        ...tagIdsFilter,
       },
       orderBy,
     }),
-    [eventName, type, rounds, entry, winnings, date, orderBy],
+    [eventName, type, rounds, entry, winnings, date, tagIdsFilter, orderBy],
   );
 
   return {
@@ -150,6 +180,7 @@ export default function useEventFilters() {
     entry,
     winnings,
     date,
+    tagIds,
     orderBy,
     onEventNameChange,
     onTypeChange,
@@ -157,6 +188,7 @@ export default function useEventFilters() {
     onEntryChange,
     onWinningsChange,
     onDateChange,
+    onTagIdsChange,
     onOrderByChange,
     onClear,
     sortDescriptor,
