@@ -1,11 +1,6 @@
 import { Tag, TagType } from '@prisma/client';
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
-import {
-  QueryFunction,
-  QueryKey,
-  skipToken,
-  useQuery,
-} from '@tanstack/react-query';
+import { QueryFunction, QueryKey, skipToken, useQuery } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import { useCallback, useMemo } from 'react';
 

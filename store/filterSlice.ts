@@ -11,6 +11,7 @@ export type FilterState = {
     deckArchetypeId?: number;
     lastPlayedAt?: DateOrRangeValue;
     createdAt?: DateOrRangeValue;
+    tagIds?: number[];
     orderBy?: OrderByInput<'Deck'>;
   };
   events: {

@@ -11,6 +11,7 @@ import { parseNumber } from '@/app/api/parsers';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
+import { GetDecksRequest } from '@/app/api/deck/getDecks';
 
 export const deckSorterOptions: SorterOption<'Deck'>[] = [
   {
@@ -59,6 +60,7 @@ export default function useDeckFilters() {
   const deckArchetypeId = useStore(state => state.decks.deckArchetypeId);
   const lastPlayedAt = useStore(state => state.decks.lastPlayedAt);
   const createdAt = useStore(state => state.decks.createdAt);
+  const tagIds = useStore(state => state.decks.tagIds);
   const orderBy = useStore(state => state.decks.orderBy);
 
   const setFilter = useStore(state => state.setFilter);
@@ -93,6 +95,7 @@ export default function useDeckFilters() {
     (v: DateOrRangeValue) => setFilter('decks', 'createdAt', v),
     [setFilter],
   );
+  const onTagIdsChange = useCallback((v: number[]) => setFilter('decks', 'tagIds', v), [setFilter]);
   const onOrderByChange = useCallback(
     (v: OrderByInput<'Deck'>) => setFilter('decks', 'orderBy', v),
     [setFilter],
@@ -116,7 +119,22 @@ export default function useDeckFilters() {
     );
   }, []);
 
-  const filters = useMemo(
+  const tagIdsFilter: GetDecksRequest['where'] = useMemo(() => {
+    if (!tagIds || tagIds.length === 0) return {};
+    return {
+      AND: [
+        ...tagIds.map(tid => ({
+          DeckTags: {
+            some: {
+              tagId: tid,
+            },
+          },
+        })),
+      ],
+    };
+  }, [tagIds]);
+
+  const filters: GetDecksRequest = useMemo(
     () => ({
       where: {
         name: parseStringToContainsCondition(deckName),
@@ -124,10 +142,11 @@ export default function useDeckFilters() {
         deckArchetypeId,
         lastPlayedAt: parseDateOrRangeValueToCondition(lastPlayedAt),
         createdAt: parseDateOrRangeValueToCondition(createdAt),
+        ...tagIdsFilter,
       },
       orderBy,
     }),
-    [deckName, formatId, lastPlayedAt, createdAt, deckArchetypeId, orderBy],
+    [deckName, formatId, lastPlayedAt, createdAt, deckArchetypeId, tagIdsFilter, orderBy],
   );
 
   return {
@@ -137,12 +156,14 @@ export default function useDeckFilters() {
     lastPlayedAt,
     createdAt,
     deckArchetypeId,
+    tagIds,
     orderBy,
     onDeckNameChange,
     onFormatChange,
     onDeckArchetypeChange,
     onLastPlayedAtChange,
     onCreatedAtChange,
+    onTagIdsChange,
     onOrderByChange,
     onClear,
     sortDescriptor,

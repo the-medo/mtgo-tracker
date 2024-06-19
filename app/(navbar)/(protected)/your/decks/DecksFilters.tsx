@@ -12,6 +12,8 @@ import SelectSorter from '@/components/form/select/SelectSorter';
 import useDeckFilters, {
   deckSorterOptions,
 } from '@/app/(navbar)/(protected)/your/decks/useDeckFilters';
+import TagFilter from '@/components/tags/TagFilter';
+import { TagType } from '@prisma/client';
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
@@ -28,12 +30,14 @@ export default function DecksFilters() {
     onDeckArchetypeChange,
     onLastPlayedAtChange,
     onCreatedAtChange,
+    onTagIdsChange,
     onOrderByChange,
     onClear,
     formatId,
     lastPlayedAt,
     createdAt,
     deckArchetypeId,
+    tagIds,
     orderBy,
   } = useDeckFilters();
 
@@ -49,6 +53,8 @@ export default function DecksFilters() {
       />
       <DateOrRangePicker label="Last played" value={lastPlayedAt} onChange={onLastPlayedAtChange} />
       <DateOrRangePicker label="Created" value={createdAt} onChange={onCreatedAtChange} />
+      <span className="pl-1 text-tiny text-foreground-500">TAGS</span>
+      <TagFilter type={TagType.DECK} values={tagIds ?? []} setValues={onTagIdsChange} />
       <span className="pl-1 text-tiny text-foreground-500">SORT</span>
       <SelectSorter data={deckSorterOptions} value={orderBy} onChange={onOrderByChange} />
       <Button onClick={onClear} size="sm">
