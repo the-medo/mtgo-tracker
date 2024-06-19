@@ -19,7 +19,7 @@ const TABLE_ID = 'DECKS';
 
 const columns = [
   { name: 'Name', uid: 'name', sortable: true },
-  { name: 'Tags', uid: 'tags', maxWidth: 200 },
+  { name: 'Tags', uid: 'tags', maxWidth: 180 },
   { name: 'Format', uid: 'formatId', maxWidth: 180 },
   { name: 'Archetype', uid: 'deckArchetypeId', maxWidth: 180, sortable: true },
   { name: 'Last played at', uid: 'lastPlayedAt', maxWidth: 120, sortable: true },
@@ -133,7 +133,13 @@ export default function DecksClient({}: Props) {
       >
         <TableHeader columns={columns}>
           {column => (
-            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting={column.sortable}>
+            <TableColumn
+              key={column.uid}
+              width={column.maxWidth}
+              maxWidth={column.maxWidth}
+              allowsSorting={column.sortable}
+              className={`max-w-[${column.maxWidth}px]`}
+            >
               {column.name}
             </TableColumn>
           )}

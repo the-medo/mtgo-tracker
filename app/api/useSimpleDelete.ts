@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { QK, qkRedirect, QTypes } from '@/app/api/queryHelpers';
 
 export type SimpleDeleteRequest = {
   id: string | number;

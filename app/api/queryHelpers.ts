@@ -7,6 +7,7 @@ import {
   Game,
   Match,
   Tag,
+  Event,
 } from '@prisma/client';
 
 export enum QK {

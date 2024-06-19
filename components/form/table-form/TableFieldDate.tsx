@@ -81,7 +81,7 @@ export default function TableFieldDate({
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
   return (
-    <div className="w-full h-[48px] flex items-center justify-items-start" onClick={selectRow}>
+    <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
       {content}
     </div>
   );
