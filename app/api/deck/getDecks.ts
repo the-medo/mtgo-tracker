@@ -1,6 +1,5 @@
-import { Deck } from '@prisma/client';
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
-import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+import { QueryFunction, QueryKey, skipToken, useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { DeckExtended } from '@/app/api/deck/route';
@@ -14,7 +13,7 @@ export async function getDecks({ where, orderBy, skip, take }: GetDecksRequest) 
   return (await f.json()) as DeckExtended[];
 }
 
-export function useInfiniteDecks(request: GetDecksRequest = {}) {
+export function useInfiniteDecks(request: GetDecksRequest = {}, skipQuery?: boolean) {
   const queryFn: QueryFunction<DeckExtended[], QueryKey, number> = useCallback(
     ({ pageParam }) => getDecks({ ...request, skip: pageParam, take: request.take ?? 10 }),
     [request],
@@ -22,7 +21,7 @@ export function useInfiniteDecks(request: GetDecksRequest = {}) {
 
   return useInfiniteQuery({
     queryKey: [QK.DECK, request],
-    queryFn,
+    queryFn: skipQuery ? skipToken : queryFn,
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const entryCount = pages.reduce((p, c) => p + c.length, 0);

@@ -1,49 +1,46 @@
 import { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import { DeckArchetype } from '@prisma/client';
+import { Deck } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
-import {
-  GetDeckArchetypesRequest,
-  useInfiniteDeckArchetypes,
-} from '@/app/api/deck-archetype/getDeckArchetypes';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { parseNumber } from '@/app/api/parsers';
-import { TbZeppelin } from 'react-icons/tb';
+import { TbCards, TbZeppelin } from 'react-icons/tb';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 import debounce from 'lodash.debounce';
+import { GetDecksRequest, useInfiniteDecks } from '@/app/api/deck/getDecks';
 
-export function textValueDeckArchetype(f: DeckArchetype | undefined): string {
-  if (!f) return ` - no deck archetype - `;
-  return f.name;
+export function textValueDeck(f: Deck | undefined): string {
+  if (!f) return ` - no deck - `;
+  return f.name ?? 'Unknown deck';
 }
 
-export type SelectDeckArchetypePropsOuter = {
-  selectType: QK.DECK_ARCHETYPE;
+export type SelectDeckPropsOuter = {
+  selectType: QK.DECK;
   formatId?: number;
-  preselectedItem?: DeckArchetype;
+  preselectedItem?: Deck;
 };
 
-type SelectDeckArchetypeProps = BaseSelectProps & Omit<SelectDeckArchetypePropsOuter, 'selectType'>;
+type SelectDeckProps = BaseSelectProps & Omit<SelectDeckPropsOuter, 'selectType'>;
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
-    <TbZeppelin size={20} />
-    Deck archetype
+    <TbCards size={20} />
+    Deck
   </div>
 );
 
-export default function SelectDeckArchetype({
+export default function SelectDeck({
   textOnly,
   isLoading,
   name,
   onChange,
   formatId,
   preselectedItem,
-}: SelectDeckArchetypeProps) {
+}: SelectDeckProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<string>('');
   const [debouncedFilter, setDebouncedFilter] = useState<string>('');
-  const [items, setItems] = useState<DeckArchetype[]>([]);
+  const [items, setItems] = useState<Deck[]>([]);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
   const debouncedSetFilter = useCallback(
     debounce(v => setDebouncedFilter(v), 250),
@@ -58,7 +55,7 @@ export default function SelectDeckArchetype({
     [debouncedFilter, selectedValue?.name],
   );
 
-  const request: GetDeckArchetypesRequest = useMemo(
+  const request: GetDecksRequest = useMemo(
     () => ({
       where: {
         formatId: parseNumber(formatId),
@@ -74,7 +71,7 @@ export default function SelectDeckArchetype({
     [formatId, contains],
   );
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDeckArchetypes(
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDecks(
     request,
     formatId === undefined,
   );
@@ -121,7 +118,7 @@ export default function SelectDeckArchetype({
 
   if (textOnly) {
     // console.log('textOnly', preselectedItem, selectedValue);
-    return textValueDeckArchetype(selectedValue);
+    return textValueDeck(selectedValue);
   }
 
   return (
@@ -142,7 +139,7 @@ export default function SelectDeckArchetype({
         items={items}
         onOpenChange={setIsOpen}
       >
-        {item => <AutocompleteItem key={item.id}>{textValueDeckArchetype(item)}</AutocompleteItem>}
+        {item => <AutocompleteItem key={item.id}>{textValueDeck(item)}</AutocompleteItem>}
       </Autocomplete>
     </>
   );
