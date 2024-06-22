@@ -12,6 +12,9 @@ import TableFieldSelect, {
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
 import TableFieldTags, { TableFieldTagsProps } from '@/components/form/table-form/TableFieldTags';
+import TableFieldBoolean, {
+  TableFieldBooleanProps,
+} from '@/components/form/table-form/TableFieldBoolean';
 
 export type TableFieldProps = {
   tableId: string;
@@ -29,13 +32,14 @@ type Props =
   | TableFieldStringProps
   | TableFieldDateProps
   | TableFieldSelectProps
-  | TableFieldTagsProps;
+  | TableFieldTagsProps
+  | TableFieldBooleanProps;
 
 export default function TableField(props: Props) {
   const { mutate } = useSimplePatch(props.qk);
 
   const onChange = useCallback(
-    (id: string | number, field: string, value: string | number) => {
+    (id: string | number, field: string, value: string | number | boolean) => {
       if (props.onChange) return props.onChange(id, field, value);
       mutate({
         id,
@@ -56,6 +60,8 @@ export default function TableField(props: Props) {
       return <TableFieldSelect {...props} onChange={onChange} isPending={isPending} />;
     case 'tags':
       return <TableFieldTags {...props} onChange={onChange} isPending={isPending} />;
+    case 'boolean':
+      return <TableFieldBoolean {...props} onChange={onChange} isPending={isPending} />;
   }
 
   return <></>;

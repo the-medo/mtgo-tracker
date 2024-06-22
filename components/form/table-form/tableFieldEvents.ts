@@ -4,7 +4,7 @@ import { TransitionStartFunction } from 'react';
 export type TableFieldPatchRequest = (
   id: string | number,
   field: string,
-  value: string | number,
+  value: string | number | boolean,
 ) => void;
 
 export type TableFieldDeleteRequest = (id: string | number) => void;
@@ -15,7 +15,7 @@ export const getPatchRequest =
     router: AppRouterInstance,
     startTransition: TransitionStartFunction,
   ): TableFieldPatchRequest =>
-  async (id: string | number, field: string, value: string | number) => {
+  async (id: string | number, field: string, value: string | number | boolean) => {
     startTransition(async () => {
       const res = await fetch(`/api/${path}/${id}`, {
         method: 'PATCH',

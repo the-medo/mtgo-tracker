@@ -17,6 +17,7 @@ import SelectDeckArchetype, {
 import SelectEventType, {
   SelectEventTypePropsOuter,
 } from '@/components/form/select/SelectEventType';
+import { SelectMatchTypePropsOuter } from '@/components/form/select/SelectMatchType';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -37,6 +38,7 @@ export type TableFieldSelectProps = {
     | SelectArchetypeGroupPropsOuter
     | SelectDeckArchetypePropsOuter
     | SelectEventTypePropsOuter
+    | SelectMatchTypePropsOuter
   );
 
 export default function TableFieldSelect({

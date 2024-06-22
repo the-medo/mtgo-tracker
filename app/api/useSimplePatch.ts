@@ -4,7 +4,7 @@ import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/query
 export type SimplePatchRequest = {
   id: string | number;
   field: string;
-  value: string | number;
+  value: string | number | boolean;
 };
 
 export default function useSimplePatch<T extends QK>(qk: QK) {

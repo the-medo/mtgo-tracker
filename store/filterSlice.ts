@@ -2,7 +2,7 @@ import { OrderByInput } from '@/types/api-params';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { EventType } from '@prisma/client';
+import { EventType, MatchType } from '@prisma/client';
 
 export type FilterState = {
   decks: {
@@ -24,6 +24,18 @@ export type FilterState = {
     tagIds?: number[];
     orderBy?: OrderByInput<'Event'>;
   };
+  matches: {
+    oppName?: string;
+    type?: MatchType;
+    round?: number;
+    eventId?: number;
+    deckId?: number;
+    isWin?: boolean;
+    startTime?: DateOrRangeValue;
+    public?: boolean;
+    tagIds?: number[];
+    orderBy?: OrderByInput<'Match'>;
+  };
 };
 
 type FilterType = keyof FilterState;
@@ -42,6 +54,7 @@ export type FilterSlice = FilterState & FilterActions;
 export const createFilterSlice: StateCreator<AllSlices, [], [], FilterSlice> = set => ({
   decks: { filter: {} },
   events: { filter: {} },
+  matches: { filter: {} },
   clearFilter: filterType => {
     set(state => ({
       ...state,
