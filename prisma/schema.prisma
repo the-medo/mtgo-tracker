@@ -57,7 +57,7 @@ model User {
   UserInfo   UserQOL[]
   Matches    Match[]   @relation("User")
   OppMatches Match[]   @relation("OppUser")
-  Events  Event[]
+  Events     Event[]
 }
 
 model VerificationToken {
@@ -166,6 +166,7 @@ model Deck {
   formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
   deckArchetype DeckArchetype @relation(fields: [deckArchetypeId], references: [id])
 
+  Events   Event[]
   Matches  Match[]
   DeckTags DeckTag[]
 }
@@ -175,18 +176,22 @@ model Event {
   userId          String
   mtgoId          String
   type            EventType
+  matchType       MatchType @default(BO3)
   rounds          Int
   name            String
   formatId        Int
   formatVersionId Int
+  deckId          Int?
   entry           Int?
   winnings        Int?
   date            DateTime?
+  notes           String?   @db.Text
 
   Matches   Match[]
   EventTags EventTag[]
 
   user          User          @relation(fields: [userId], references: [id])
+  deck          Deck?         @relation(fields: [deckId], references: [id])
   format        Format        @relation(fields: [formatId], references: [id])
   formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
 }
