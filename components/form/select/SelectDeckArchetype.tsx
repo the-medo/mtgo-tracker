@@ -1,12 +1,16 @@
-import { Select, SelectItem } from '@nextui-org/select';
-import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
-import { DeckArchetype, Format } from '@prisma/client';
+import { Key, useCallback, useEffect, useMemo, useState } from 'react';
+import { DeckArchetype } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
-import { useInfiniteDeckArchetypes } from '@/app/api/deck-archetype/getDeckArchetypes';
+import {
+  GetDeckArchetypesRequest,
+  useInfiniteDeckArchetypes,
+} from '@/app/api/deck-archetype/getDeckArchetypes';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { parseNumber } from '@/app/api/parsers';
 import { TbZeppelin } from 'react-icons/tb';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
+import debounce from 'lodash.debounce';
 
 export function textValueDeckArchetype(f: DeckArchetype | undefined): string {
   if (!f) return ` - no deck archetype - `;
@@ -37,11 +41,41 @@ export default function SelectDeckArchetype({
   preselectedItem,
 }: SelectDeckArchetypeProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [filter, setFilter] = useState<string>('');
+  const [debouncedFilter, setDebouncedFilter] = useState<string>('');
+  const [items, setItems] = useState<DeckArchetype[]>([]);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
+  const debouncedSetFilter = useCallback(
+    debounce(v => setDebouncedFilter(v), 250),
+    [setDebouncedFilter],
+  );
+
+  const contains = useMemo(
+    () =>
+      selectedValue?.name === debouncedFilter || debouncedFilter === ''
+        ? undefined
+        : debouncedFilter,
+    [debouncedFilter, selectedValue?.name],
+  );
+
+  const request: GetDeckArchetypesRequest = useMemo(
+    () => ({
+      where: {
+        formatId: parseNumber(formatId),
+        name:
+          contains !== undefined
+            ? {
+                contains,
+                mode: 'insensitive',
+              }
+            : undefined,
+      },
+    }),
+    [formatId, contains],
+  );
+
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDeckArchetypes(
-    {
-      where: { formatId: parseNumber(formatId) },
-    },
+    request,
     formatId === undefined,
   );
 
@@ -52,22 +86,32 @@ export default function SelectDeckArchetype({
     onLoadMore: fetchNextPage,
   });
 
-  const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
-    e => {
-      console.log('onChangeHandler', e);
-      if (onChange) {
-        onChange(e.target.value);
-      }
+  const onInputChangeHandler = useCallback(
+    (filter: string) => {
+      setFilter(filter);
+      debouncedSetFilter(filter);
     },
-    [onChange],
+    [debouncedSetFilter],
   );
 
-  const items = useMemo(() => {
+  const onSelectionChangeHandler = useCallback(
+    (x: Key) => {
+      if (onChange && (typeof x === 'string' || typeof x === 'number')) {
+        onChange(x);
+        const item = items.find(i => i.id === (typeof x === 'string' ? parseInt(x) : x));
+        if (item) setSelectedValue(item);
+      }
+    },
+    [onChange, items],
+  );
+
+  useEffect(() => {
+    if (isFetching || isLoading) return;
     const baseItems = data?.pages?.flat() ?? [];
-    if (!preselectedItem) return baseItems;
-    if (baseItems.find(i => i.id === preselectedItem.id)) return baseItems;
-    return [preselectedItem, ...baseItems];
-  }, [preselectedItem, data?.pages]);
+    if (!preselectedItem) return setItems(baseItems);
+    if (baseItems.find(i => i.id === preselectedItem.id)) return setItems(baseItems);
+    return setItems([preselectedItem, ...baseItems]);
+  }, [data, isFetching, isLoading, preselectedItem]);
 
   useEffect(() => {
     setSelectedValue(preselectedItem);
@@ -82,24 +126,25 @@ export default function SelectDeckArchetype({
 
   return (
     <>
-      <Select
+      <Autocomplete
+        key="test"
         size="sm"
         label={label}
-        selectionMode="single"
         className="max-w-xs"
-        onChange={onChangeHandler}
+        inputValue={filter}
+        onInputChange={onInputChangeHandler}
+        onSelectionChange={onSelectionChangeHandler}
         name={name}
         scrollRef={scrollerRef}
         isLoading={isLoading || isFetching}
-        isDisabled={!data}
         // @ts-ignore
         selectedKeys={selectedKeys}
         defaultSelectedKeys={selectedKeys}
         items={items}
         onOpenChange={setIsOpen}
       >
-        {item => <SelectItem key={item.id}>{textValueDeckArchetype(item)}</SelectItem>}
-      </Select>
+        {item => <AutocompleteItem key={item.id}>{textValueDeckArchetype(item)}</AutocompleteItem>}
+      </Autocomplete>
     </>
   );
 }

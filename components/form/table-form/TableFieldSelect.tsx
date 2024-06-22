@@ -17,7 +17,9 @@ import SelectDeckArchetype, {
 import SelectEventType, {
   SelectEventTypePropsOuter,
 } from '@/components/form/select/SelectEventType';
-import { SelectMatchTypePropsOuter } from '@/components/form/select/SelectMatchType';
+import SelectMatchType, {
+  SelectMatchTypePropsOuter,
+} from '@/components/form/select/SelectMatchType';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -110,6 +112,16 @@ export default function TableFieldSelect({
       case 'EVENT_TYPE':
         return (
           <SelectEventType
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+            {...other}
+          />
+        );
+      case 'MATCH_TYPE':
+        return (
+          <SelectMatchType
             textOnly={!isSelected}
             name={fieldName}
             value={value}
