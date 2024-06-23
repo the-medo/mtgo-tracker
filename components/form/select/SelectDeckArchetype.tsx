@@ -115,9 +115,10 @@ export default function SelectDeckArchetype({
 
   useEffect(() => {
     setSelectedValue(preselectedItem);
+    setFilter(preselectedItem?.name ?? '');
   }, [preselectedItem]);
 
-  const selectedKeys = selectedValue ? [selectedValue.id.toString()] : undefined;
+  const selectedKeys = selectedValue ? selectedValue.id.toString() : undefined;
 
   if (textOnly) {
     // console.log('textOnly', preselectedItem, selectedValue);

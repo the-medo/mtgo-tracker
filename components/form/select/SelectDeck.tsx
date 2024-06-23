@@ -94,8 +94,9 @@ export default function SelectDeck({
   const onSelectionChangeHandler = useCallback(
     (x: Key) => {
       if (onChange && (typeof x === 'string' || typeof x === 'number')) {
-        onChange(x);
-        const item = items.find(i => i.id === (typeof x === 'string' ? parseInt(x) : x));
+        const intValue = typeof x === 'string' ? parseInt(x) : x;
+        onChange(intValue);
+        const item = items.find(i => i.id === intValue);
         if (item) setSelectedValue(item);
       }
     },
@@ -112,6 +113,7 @@ export default function SelectDeck({
 
   useEffect(() => {
     setSelectedValue(preselectedItem);
+    setFilter(preselectedItem?.name ?? '');
   }, [preselectedItem]);
 
   const selectedKeys = selectedValue ? [selectedValue.id.toString()] : undefined;
@@ -133,6 +135,7 @@ export default function SelectDeck({
         name={name}
         scrollRef={scrollerRef}
         isLoading={isLoading || isFetching}
+        disabled={!formatId}
         // @ts-ignore
         selectedKeys={selectedKeys}
         defaultSelectedKeys={selectedKeys}
