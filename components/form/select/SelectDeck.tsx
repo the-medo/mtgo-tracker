@@ -17,15 +17,16 @@ export function textValueDeck(f: Deck | undefined): string {
 export type SelectDeckPropsOuter = {
   selectType: QK.DECK;
   formatId?: number;
+  isFormatIdMandatory?: boolean;
   preselectedItem?: Deck;
 };
 
 type SelectDeckProps = BaseSelectProps & Omit<SelectDeckPropsOuter, 'selectType'>;
 
-const label = (
+const getLabel = (chooseFormat: boolean) => (
   <div className="flex flex-row gap-2 items-center">
     <TbCards size={20} />
-    Deck
+    Deck {chooseFormat ? ` (choose format)` : null}
   </div>
 );
 
@@ -35,6 +36,7 @@ export default function SelectDeck({
   name,
   onChange,
   formatId,
+  isFormatIdMandatory = false,
   preselectedItem,
 }: SelectDeckProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,10 +73,7 @@ export default function SelectDeck({
     [formatId, contains],
   );
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDecks(
-    request,
-    formatId === undefined,
-  );
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteDecks(request);
 
   const [, scrollerRef] = useInfiniteScroll({
     hasMore: hasNextPage,
@@ -92,11 +91,13 @@ export default function SelectDeck({
   );
 
   const onSelectionChangeHandler = useCallback(
-    (x: Key) => {
-      if (onChange && (typeof x === 'string' || typeof x === 'number')) {
-        const intValue = typeof x === 'string' ? parseInt(x) : x;
-        onChange(intValue);
-        const item = items.find(i => i.id === intValue);
+    (x: Key | undefined) => {
+      if (onChange) {
+        let newValue = undefined;
+        if (typeof x === 'string') newValue = parseInt(x);
+        if (typeof x === 'number') newValue = x;
+        onChange(newValue);
+        const item = items.find(i => i.id === newValue);
         if (item) setSelectedValue(item);
       }
     },
@@ -117,6 +118,7 @@ export default function SelectDeck({
   }, [preselectedItem]);
 
   const selectedKeys = selectedValue ? [selectedValue.id.toString()] : undefined;
+  const isDisabled = isFormatIdMandatory && !formatId;
 
   if (textOnly) {
     // console.log('textOnly', preselectedItem, selectedValue);
@@ -127,15 +129,21 @@ export default function SelectDeck({
     <>
       <Autocomplete
         size="sm"
-        label={label}
+        label={getLabel(isDisabled)}
         className="max-w-xs"
         inputValue={filter}
         onInputChange={onInputChangeHandler}
         onSelectionChange={onSelectionChangeHandler}
+        clearButtonProps={{
+          onClick: () => {
+            setFilter('');
+            onSelectionChangeHandler(undefined);
+          },
+        }}
         name={name}
         scrollRef={scrollerRef}
         isLoading={isLoading || isFetching}
-        disabled={!formatId}
+        isDisabled={isDisabled}
         // @ts-ignore
         selectedKeys={selectedKeys}
         defaultSelectedKeys={selectedKeys}

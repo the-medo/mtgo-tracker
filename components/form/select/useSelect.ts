@@ -2,7 +2,7 @@ import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 
 export type UseSelectProps = {
   value?: string | number;
-  onChange?: (x: string | number) => void;
+  onChange?: (x: string | number | undefined) => void;
 };
 
 const parseValueToString = (v: string | number | undefined) => {
@@ -19,9 +19,10 @@ export default function useSelect<T extends { id: string | number }>({
 
   const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
     e => {
-      setLocalValue(e.target.value);
+      const newValue = e.target.value === '' ? undefined : e.target.value;
+      setLocalValue(newValue);
       if (onChange) {
-        onChange(e.target.value);
+        onChange(newValue);
       }
     },
     [onChange],

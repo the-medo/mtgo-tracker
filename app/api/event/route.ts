@@ -85,6 +85,7 @@ export async function POST(req: Request) {
 
 const eventExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
   include: {
+    deck: true,
     EventTags: true,
   },
 });

@@ -12,6 +12,8 @@ import useEventFilters, {
 import SelectEventType from '@/components/form/select/SelectEventType';
 import TagFilter from '@/components/tags/TagFilter';
 import { TagType } from '@prisma/client';
+import SelectDeck from '@/components/form/select/SelectDeck';
+import SelectFormat from '@/components/form/select/SelectFormat';
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
@@ -23,6 +25,8 @@ const label = (
 export default function EventsFilters() {
   const {
     eventName,
+    onFormatIdChange,
+    onDeckIdChange,
     onEventNameChange,
     onTypeChange,
     onRoundsChange,
@@ -32,6 +36,8 @@ export default function EventsFilters() {
     onTagIdsChange,
     onOrderByChange,
     onClear,
+    formatId,
+    deckId,
     type,
     rounds,
     entry,
@@ -46,6 +52,8 @@ export default function EventsFilters() {
       <span className="pl-1 text-tiny text-foreground-500">FILTERS</span>
       <Input size="sm" label={label} value={eventName ?? ''} onChange={onEventNameChange} />
       <SelectEventType value={type} onChange={onTypeChange} />
+      <SelectFormat value={formatId} onChange={onFormatIdChange} />
+      <SelectDeck value={deckId} onChange={onDeckIdChange} formatId={formatId} />
       <Input
         type="number"
         size="sm"

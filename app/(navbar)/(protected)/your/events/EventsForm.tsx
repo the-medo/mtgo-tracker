@@ -14,6 +14,7 @@ import { eventTypeInfo } from '@/app/(navbar)/(protected)/your/events/eventsLib'
 import { EventType } from '@prisma/client';
 import { DatePicker } from '@nextui-org/date-picker';
 import { fromDate } from '@internationalized/date';
+import SelectDeck from '@/components/form/select/SelectDeck';
 
 export default function EventsForm() {
   const ref = useRef<HTMLFormElement>(null);
@@ -59,17 +60,15 @@ export default function EventsForm() {
   );
 
   const onFormatChange = useCallback(
-    (id: string | number) => {
+    (id: string | number | undefined) => {
       const newFormat = formats?.find(f => f.id.toString() === id);
-      if (newFormat) {
-        setFormatId(newFormat.id);
-        setSelectedFormatVersion(newFormat.latestFormatVersionId?.toString());
-      }
+      setFormatId(newFormat?.id);
+      setSelectedFormatVersion(newFormat?.latestFormatVersionId?.toString());
     },
     [formats],
   );
 
-  const onEventTypeChange = useCallback((eventType: string | number) => {
+  const onEventTypeChange = useCallback((eventType: string | number | undefined) => {
     const et = eventType as EventType;
     const eventInfo = eventTypeInfo[et];
     if (eventInfo) {
@@ -98,7 +97,6 @@ export default function EventsForm() {
 
   return (
     <form ref={ref} action={createEvent} className="flex flex-col gap-2">
-      <SelectEventType name="type" onChange={onEventTypeChange} />
       <SelectFormat name="formatId" onChange={onFormatChange} />
       <SelectFormatVersion
         name="formatVersionId"
@@ -106,7 +104,16 @@ export default function EventsForm() {
         description='Automatically changes to "latest" after format change'
       />
 
-      <Input type="text" label="Name" size="sm" name="name" value={name} onChange={onNameChange} />
+      <SelectEventType name="type" onChange={onEventTypeChange} />
+      <Input
+        type="text"
+        label="Event name"
+        size="sm"
+        name="name"
+        value={name}
+        onChange={onNameChange}
+      />
+      <SelectDeck name="deckId" formatId={formatId} isFormatIdMandatory={true} />
       <Input
         type="number"
         label="Rounds"

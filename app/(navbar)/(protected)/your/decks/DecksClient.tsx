@@ -81,7 +81,6 @@ const renderCell = (data: DeckExtended, columnKey: Key) => {
           id={data.id}
           fieldName="deckArchetypeId"
           label="Archetype"
-          // @ts-ignore
           preselectedItem={data.deckArchetype}
         />
       );

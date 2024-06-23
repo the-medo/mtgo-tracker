@@ -20,12 +20,14 @@ const TABLE_ID = 'EVENTS';
 const columns = [
   { name: 'Name', uid: 'name', sortable: true },
   { name: 'Type', uid: 'type', sortable: true },
-  { name: 'Tags', uid: 'tags', maxWidth: 180 },
-  { name: 'Rounds', uid: 'rounds', maxWidth: 80, sortable: true },
-  { name: 'Entry', uid: 'entry', maxWidth: 80, sortable: true },
-  { name: 'Winnings', uid: 'winnings', maxWidth: 80, sortable: true },
+  { name: 'Format', uid: 'formatId', maxWidth: 150 },
+  { name: 'Deck', uid: 'deckId' },
+  { name: 'Tags', uid: 'tags', maxWidth: 100 },
+  { name: 'Rounds', uid: 'rounds', maxWidth: 70, sortable: true },
+  { name: 'Entry', uid: 'entry', maxWidth: 70, sortable: true },
+  { name: 'Winnings', uid: 'winnings', maxWidth: 70, sortable: true },
   { name: 'Date', uid: 'date', maxWidth: 120, sortable: true },
-  { name: 'Actions', uid: 'actions', maxWidth: 80 },
+  { name: 'Actions', uid: 'actions', maxWidth: 70 },
 ];
 
 const renderCell = (data: EventExtended, columnKey: Key) => {
@@ -56,6 +58,34 @@ const renderCell = (data: EventExtended, columnKey: Key) => {
           fieldName="type"
           label="Type"
           value={data.type.toString() ?? undefined}
+        />
+      );
+    case 'formatId':
+      return (
+        <TableField
+          qk={QK.EVENT}
+          selectType={QK.FORMATS}
+          type="select"
+          tableId={TABLE_ID}
+          id={data.id}
+          fieldName="formatId"
+          label="Format"
+          value={data.formatId ?? undefined}
+        />
+      );
+    case 'deckId':
+      return (
+        <TableField
+          qk={QK.EVENT}
+          type="select"
+          selectType={QK.DECK}
+          tableId={TABLE_ID}
+          id={data.id}
+          fieldName="deckId"
+          label="Deck"
+          formatId={data.formatId}
+          value={data.deckId ?? undefined}
+          preselectedItem={data.deck ?? undefined}
         />
       );
     case 'tags':

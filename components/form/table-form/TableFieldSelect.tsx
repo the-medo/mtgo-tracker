@@ -28,7 +28,7 @@ export type BaseSelectProps = {
   isLoading?: boolean;
   name?: string;
   description?: string;
-  onChange?: (x: number | string) => void;
+  onChange?: (x: number | string | undefined) => void;
 };
 
 export type TableFieldSelectProps = {
@@ -63,7 +63,7 @@ export default function TableFieldSelect({
   const setClickedColumn = useStore(state => state.setClickedColumn);
 
   const changeHandler = useCallback(
-    (x: number | string) => {
+    (x: number | string | undefined) => {
       const val = x ?? '';
       if (value !== val) {
         if (onChange) onChange(id, fieldName, val);

@@ -10,10 +10,9 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
-import { EventType, Prisma } from '@prisma/client';
-import { GetDecksRequest } from '@/app/api/deck/getDecks';
-import GetEvents = Prisma.GetEvents;
+import { EventType } from '@prisma/client';
 import { GetEventsRequest } from '@/app/api/event/getEvents';
+import { parseNumber } from '@/app/api/parsers';
 
 export const eventSorterOptions: SorterOption<'Event'>[] = [
   {
@@ -70,6 +69,8 @@ export default function useEventFilters() {
   const [localEventName, setLocalEventName] = useState(eventName ?? '');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(defaultSortDescriptor);
 
+  const formatId = useStore(state => state.events.formatId);
+  const deckId = useStore(state => state.events.deckId);
   const type = useStore(state => state.events.type);
   const rounds = useStore(state => state.events.rounds);
   const entry = useStore(state => state.events.entry);
@@ -94,8 +95,17 @@ export default function useEventFilters() {
     [onEventNameChangeDebounced],
   );
 
+  const onFormatIdChange = useCallback(
+    (id: string | number | undefined) => setFilter('events', 'formatId', parseNumber(id)),
+    [setFilter],
+  );
+  const onDeckIdChange = useCallback(
+    (id: string | number | undefined) => setFilter('events', 'deckId', parseNumber(id)),
+    [setFilter],
+  );
   const onTypeChange = useCallback(
-    (id: string | number) => setFilter('events', 'type', id === '' ? undefined : (id as EventType)),
+    (id: string | number | undefined) =>
+      setFilter('events', 'type', !id || id === '' ? undefined : (id as EventType)),
     [setFilter],
   );
   const onRoundsChange = useCallback(
@@ -160,6 +170,8 @@ export default function useEventFilters() {
     () => ({
       where: {
         name: parseStringToContainsCondition(eventName),
+        formatId,
+        deckId,
         type,
         rounds,
         entry,
@@ -169,11 +181,13 @@ export default function useEventFilters() {
       },
       orderBy,
     }),
-    [eventName, type, rounds, entry, winnings, date, tagIdsFilter, orderBy],
+    [eventName, type, rounds, entry, winnings, date, tagIdsFilter, orderBy, formatId, deckId],
   );
 
   return {
     filters,
+    formatId,
+    deckId,
     eventName: localEventName,
     type,
     rounds,
@@ -182,6 +196,8 @@ export default function useEventFilters() {
     date,
     tagIds,
     orderBy,
+    onFormatIdChange,
+    onDeckIdChange,
     onEventNameChange,
     onTypeChange,
     onRoundsChange,

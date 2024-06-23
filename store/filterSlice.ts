@@ -17,6 +17,8 @@ export type FilterState = {
   events: {
     eventName?: string;
     type?: EventType;
+    formatId?: number;
+    deckId?: number;
     rounds?: number;
     entry?: number;
     winnings?: number;

@@ -95,10 +95,13 @@ export default function SelectDeckArchetype({
   );
 
   const onSelectionChangeHandler = useCallback(
-    (x: Key) => {
-      if (onChange && (typeof x === 'string' || typeof x === 'number')) {
-        onChange(x);
-        const item = items.find(i => i.id === (typeof x === 'string' ? parseInt(x) : x));
+    (x: Key | undefined) => {
+      if (onChange) {
+        let newValue = undefined;
+        if (typeof x === 'string') newValue = parseInt(x);
+        if (typeof x === 'number') newValue = x;
+        onChange(newValue);
+        const item = items.find(i => i.id === newValue);
         if (item) setSelectedValue(item);
       }
     },
@@ -134,6 +137,12 @@ export default function SelectDeckArchetype({
         inputValue={filter}
         onInputChange={onInputChangeHandler}
         onSelectionChange={onSelectionChangeHandler}
+        clearButtonProps={{
+          onClick: () => {
+            setFilter('');
+            onSelectionChangeHandler(undefined);
+          },
+        }}
         name={name}
         scrollRef={scrollerRef}
         isLoading={isLoading || isFetching}
