@@ -10,7 +10,7 @@ export default function MatchesLeftNav() {
   return (
     <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
       <Accordion
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={['3']}
         disableIndicatorAnimation
         keepContentMounted
         disallowEmptySelection

@@ -21,6 +21,7 @@ import SelectMatchType, {
   SelectMatchTypePropsOuter,
 } from '@/components/form/select/SelectMatchType';
 import SelectDeck, { SelectDeckPropsOuter } from '@/components/form/select/SelectDeck';
+import SelectEvent, { SelectEventPropsOuter } from '@/components/form/select/SelectEvent';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -41,6 +42,7 @@ export type TableFieldSelectProps = {
     | SelectArchetypeGroupPropsOuter
     | SelectDeckArchetypePropsOuter
     | SelectDeckPropsOuter
+    | SelectEventPropsOuter
     | SelectEventTypePropsOuter
     | SelectMatchTypePropsOuter
   );
@@ -114,6 +116,16 @@ export default function TableFieldSelect({
       case QK.DECK:
         return (
           <SelectDeck
+            textOnly={!isSelected}
+            name={fieldName}
+            value={value}
+            onChange={changeHandler}
+            {...other}
+          />
+        );
+      case QK.EVENT:
+        return (
+          <SelectEvent
             textOnly={!isSelected}
             name={fieldName}
             value={value}
