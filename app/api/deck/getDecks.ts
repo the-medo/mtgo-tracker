@@ -1,8 +1,15 @@
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
-import { QueryFunction, QueryKey, skipToken, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  skipToken,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { DeckExtended } from '@/app/api/deck/route';
+import { queryClient } from '@/app/providers';
 
 export type GetDecksRequest = PrismaQueryApiParams<'Deck'>;
 
@@ -10,7 +17,13 @@ export async function getDecks({ where, orderBy, skip, take }: GetDecksRequest) 
   const params = createQueryApiParams({ where, orderBy, skip, take });
   const f = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/deck${params}`);
 
-  return (await f.json()) as DeckExtended[];
+  const data = (await f.json()) as DeckExtended[];
+
+  data.forEach(deck => {
+    queryClient.setQueryData([QK.DECK, deck.id], deck);
+  });
+
+  return data;
 }
 
 export function useInfiniteDecks(request: GetDecksRequest = {}, skipQuery?: boolean) {
