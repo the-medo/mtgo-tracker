@@ -4,6 +4,7 @@ import { Accordion, AccordionItem } from '@nextui-org/accordion';
 
 import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
 import { useDeck } from '@/app/api/deck/[id]/getDeck';
+import DeckInfo from '@/app/(navbar)/(protected)/your/decks/[id]/DeckInfo';
 
 interface DeckLeftNavProps {
   deckId: number;
@@ -14,7 +15,7 @@ export default function DeckLeftNav({ deckId }: DeckLeftNavProps) {
 
   return (
     <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
-      {JSON.stringify(data)}
+      <DeckInfo deckId={deckId} />
       <Accordion
         defaultSelectedKeys={['1']}
         disableIndicatorAnimation
@@ -28,6 +29,7 @@ export default function DeckLeftNav({ deckId }: DeckLeftNavProps) {
           title="Filter and sort"
         ></AccordionItem>
       </Accordion>
+      {JSON.stringify(data)}
     </div>
   );
 }

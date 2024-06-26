@@ -6,6 +6,7 @@ import { ChangeEventHandler, useCallback, useMemo, useRef } from 'react';
 import debounce from 'lodash.debounce';
 import useStore from '@/store/store';
 import FieldCircularProgress from '@/components/form/table-form/FieldCircularProgress';
+import LabelledValue from '@/components/typography/LabelledValue';
 
 export type TableFieldBooleanProps = {
   type: 'boolean';
@@ -22,6 +23,7 @@ export default function TableFieldBoolean({
   onChange,
   endContent,
   isPending,
+  isLabelledView,
 }: TableFieldBooleanProps) {
   const ref = useRef<HTMLInputElement>(null);
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
@@ -66,7 +68,11 @@ export default function TableFieldBoolean({
     }
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
-  return (
+  const isLabelledViewVisible = !isSelected && isLabelledView;
+
+  return isLabelledViewVisible ? (
+    <LabelledValue label={label} value={content} onClick={selectRow} />
+  ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
       {content}
     </div>

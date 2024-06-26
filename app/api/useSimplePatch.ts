@@ -1,5 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { useMemo } from 'react';
+import { tagArrayPropertyNameByQK } from '@/types/tags';
 
 export type SimplePatchRequest = {
   id: string | number;
@@ -9,6 +11,15 @@ export type SimplePatchRequest = {
 
 export default function useSimplePatch<T extends QK>(qk: QK) {
   const queryClient = useQueryClient();
+
+  const filters: QueryFilters = useMemo(
+    () => ({
+      type: 'all',
+      exact: false,
+      queryKey: [qk],
+    }),
+    [qk],
+  );
 
   return useMutation({
     mutationFn: async (data: SimplePatchRequest): Promise<QTypes[T][number]> => {
@@ -25,10 +36,52 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
       return await res.json();
     },
     onMutate: async data => {
-      await queryClient.cancelQueries({ queryKey: [qk] });
-      const previousData = queryClient.getQueryData([qk]);
+      await queryClient.cancelQueries(filters);
+      const previousData = queryClient.getQueriesData(filters);
+
+      console.log('previous data!', previousData);
 
       const valueParser = QTypeParsers[qk]?.[data.field] ?? anyParser;
+
+      const propertyName = data.field;
+
+      queryClient.setQueriesData(filters, (old: unknown) => {
+        console.log('OLD', old);
+
+        /* This is for infinite scroll hooks */
+        // @ts-ignore
+        if ('pages' in old && Array.isArray(old.pages)) {
+          if (propertyName in old.pages[0]?.[0]) {
+            const result = {
+              ...old,
+              pages: old.pages.map(o => {
+                // @ts-ignore
+                return o.map(x => ({
+                  ...x,
+                  [propertyName]: x.id === data.id ? valueParser(data.value) : x[propertyName],
+                }));
+              }),
+            };
+
+            console.log('Infinite result: ', result);
+            return result;
+          }
+          /* This is for single property fetch  */
+        } else {
+          // @ts-ignore
+          if (propertyName in old) {
+            const result = {
+              // @ts-ignore
+              ...old,
+              // @ts-ignore
+              [propertyName]: old.id === data.id ? valueParser(data.value) : old[propertyName],
+            };
+
+            console.log('Single result: ', result);
+            return result;
+          }
+        }
+      });
 
       queryClient.setQueryData([qk], (old: QTypes[T]) => [
         ...(old ?? []).map(o =>
@@ -39,7 +92,7 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
       return { previousData };
     },
     onError: (err, newData, context) => {
-      queryClient.setQueryData([qk], context?.previousData);
+      queryClient.setQueriesData(filters, context?.previousData);
     },
   });
 }

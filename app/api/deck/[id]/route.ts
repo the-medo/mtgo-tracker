@@ -54,12 +54,16 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: 'Failed to load the deck' }, { status: 403 });
   }
 
-  const data: DeckExtended[] = await prisma.deck.findMany({
+  const data: DeckExtended | null = await prisma.deck.findFirst({
     where: {
       id: parseInt(params.id),
     },
     ...deckExtension,
   });
+
+  if (!data) {
+    return NextResponse.json({ error: 'Failed to load the deck' }, { status: 403 });
+  }
 
   return NextResponse.json(data);
 }

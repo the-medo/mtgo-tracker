@@ -10,6 +10,14 @@ import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { DeckExtended } from '@/app/api/deck/route';
 import { queryClient } from '@/app/providers';
+import { parseDate, Stringify } from '@/app/api/parsers';
+
+export const parseDeck = (j: Stringify<DeckExtended>): DeckExtended =>
+  ({
+    ...j,
+    createdAt: parseDate(j.createdAt),
+    lastPlayedAt: parseDate(j.lastPlayedAt),
+  }) as unknown as DeckExtended;
 
 export type GetDecksRequest = PrismaQueryApiParams<'Deck'>;
 
@@ -17,7 +25,7 @@ export async function getDecks({ where, orderBy, skip, take }: GetDecksRequest) 
   const params = createQueryApiParams({ where, orderBy, skip, take });
   const f = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/deck${params}`);
 
-  const data = (await f.json()) as DeckExtended[];
+  const data = (await f.json()).map((j: Stringify<DeckExtended>) => parseDeck(j)) as DeckExtended[];
 
   data.forEach(deck => {
     queryClient.setQueryData([QK.DECK, deck.id], deck);

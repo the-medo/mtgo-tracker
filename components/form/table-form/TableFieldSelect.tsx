@@ -22,6 +22,7 @@ import SelectMatchType, {
 } from '@/components/form/select/SelectMatchType';
 import SelectDeck, { SelectDeckPropsOuter } from '@/components/form/select/SelectDeck';
 import SelectEvent, { SelectEventPropsOuter } from '@/components/form/select/SelectEvent';
+import LabelledValue from '@/components/typography/LabelledValue';
 
 export type BaseSelectProps = {
   textOnly?: boolean;
@@ -163,7 +164,11 @@ export default function TableFieldSelect({
     }
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
-  return (
+  const isLabelledViewVisible = !isSelected && other.isLabelledView;
+
+  return isLabelledViewVisible ? (
+    <LabelledValue label={label} value={content} onClick={selectRow} />
+  ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
       {content}
     </div>

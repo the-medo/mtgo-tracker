@@ -23,6 +23,7 @@ export type TableFieldProps = {
   fieldName: string;
   label: string;
   editable?: boolean;
+  isLabelledView?: boolean;
   endContent?: ReactNode;
   onChange?: TableFieldPatchRequest;
   isPending?: boolean;

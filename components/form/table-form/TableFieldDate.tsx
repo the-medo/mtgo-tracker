@@ -7,6 +7,7 @@ import useStore from '@/store/store';
 import debounce from 'lodash.debounce';
 import { fromDate, ZonedDateTime } from '@internationalized/date';
 import FieldCircularProgress from '@/components/form/table-form/FieldCircularProgress';
+import LabelledValue from '@/components/typography/LabelledValue';
 
 function zonedDateTimeToISOString(zdt: ZonedDateTime): string {
   const { year, month, day } = zdt;
@@ -29,6 +30,7 @@ export default function TableFieldDate({
   onChange,
   isPending,
   endContent,
+  isLabelledView,
 }: TableFieldDateProps) {
   const ref = useRef(null);
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
@@ -80,7 +82,11 @@ export default function TableFieldDate({
     }
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
-  return (
+  const isLabelledViewVisible = !isSelected && isLabelledView;
+
+  return isLabelledViewVisible ? (
+    <LabelledValue label={label} value={content} onClick={selectRow} />
+  ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
       {content}
     </div>

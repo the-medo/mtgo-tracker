@@ -12,6 +12,7 @@ import { MultipleSelection, Selection } from '@react-types/shared/src/selection'
 import useTagAssignmentPost from '@/app/api/tag-assignment/useTagAssignmentPost';
 import { TagAssignment } from '@/types/tags';
 import useTagAssignmentDelete from '@/app/api/tag-assignment/useTagAssignmentDelete';
+import LabelledValue from '@/components/typography/LabelledValue';
 
 export type TableFieldTagsProps = {
   type: 'tags';
@@ -107,8 +108,12 @@ export default function TableFieldTags({
     }
   }, [isLoading, isSelected, changeHandler, selectedKeys, tags, values]);
 
-  return (
-    <div className="w-full min-h-[48px] flex items-start justify-items-start" onClick={selectRow}>
+  const isLabelledViewVisible = !isSelected && other.isLabelledView;
+
+  return isLabelledViewVisible ? (
+    <LabelledValue label={label} value={content} onClick={selectRow} />
+  ) : (
+    <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
       {content}
     </div>
   );

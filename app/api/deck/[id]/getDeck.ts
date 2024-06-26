@@ -1,10 +1,13 @@
 import { useQuery, QueryKey, QueryFunction, skipToken } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import { DeckExtended } from '@/app/api/deck/route';
+import { parseDeck } from '@/app/api/deck/getDecks';
+import { Stringify } from '@/app/api/parsers';
 
 export async function getDeck(deckId: number) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/deck/${deckId}`);
-  return (await response.json()) as DeckExtended;
+  const data = (await response.json()) as Stringify<DeckExtended>;
+  return parseDeck(data);
 }
 
 export function useDeck(deckId: number, skipQuery?: boolean) {

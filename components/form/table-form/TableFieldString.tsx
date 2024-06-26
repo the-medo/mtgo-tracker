@@ -6,11 +6,14 @@ import useStore from '@/store/store';
 import { ChangeEventHandler, useCallback, useMemo, useRef } from 'react';
 import debounce from 'lodash.debounce';
 import FieldCircularProgress from '@/components/form/table-form/FieldCircularProgress';
+import LabelledValue from '@/components/typography/LabelledValue';
+import Title from '@/components/typography/Title';
 
 export type TableFieldStringProps = {
   type: 'string';
   value?: string;
   selectAllOnFocus?: boolean;
+  isMainTitle?: boolean;
 } & TableFieldProps;
 
 export default function TableFieldString({
@@ -23,6 +26,8 @@ export default function TableFieldString({
   onChange,
   endContent,
   isPending,
+  isLabelledView,
+  isMainTitle,
 }: TableFieldStringProps) {
   const ref = useRef<HTMLInputElement>(null);
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
@@ -83,9 +88,13 @@ export default function TableFieldString({
     }
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
-  return (
+  const isLabelledViewVisible = !isSelected && isLabelledView;
+
+  return isLabelledViewVisible ? (
+    <LabelledValue label={label} value={content} onClick={selectRow} />
+  ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
-      {content}
+      {isMainTitle && !isSelected ? <Title title={value ?? '-'} size="xl" /> : content}
     </div>
   );
 }
