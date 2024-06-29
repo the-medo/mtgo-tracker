@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeck } from '@/app/api/deck/[id]/getDeck';
-import { useCallback, useEffect } from 'react';
+import { ReactEventHandler, useCallback, useEffect } from 'react';
 
 interface DeckContentProps {
   deckId: number;
@@ -10,7 +10,7 @@ interface DeckContentProps {
 export default function DeckContent({ deckId }: DeckContentProps) {
   const { data } = useDeck(deckId);
 
-  const moxfieldOnMessage = useCallback(e => {
+  const moxfieldOnMessage = useCallback((e: MessageEvent) => {
     const t = e.data;
     if ('object' == typeof t && 'moxfield' === t.type) {
       const e = document.getElementById(t.id);
@@ -18,9 +18,11 @@ export default function DeckContent({ deckId }: DeckContentProps) {
     }
   }, []);
 
-  const moxfieldOnLoad = useCallback(e => {
+  const moxfieldOnLoad: ReactEventHandler<HTMLIFrameElement> = useCallback(e => {
     e.target &&
+      // @ts-ignore
       e.target.contentWindow &&
+      // @ts-ignore
       e.target.contentWindow.postMessage({ type: 'moxfield', data: e.target.id }, '*');
   }, []);
 
@@ -38,12 +40,7 @@ export default function DeckContent({ deckId }: DeckContentProps) {
 
   return (
     <div className="flex flex-col w-full gap-4">
-      <iframe
-        src={url}
-        id="moxfield-frame-1"
-        width="100%"
-        onLoad={event => moxfieldOnLoad(event)}
-      ></iframe>
+      <iframe src={url} id="moxfield-frame-1" width="100%" onLoad={moxfieldOnLoad}></iframe>
     </div>
   );
 }

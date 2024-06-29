@@ -98,6 +98,7 @@ export default function SelectDeckArchetype({
   const onSelectionChangeHandler = useCallback(
     (x: Key | undefined) => {
       if (onChange) {
+        console.log('inside ', x);
         let newValue = undefined;
         if (typeof x === 'string') newValue = parseInt(x);
         if (typeof x === 'number') newValue = x;
@@ -157,7 +158,11 @@ export default function SelectDeckArchetype({
         items={items}
         onOpenChange={setIsOpen}
       >
-        {item => <AutocompleteItem key={item.id}>{textValueDeckArchetype(item)}</AutocompleteItem>}
+        {item => (
+          <AutocompleteItem key={item.id} value={item.id}>
+            {textValueDeckArchetype(item)}
+          </AutocompleteItem>
+        )}
       </Autocomplete>
     </>
   );

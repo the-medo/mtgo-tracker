@@ -94,6 +94,17 @@ export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoP
         preselectedItem={data.deckArchetype}
         isLabelledView={true}
       />
+      <TableField
+        qk={QK.DECK}
+        type="tags"
+        tableId={deckInfoIdentificator}
+        id={data.id}
+        fieldName="tags"
+        label="Tags"
+        displaySelect={false}
+        // @ts-ignore
+        values={data.DeckTags}
+      />
       {!isAlwaysEditMode &&
         (isSelected ? (
           <Button size="sm" onClick={() => clearTableData(deckInfoIdentificator)}>

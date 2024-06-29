@@ -18,6 +18,7 @@ export default function DecksForm() {
   const [selectedFormatVersion, setSelectedFormatVersion] = useState<string>();
   const [validatedLink, setValidatedLink] = useState(true);
   const [formatId, setFormatId] = useState<number>();
+  const [deckArchetypeId, setDeckArchetypeId] = useState<string>();
 
   const { isPending, data: formats } = useQuery({
     queryKey: [QK.FORMATS],
@@ -28,7 +29,6 @@ export default function DecksForm() {
     async (formData: FormData) => {
       const formatId = formData.get('formatId') as string | undefined;
       const formatVersionId = formData.get('formatVersionId') as string | undefined;
-      const deckArchetypeId = formData.get('deckArchetypeId') as string | undefined;
 
       const data = {
         name: formData.get('name'),
@@ -40,9 +40,11 @@ export default function DecksForm() {
 
       ref.current?.reset();
 
+      console.log(deckArchetypeId, data);
+
       mutate(data);
     },
-    [mutate],
+    [mutate, deckArchetypeId],
   );
 
   const onFormatChange = useCallback(
@@ -55,6 +57,10 @@ export default function DecksForm() {
     },
     [formats],
   );
+
+  const onDeckArchetypeChange = useCallback((id: string | number | undefined) => {
+    setDeckArchetypeId(typeof id === 'number' ? id.toString() : id);
+  }, []);
 
   const onLinkChange: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
     setValidatedLink(parseDeckLink(e.target.value) !== false);
@@ -79,7 +85,13 @@ export default function DecksForm() {
         value={selectedFormatVersion}
         description='Automatically changes to "latest" after format change'
       />
-      {formatId && <SelectDeckArchetype name="deckArchetypeId" formatId={formatId} />}
+      {formatId && (
+        <SelectDeckArchetype
+          name="deckArchetypeId"
+          formatId={formatId}
+          onChange={onDeckArchetypeChange}
+        />
+      )}
       <Button type="submit">Create</Button>
     </form>
   );

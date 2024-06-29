@@ -17,6 +17,7 @@ import LabelledValue from '@/components/typography/LabelledValue';
 export type TableFieldTagsProps = {
   type: 'tags';
   values: TagAssignment[];
+  displaySelect?: boolean;
 } & TableFieldProps;
 
 export default function TableFieldTags({
@@ -30,6 +31,7 @@ export default function TableFieldTags({
   endContent,
   isPending,
   qk,
+  displaySelect = true,
   ...other
 }: TableFieldTagsProps) {
   const tagType = qkToTagType[qk];
@@ -71,6 +73,24 @@ export default function TableFieldTags({
     [selectedKeys, assignTag, id, deleteTag],
   );
 
+  const toggleTag = useCallback(
+    (tagId: number) => {
+      if (selectedKeys.find(k => k === tagId.toString())) {
+        deleteTag({
+          tagId,
+          entityId: id,
+        });
+      } else {
+        assignTag({
+          type: tagType,
+          tagId: tagId,
+          entityId: id,
+        });
+      }
+    },
+    [selectedKeys, deleteTag, id, assignTag],
+  );
+
   const selectRow = useCallback(() => {
     if (editable && !isSelected) {
       setSelectedId(tableId, id);
@@ -79,7 +99,7 @@ export default function TableFieldTags({
   }, [editable, setSelectedId, tableId, id, isSelected, setClickedColumn, fieldName]);
 
   const content = useMemo(() => {
-    if (isSelected) {
+    if (isSelected && displaySelect) {
       return (
         <Select
           label="Tags"
@@ -92,6 +112,29 @@ export default function TableFieldTags({
         >
           {(tags ?? [])?.map(t => <SelectItem key={t.id}>{t.name}</SelectItem>)}
         </Select>
+      );
+    } else if (isSelected && !displaySelect) {
+      return (
+        <div className="flex flex-row gap-2 flex-wrap">
+          {(tags ?? []).map(v => {
+            const isTagSelected = selectedKeys.find(k => k === v.id.toString());
+
+            return (
+              <Chip
+                size="sm"
+                key={v.id}
+                variant={isTagSelected ? 'bordered' : 'flat'}
+                onClick={() => toggleTag(v.id)}
+                // onClose={() => deleteTag({ id: tag.id })}
+                className={
+                  isTagSelected ? 'cursor-pointer' : 'border-2 border-transparent cursor-pointer'
+                }
+              >
+                {v.name}
+              </Chip>
+            );
+          })}
+        </div>
       );
     } else {
       return (
@@ -106,7 +149,7 @@ export default function TableFieldTags({
         </div>
       );
     }
-  }, [isLoading, isSelected, changeHandler, selectedKeys, tags, values]);
+  }, [isLoading, isSelected, changeHandler, selectedKeys, tags, values, displaySelect, toggleTag]);
 
   const isLabelledViewVisible = !isSelected && other.isLabelledView;
 

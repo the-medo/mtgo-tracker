@@ -60,6 +60,21 @@ export default function useTagAssignmentDelete(tagType: TagType | undefined, qk:
             console.log('RESULT', result);
             return result;
           }
+        } else {
+          // @ts-ignore
+          if (propertyName in old) {
+            return {
+              // @ts-ignore
+              ...old,
+              [propertyName]:
+                // @ts-ignore
+                old.id === data.entityId
+                  ? // @ts-ignore
+                    old[propertyName].filter(y => y.tagId !== data.tagId)
+                  : // @ts-ignore
+                    old[propertyName],
+            };
+          }
         }
         return old;
       });

@@ -65,6 +65,21 @@ export default function useTagAssignmentPost(tagType: TagType | undefined, qk: Q
             };
             return result;
           }
+        } else {
+          // @ts-ignore
+          if (propertyName in old) {
+            return {
+              // @ts-ignore
+              ...old,
+              [propertyName]:
+                // @ts-ignore
+                old.id === tagData[propertyId]
+                  ? // @ts-ignore
+                    [...old[propertyName], tagData]
+                  : // @ts-ignore
+                    old[propertyName],
+            };
+          }
         }
         return old;
       });
