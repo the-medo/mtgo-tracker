@@ -14,6 +14,8 @@ import useDeckFilters from '@/app/(navbar)/(protected)/your/decks/useDeckFilters
 import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
 import { DeckExtended } from '@/app/api/deck/route';
+import { useRouter } from 'next/navigation';
+import DeckInfoModal from '@/app/(navbar)/(protected)/your/decks/[id]/DeckInfoModal';
 
 const TABLE_ID = 'DECKS';
 
@@ -82,6 +84,7 @@ const renderCell = (data: DeckExtended, columnKey: Key) => {
           fieldName="deckArchetypeId"
           label="Archetype"
           preselectedItem={data.deckArchetype}
+          value={data.deckArchetypeId}
         />
       );
     case 'lastPlayedAt':
@@ -91,7 +94,7 @@ const renderCell = (data: DeckExtended, columnKey: Key) => {
     case 'actions':
       return (
         <div className="relative flex flex-row items-center gap-2">
-          <EditButton tableId={TABLE_ID} id={data.id} qk={QK.DECK} />
+          <DeckInfoModal deckId={data.id} />
           <DeleteButton id={data.id} qk={QK.DECK} />
         </div>
       );
@@ -101,6 +104,7 @@ const renderCell = (data: DeckExtended, columnKey: Key) => {
 interface Props {}
 
 export default function DecksClient({}: Props) {
+  const router = useRouter();
   const { filters, sortDescriptor, onSortChange } = useDeckFilters();
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteDecks(filters);
 
@@ -152,9 +156,14 @@ export default function DecksClient({}: Props) {
           {item => (
             <TableRow
               key={item.id}
-              className={`hover:bg-zinc-50 ${item.id === -1 ? 'opacity-50' : ''}`}
+              className={`hover:bg-zinc-50 cursor-pointer ${item.id === -1 ? 'opacity-50' : ''}`}
+              href={`/your/decks/${item.id}`}
             >
-              {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+              {columnKey => (
+                <TableCell onClick={e => e.stopPropagation()}>
+                  {renderCell(item, columnKey)}
+                </TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>

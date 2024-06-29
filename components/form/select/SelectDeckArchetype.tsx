@@ -39,6 +39,7 @@ export default function SelectDeckArchetype({
   onChange,
   formatId,
   preselectedItem,
+  value,
 }: SelectDeckArchetypeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<string>('');
@@ -117,6 +118,11 @@ export default function SelectDeckArchetype({
   }, [data, isFetching, isLoading, preselectedItem]);
 
   useEffect(() => {
+    const item = items.find(i => i.id === value);
+    if (item) setSelectedValue(item);
+  }, [value]);
+
+  useEffect(() => {
     setSelectedValue(preselectedItem);
     setFilter(preselectedItem?.name ?? '');
   }, [preselectedItem]);
@@ -124,7 +130,6 @@ export default function SelectDeckArchetype({
   const selectedKeys = selectedValue ? selectedValue.id.toString() : undefined;
 
   if (textOnly) {
-    // console.log('textOnly', preselectedItem, selectedValue);
     return textValueDeckArchetype(selectedValue);
   }
 

@@ -6,16 +6,26 @@ import LabelledValue from '@/components/typography/LabelledValue';
 import DateDisplay from '@/components/typography/DateDisplay';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
+import { useEffect } from 'react';
 
 interface DeckInfoProps {
   deckId: number;
+  isAlwaysEditMode: boolean;
 }
 
-export default function DeckInfo({ deckId }: DeckInfoProps) {
-  const identificator = `DeckInfo`;
+export const deckInfoIdentificator = `DeckInfo`;
+
+export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
   const { data } = useDeck(deckId);
   const clearTableData = useStore(state => state.clearTableData);
-  const isSelected = useStore(state => state.tables[identificator]?.selectedIds[deckId]);
+  const isSelected = useStore(state => state.tables[deckInfoIdentificator]?.selectedIds[deckId]);
+  const setSelectedId = useStore(state => state.setSelectedId);
+
+  useEffect(() => {
+    if (isAlwaysEditMode && !isSelected) {
+      setSelectedId(deckInfoIdentificator, deckId);
+    }
+  }, [isAlwaysEditMode]);
 
   if (!data) {
     return (
@@ -30,7 +40,7 @@ export default function DeckInfo({ deckId }: DeckInfoProps) {
       <TableField
         qk={QK.DECK}
         type="string"
-        tableId={identificator}
+        tableId={deckInfoIdentificator}
         id={data.id}
         fieldName="name"
         label="Name"
@@ -52,7 +62,7 @@ export default function DeckInfo({ deckId }: DeckInfoProps) {
         qk={QK.DECK}
         selectType={QK.FORMATS}
         type="select"
-        tableId={identificator}
+        tableId={deckInfoIdentificator}
         id={data.id}
         fieldName="formatId"
         label="Format"
@@ -64,7 +74,7 @@ export default function DeckInfo({ deckId }: DeckInfoProps) {
         qk={QK.DECK}
         selectType={QK.FORMAT_VERSIONS}
         type="select"
-        tableId={identificator}
+        tableId={deckInfoIdentificator}
         id={data.id}
         fieldName="formatVersionId"
         label="Format version"
@@ -78,7 +88,7 @@ export default function DeckInfo({ deckId }: DeckInfoProps) {
         selectType={QK.DECK_ARCHETYPE}
         formatId={data.formatId}
         type="select"
-        tableId={identificator}
+        tableId={deckInfoIdentificator}
         id={data.id}
         fieldName="deckArchetypeId"
         label="Archetype"
@@ -86,8 +96,8 @@ export default function DeckInfo({ deckId }: DeckInfoProps) {
         editable={true}
         isLabelledView={true}
       />
-      {isSelected && (
-        <Button size="sm" onClick={() => clearTableData(identificator)}>
+      {isSelected && !isAlwaysEditMode && (
+        <Button size="sm" onClick={() => clearTableData(deckInfoIdentificator)}>
           Close editing
         </Button>
       )}
