@@ -110,7 +110,7 @@ model Format {
   id                    Int            @id @default(autoincrement())
   name                  String
   latestFormatVersionId Int?
-  formatVersion         FormatVersion? @relation(fields: [latestFormatVersionId], references: [id])
+  formatVersion         FormatVersion? @relation(fields: [latestFormatVersionId], references: [id], onDelete: SetNull)
 
   Decks         Deck[]
   DeckArchetype DeckArchetype[]
@@ -141,8 +141,8 @@ model DeckArchetype {
   name             String
   formatId         Int
   archetypeGroupId Int
-  archetypeGroup   ArchetypeGroup @relation(fields: [archetypeGroupId], references: [id])
-  format           Format         @relation(fields: [formatId], references: [id])
+  archetypeGroup   ArchetypeGroup @relation(fields: [archetypeGroupId], references: [id], onDelete: Cascade)
+  format           Format         @relation(fields: [formatId], references: [id], onDelete: Cascade)
 
   Decks      Deck[]
   OppMatches Match[]
@@ -162,9 +162,9 @@ model Deck {
   formatVersionId Int
   deckArchetypeId Int
 
-  format        Format        @relation(fields: [formatId], references: [id])
-  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
-  deckArchetype DeckArchetype @relation(fields: [deckArchetypeId], references: [id])
+  format        Format        @relation(fields: [formatId], references: [id], onDelete: Cascade)
+  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id], onDelete: Cascade)
+  deckArchetype DeckArchetype @relation(fields: [deckArchetypeId], references: [id], onDelete: Cascade)
 
   Events   Event[]
   Matches  Match[]
@@ -190,10 +190,10 @@ model Event {
   Matches   Match[]
   EventTags EventTag[]
 
-  user          User          @relation(fields: [userId], references: [id])
-  deck          Deck?         @relation(fields: [deckId], references: [id])
-  format        Format        @relation(fields: [formatId], references: [id])
-  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id])
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck          Deck?         @relation(fields: [deckId], references: [id], onDelete: SetNull)
+  format        Format        @relation(fields: [formatId], references: [id], onDelete: Cascade)
+  formatVersion FormatVersion @relation(fields: [formatVersionId], references: [id], onDelete: Cascade)
 }
 
 model Match {
@@ -218,12 +218,12 @@ model Match {
   Games     Game[]
   MatchTags MatchTag[]
 
-  user         User           @relation(fields: [userId], references: [id], name: "User")
-  event        Event?         @relation(fields: [eventId], references: [id])
-  deck         Deck           @relation(fields: [deckId], references: [id])
-  oppUser      User?          @relation(fields: [oppUserId], references: [id], name: "OppUser")
-  oppMatch     Match?         @relation(fields: [oppMatchId], references: [id], name: "OppMatch")
-  oppArchetype DeckArchetype? @relation(fields: [oppArchetypeId], references: [id])
+  user         User           @relation(fields: [userId], references: [id], name: "User", onDelete: Cascade)
+  event        Event?         @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  deck         Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  oppUser      User?          @relation(fields: [oppUserId], references: [id], name: "OppUser", onDelete: SetNull)
+  oppMatch     Match?         @relation(fields: [oppMatchId], references: [id], name: "OppMatch", onDelete: SetNull)
+  oppArchetype DeckArchetype? @relation(fields: [oppArchetypeId], references: [id], onDelete: SetNull)
 }
 
 model Game {
@@ -240,7 +240,7 @@ model Game {
 
   GameTags GameTag[]
 
-  match Match @relation(fields: [matchId], references: [id])
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
 
   @@unique([gameNumber, matchId])
 }
@@ -263,8 +263,8 @@ model MatchTag {
   tagId   Int
   matchId Int
 
-  tag   Tag   @relation(fields: [tagId], references: [id])
-  match Match @relation(fields: [matchId], references: [id])
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
 
   @@id([tagId, matchId])
 }
@@ -273,8 +273,8 @@ model GameTag {
   tagId  Int
   gameId Int
 
-  tag  Tag  @relation(fields: [tagId], references: [id])
-  game Game @relation(fields: [gameId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@id([tagId, gameId])
 }
@@ -283,8 +283,8 @@ model EventTag {
   tagId   Int
   eventId Int
 
-  tag   Tag   @relation(fields: [tagId], references: [id])
-  event Event @relation(fields: [eventId], references: [id])
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([tagId, eventId])
 }
@@ -293,8 +293,8 @@ model DeckTag {
   tagId  Int
   deckId Int
 
-  tag  Tag  @relation(fields: [tagId], references: [id])
-  deck Deck @relation(fields: [deckId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  deck Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
 
   @@id([tagId, deckId])
 }
