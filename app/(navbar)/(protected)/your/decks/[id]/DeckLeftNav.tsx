@@ -25,11 +25,10 @@ export default function DeckLeftNav({ deckId }: DeckLeftNavProps) {
         <AccordionItem
           indicator={<TbFilter size={20} />}
           key="1"
-          aria-label="Filters for decks"
-          title="Filter and sort"
+          aria-label="New event with this deck"
+          title="New event"
         ></AccordionItem>
       </Accordion>
-      {JSON.stringify(data)}
     </div>
   );
 }

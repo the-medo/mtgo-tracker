@@ -6,25 +6,27 @@ import LabelledValue from '@/components/typography/LabelledValue';
 import DateDisplay from '@/components/typography/DateDisplay';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 interface DeckInfoProps {
   deckId: number;
-  isAlwaysEditMode: boolean;
+  isAlwaysEditMode?: boolean;
 }
 
 export const deckInfoIdentificator = `DeckInfo`;
 
-export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
+export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoProps) {
   const { data } = useDeck(deckId);
   const clearTableData = useStore(state => state.clearTableData);
   const isSelected = useStore(state => state.tables[deckInfoIdentificator]?.selectedIds[deckId]);
   const setSelectedId = useStore(state => state.setSelectedId);
 
+  const setSelected = useCallback(() => {
+    setSelectedId(deckInfoIdentificator, deckId);
+  }, [setSelectedId, deckId]);
+
   useEffect(() => {
-    if (isAlwaysEditMode && !isSelected) {
-      setSelectedId(deckInfoIdentificator, deckId);
-    }
+    if (isAlwaysEditMode && !isSelected) setSelected();
   }, [isAlwaysEditMode]);
 
   if (!data) {
@@ -45,7 +47,6 @@ export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
         fieldName="name"
         label="Name"
         value={data.name ?? undefined}
-        editable={true}
         isMainTitle={true}
       />
       <LabelledValue
@@ -67,7 +68,6 @@ export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
         fieldName="formatId"
         label="Format"
         value={data.formatId ?? undefined}
-        editable={true}
         isLabelledView={true}
       />
       <TableField
@@ -79,7 +79,6 @@ export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
         fieldName="formatVersionId"
         label="Format version"
         value={data.formatVersionId ?? undefined}
-        editable={true}
         isLabelledView={true}
       />
 
@@ -93,14 +92,18 @@ export default function DeckInfo({ deckId, isAlwaysEditMode }: DeckInfoProps) {
         fieldName="deckArchetypeId"
         label="Archetype"
         preselectedItem={data.deckArchetype}
-        editable={true}
         isLabelledView={true}
       />
-      {isSelected && !isAlwaysEditMode && (
-        <Button size="sm" onClick={() => clearTableData(deckInfoIdentificator)}>
-          Close editing
-        </Button>
-      )}
+      {!isAlwaysEditMode &&
+        (isSelected ? (
+          <Button size="sm" onClick={() => clearTableData(deckInfoIdentificator)}>
+            Close editing
+          </Button>
+        ) : (
+          <Button size="sm" onClick={setSelected}>
+            Edit
+          </Button>
+        ))}
     </div>
   );
 }
