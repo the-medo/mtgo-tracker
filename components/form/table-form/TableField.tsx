@@ -54,6 +54,7 @@ export default function TableField(props: Props) {
 
   switch (props.type) {
     case 'string':
+    case 'number':
       return <TableFieldString {...props} onChange={onChange} isPending={isPending} />;
     case 'date':
       return <TableFieldDate {...props} onChange={onChange} isPending={isPending} />;
@@ -63,7 +64,7 @@ export default function TableField(props: Props) {
       return <TableFieldTags {...props} onChange={onChange} isPending={isPending} />;
     case 'boolean':
       return <TableFieldBoolean {...props} onChange={onChange} isPending={isPending} />;
+    default:
+      return 'NOT IMPLEMENTED FIELD TYPE';
   }
-
-  return <></>;
 }

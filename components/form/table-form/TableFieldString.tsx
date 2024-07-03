@@ -10,13 +10,14 @@ import LabelledValue from '@/components/typography/LabelledValue';
 import Title from '@/components/typography/Title';
 
 export type TableFieldStringProps = {
-  type: 'string';
-  value?: string;
+  type: 'string' | 'number';
+  value?: string | number;
   selectAllOnFocus?: boolean;
   isMainTitle?: boolean;
 } & TableFieldProps;
 
 export default function TableFieldString({
+  type,
   tableId,
   id,
   fieldName,
@@ -36,12 +37,12 @@ export default function TableFieldString({
 
   const changeHandler = useCallback(
     (e: { target: { value?: string } }) => {
-      const val = e.target.value ?? '';
+      const val = type === 'number' ? parseInt(e.target.value ?? '') : e.target.value ?? '';
       if (value !== val) {
         if (onChange) onChange(id, fieldName, val);
       }
     },
-    [onChange, id, fieldName, value],
+    [onChange, id, fieldName, value, type],
   );
 
   const debouncedChangeHandler: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -49,16 +50,18 @@ export default function TableFieldString({
     [changeHandler],
   );
 
+  const stringValue = typeof value === 'number' ? value.toString() : value;
+
   const content = useMemo(() => {
     if (isSelected)
       return (
         <Input
           ref={ref}
-          type="text"
+          type={type === 'string' ? 'text' : 'number'}
           label={label}
           size="sm"
           name={fieldName}
-          defaultValue={value}
+          defaultValue={stringValue}
           onChange={debouncedChangeHandler}
           onBlur={changeHandler}
           endContent={isPending ? <FieldCircularProgress /> : endContent}
@@ -75,6 +78,7 @@ export default function TableFieldString({
     changeHandler,
     isPending,
     endContent,
+    type,
   ]);
 
   const selectRow = useCallback(() => {
@@ -94,7 +98,7 @@ export default function TableFieldString({
     <LabelledValue label={label} value={content} onClick={selectRow} />
   ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
-      {isMainTitle && !isSelected ? <Title title={value ?? '-'} size="xl" /> : content}
+      {isMainTitle && !isSelected ? <Title title={stringValue ?? '-'} size="xl" /> : content}
     </div>
   );
 }

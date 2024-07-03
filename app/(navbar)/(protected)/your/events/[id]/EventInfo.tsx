@@ -94,6 +94,37 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
         value={data.deckId ?? undefined}
         formatId={data.formatId}
         isLabelledView={true}
+        preselectedItem={data.deck ?? undefined}
+      />
+      <TableField
+        qk={QK.EVENT}
+        type="number"
+        tableId={eventInfoIdentificator}
+        id={data.id}
+        fieldName="rounds"
+        label="Rounds"
+        value={data.rounds}
+        isMainTitle={true}
+      />
+      <TableField
+        qk={QK.EVENT}
+        type="number"
+        tableId={eventInfoIdentificator}
+        id={data.id}
+        fieldName="entry"
+        label="Entry"
+        value={data.entry ?? undefined}
+        isMainTitle={true}
+      />
+      <TableField
+        qk={QK.EVENT}
+        type="number"
+        tableId={eventInfoIdentificator}
+        id={data.id}
+        fieldName="winnings"
+        label="Winnings"
+        value={data.winnings ?? undefined}
+        isMainTitle={true}
       />
       <TableField
         qk={QK.EVENT}
