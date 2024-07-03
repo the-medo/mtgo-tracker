@@ -186,6 +186,7 @@ model Event {
   winnings        Int?
   date            DateTime?
   notes           String?   @db.Text
+  isFinished      Boolean @default(false)
 
   Matches   Match[]
   EventTags EventTag[]
