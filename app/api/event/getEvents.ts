@@ -3,6 +3,14 @@ import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { EventExtended } from '@/app/api/event/route';
+import { parseDate, Stringify } from '@/app/api/parsers';
+import { DeckExtended } from '@/app/api/deck/route';
+
+export const parseEvent = (j: Stringify<EventExtended>): EventExtended =>
+  ({
+    ...j,
+    date: parseDate(j.date),
+  }) as unknown as EventExtended;
 
 export type GetEventsRequest = PrismaQueryApiParams<'Event'>;
 

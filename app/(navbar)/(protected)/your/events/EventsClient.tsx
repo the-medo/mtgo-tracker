@@ -12,8 +12,8 @@ import { Spinner } from '@nextui-org/spinner';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import useEventFilters from '@/app/(navbar)/(protected)/your/events/useEventFilters';
 import DateDisplay from '@/components/typography/DateDisplay';
-import EditButton from '@/components/form/table-form/EditButton';
 import { EventExtended } from '@/app/api/event/route';
+import EventInfoModal from '@/app/(navbar)/(protected)/your/events/[id]/EventInfoModal';
 
 const TABLE_ID = 'EVENTS';
 
@@ -142,7 +142,7 @@ const renderCell = (data: EventExtended, columnKey: Key) => {
     case 'actions':
       return (
         <div className="relative flex flex-row items-center gap-2">
-          <EditButton tableId={TABLE_ID} id={data.id} qk={QK.EVENT} />
+          <EventInfoModal eventId={data.id} />
           <DeleteButton id={data.id} qk={QK.EVENT} />
         </div>
       );
@@ -197,7 +197,8 @@ export default function EventsClient({}: Props) {
           {item => (
             <TableRow
               key={item.id}
-              className={`hover:bg-zinc-50 ${item.id === -1 ? 'opacity-50' : ''}`}
+              className={`hover:bg-zinc-50 cursor-pointer ${item.id === -1 ? 'opacity-50' : ''}`}
+              href={`/your/events/${item.id}`}
             >
               {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
