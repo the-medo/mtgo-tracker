@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { EventExtended } from '@/app/api/event/route';
 import { parseDate, Stringify } from '@/app/api/parsers';
-import { DeckExtended } from '@/app/api/deck/route';
+import { queryClient } from '@/app/providers';
 
 export const parseEvent = (j: Stringify<EventExtended>): EventExtended =>
   ({
@@ -18,7 +18,15 @@ export async function getEvents({ where, orderBy, skip, take }: GetEventsRequest
   const params = createQueryApiParams({ where, orderBy, skip, take });
   const f = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/event${params}`);
 
-  return (await f.json()) as EventExtended[];
+  const data = (await f.json()).map((j: Stringify<EventExtended>) =>
+    parseEvent(j),
+  ) as EventExtended[];
+
+  data.forEach(event => {
+    queryClient.setQueryData([QK.EVENT, event.id], event);
+  });
+
+  return data;
 }
 
 export function useInfiniteEvents(request: GetEventsRequest = {}) {

@@ -104,7 +104,7 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
         fieldName="rounds"
         label="Rounds"
         value={data.rounds}
-        isMainTitle={true}
+        isLabelledView={true}
       />
       <TableField
         qk={QK.EVENT}
@@ -114,7 +114,7 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
         fieldName="entry"
         label="Entry"
         value={data.entry ?? undefined}
-        isMainTitle={true}
+        isLabelledView={true}
       />
       <TableField
         qk={QK.EVENT}
@@ -124,7 +124,7 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
         fieldName="winnings"
         label="Winnings"
         value={data.winnings ?? undefined}
-        isMainTitle={true}
+        isLabelledView={true}
       />
       <TableField
         qk={QK.EVENT}

@@ -25,10 +25,10 @@ export type SelectDeckArchetypePropsOuter = {
 
 type SelectDeckArchetypeProps = BaseSelectProps & Omit<SelectDeckArchetypePropsOuter, 'selectType'>;
 
-const label = (
+export const getDeckArchetypeLabel = (label: string = 'Deck archetype') => (
   <div className="flex flex-row gap-2 items-center">
     <TbZeppelin size={20} />
-    Deck archetype
+    {label}
   </div>
 );
 
@@ -40,6 +40,7 @@ export default function SelectDeckArchetype({
   formatId,
   preselectedItem,
   value,
+  customLabel,
 }: SelectDeckArchetypeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<string>('');
@@ -138,7 +139,7 @@ export default function SelectDeckArchetype({
     <>
       <Autocomplete
         size="sm"
-        label={label}
+        label={customLabel !== undefined ? customLabel : getDeckArchetypeLabel()}
         className="max-w-xs"
         inputValue={filter}
         onInputChange={onInputChangeHandler}

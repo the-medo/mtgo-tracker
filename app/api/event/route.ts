@@ -87,6 +87,7 @@ export const eventExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
   include: {
     deck: true,
     EventTags: true,
+    Matches: true,
   },
 });
 

@@ -2,7 +2,7 @@
 
 import { TableFieldProps } from '@/components/form/table-form/TableField';
 import useStore from '@/store/store';
-import { useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import SelectFormatVersion, {
   SelectFormatVersionPropsOuter,
 } from '@/components/form/select/SelectFormatVersion';
@@ -31,6 +31,7 @@ export type BaseSelectProps = {
   name?: string;
   description?: string;
   onChange?: (x: number | string | undefined) => void;
+  customLabel?: ReactNode;
 };
 
 export type TableFieldSelectProps = {
