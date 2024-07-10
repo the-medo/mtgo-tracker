@@ -2,37 +2,37 @@ import { QueryFilters, useQueryClient } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import useSimplePost, { SimplePostRequest } from '@/app/api/useSimplePost';
 import { useCallback, useMemo } from 'react';
-import { MatchExtended } from '@/app/api/match/route';
+import useCreateGame from '@/lib/hooks/useCreateGame';
+import { EventExtended } from '@/app/api/event/route';
 
-export default function useCreateGame() {
+export default function useCreateMatch() {
   const queryClient = useQueryClient();
 
-  const { mutate: createGame, isPending } = useSimplePost(QK.GAME);
+  const { mutate: createMatch, isPending } = useSimplePost(QK.MATCH);
+  const { mutate: createGame, isPending: isPendingGame } = useCreateGame();
 
-  const matchFilters: QueryFilters = useMemo(
+  const eventFilters: QueryFilters = useMemo(
     () => ({
       type: 'all',
       exact: false,
-      queryKey: [QK.MATCH],
+      queryKey: [QK.EVENT],
     }),
     [],
   );
 
   return useMemo(
     () => ({
-      mutate: async (gameData: SimplePostRequest) => {
-        createGame(gameData, {
-          onSuccess: newGame => {
-            console.log('useCreateGame onSuccess callback');
-            console.log('NEW GAME: ', newGame);
-            //add to "game" cache
-            queryClient.setQueryData([QK.GAME, newGame.id], () => newGame);
+      mutate: async (matchData: SimplePostRequest) => {
+        createMatch(matchData, {
+          onSuccess: newMatch => {
+            console.log('useCreateMatch onSuccess callback');
+            console.log('NEW GAME: ', newMatch);
 
             //add to "matches"
-            queryClient.setQueriesData(matchFilters, (old: unknown) => {
+            queryClient.setQueriesData(eventFilters, (old: unknown) => {
               // @ts-ignore
               if ('pages' in old && Array.isArray(old.pages)) {
-                const pgs = old.pages as MatchExtended[][];
+                const pgs = old.pages as EventExtended[][];
 
                 const result = {
                   ...old,
@@ -41,7 +41,7 @@ export default function useCreateGame() {
                     return p.map(x => ({
                       ...x,
                       // @ts-ignore
-                      Games: x.id === newGame.matchId ? [...x.Games, newGame] : x.Games,
+                      Matches: x.id === newMatch.eventId ? [...x.Matches, newMatch] : x.Matches,
                     }));
                   }),
                 };
@@ -50,18 +50,25 @@ export default function useCreateGame() {
                 return result;
               } else {
                 // @ts-ignore
-                if ('id' in old && old.id === newGame.matchId) {
+                if ('id' in old && old.id === newMatch.eventId) {
                   const result = {
                     // @ts-ignore
                     ...old,
                     // @ts-ignore
-                    Games: [...x.Games, newGame],
+                    Matches: [...x.Matches, newMatch],
                   };
 
                   console.log('Single result: ', result);
                   return result;
                 }
               }
+            });
+
+            createGame({
+              gameNumber: 1,
+              matchId: newMatch.id,
+              startingHand: 7,
+              oppStartingHand: 7,
             });
           },
         });

@@ -5,10 +5,10 @@ import {
   Format,
   FormatVersion,
   Game,
-  Match,
   Tag,
-  Event,
 } from '@prisma/client';
+import { MatchExtended } from '@/app/api/match/route';
+import { EventExtended } from '@/app/api/event/route';
 
 export enum QK {
   FORMAT_VERSIONS = 'format-version',
@@ -32,8 +32,8 @@ export type QTypes = {
   [QK.ARCHETYPE_GROUPS]: ArchetypeGroup[];
   [QK.DECK_ARCHETYPE]: DeckArchetype[];
   [QK.DECK]: Deck[];
-  [QK.EVENT]: Event[];
-  [QK.MATCH]: Match[];
+  [QK.EVENT]: EventExtended[];
+  [QK.MATCH]: MatchExtended[];
   [QK.GAME]: Game[];
   [QK.TAG]: Tag[];
   [QK.TAG_DECK]: Tag[];

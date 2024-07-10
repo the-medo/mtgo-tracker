@@ -3,13 +3,8 @@
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import { Input } from '@nextui-org/input';
 import { ChangeEventHandler, useCallback, useState } from 'react';
-import SelectDeckArchetype, {
-  getDeckArchetypeLabel,
-} from '@/components/form/select/SelectDeckArchetype';
-import Title from '@/components/typography/Title';
-import useSimplePost from '@/app/api/useSimplePost';
-import { QK } from '@/app/api/queryHelpers';
 import { Button } from '@nextui-org/button';
+import useCreateMatch from '@/lib/hooks/useCreateMatch';
 
 interface EventMatchTitleProps {
   eventId: number;
@@ -19,7 +14,7 @@ interface EventMatchTitleProps {
 
 export default function EventMatchTitle({ eventId, eventRound }: EventMatchTitleProps) {
   const { data } = useEvent(eventId);
-  const { mutate: createMatch } = useSimplePost(QK.MATCH);
+  const { mutate: createMatch, isPending } = useCreateMatch();
   const [oppName, setOppName] = useState<string>('');
 
   const onOppNameChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -53,7 +48,11 @@ export default function EventMatchTitle({ eventId, eventRound }: EventMatchTitle
           value={oppName}
           onChange={onOppNameChange}
         />
-        <Button onPress={createMatchHandler} isDisabled={oppName.length === 0}>
+        <Button
+          onPress={createMatchHandler}
+          isDisabled={oppName.length === 0 || isPending}
+          isLoading={isPending}
+        >
           Create
         </Button>
       </div>

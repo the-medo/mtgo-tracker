@@ -1,5 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { useMemo } from 'react';
 
 export type SimplePostRequest = Record<
   string,
@@ -8,6 +9,15 @@ export type SimplePostRequest = Record<
 
 export default function useSimplePost<T extends QK>(qk: QK) {
   const queryClient = useQueryClient();
+
+  const filters: QueryFilters = useMemo(
+    () => ({
+      type: 'all',
+      exact: false,
+      queryKey: [qk],
+    }),
+    [qk],
+  );
 
   return useMutation({
     mutationFn: async (data: SimplePostRequest): Promise<QTypes[T][number]> => {
@@ -21,33 +31,58 @@ export default function useSimplePost<T extends QK>(qk: QK) {
 
       return await res.json();
     },
-    onMutate: async data => {
-      await queryClient.cancelQueries({ queryKey: [qk] });
-      const previousData = queryClient.getQueryData([qk]);
+    // onMutate: async data => {
+    //   await queryClient.cancelQueries({ queryKey: [qk] });
+    //   const previousData = queryClient.getQueryData([qk]);
+    //
+    //   const newData = {
+    //     ...data,
+    //   };
+    //
+    //   Object.keys(data).forEach(field => {
+    //     const valueParser = QTypeParsers[qk]?.[field];
+    //     if (valueParser) {
+    //       newData[field] = valueParser(data[field]);
+    //     }
+    //   });
+    //
+    //   // queryClient.setQueryData([qk], (old: QTypes[T]) => [...(old ?? []), { ...newData, id: -1 }]);
+    //
+    //   return { previousData };
+    // },
+    // onError: (err, newData, context) => {
+    //   queryClient.setQueryData([qk], context?.previousData);
+    // },
+    onSuccess: data => {
+      console.log('useSimplePost onSuccess callback');
+      const queries = queryClient.getQueryCache().findAll(filters);
 
-      const newData = {
-        ...data,
-      };
+      queries.forEach(q => {
+        const queryKey = q.queryKey;
 
-      Object.keys(data).forEach(field => {
-        const valueParser = QTypeParsers[qk]?.[field];
-        if (valueParser) {
-          newData[field] = valueParser(data[field]);
+        if (Array.isArray(queryKey)) {
+          if (queryKey.length > 1) {
+            if (typeof queryKey[0] === 'object') {
+              if (Object.keys(queryKey[0]).length > 0) {
+                queryClient.invalidateQueries({ queryKey });
+              } else {
+                queryClient.setQueryData(queryKey, (old: InfiniteData<QTypes[T][number][]>) => ({
+                  ...old,
+                  pages: old.pages.map((o, i) => (i === 0 ? [data, ...o] : o)),
+                  // @ts-ignore
+                  pageParams: old.pageParams.map((o, i) => (i === 0 ? o : o + 1)),
+                }));
+              }
+            }
+          }
         }
       });
 
-      queryClient.setQueryData([qk], (old: QTypes[T]) => [...(old ?? []), { ...newData, id: -1 }]);
+      queryClient.setQueryData([qk, data.id], old => data);
 
-      return { previousData };
-    },
-    onError: (err, newData, context) => {
-      queryClient.setQueryData([qk], context?.previousData);
-    },
-    onSuccess: data => {
-      // queryClient.setQueryData([qk], (old: QTypes[T]) => [
-      //   ...(old ?? []).map(o => (o.id === -1 ? { ...o, id: data.id } : o)),
-      // ]);
-      queryClient.invalidateQueries({ queryKey: [qk] });
+      queryClient.setQueryData([qk], (old: QTypes[T]) => [
+        ...(old ?? []).map(o => (o.id === -1 ? { ...o, id: data.id } : o)),
+      ]);
     },
   });
 }
