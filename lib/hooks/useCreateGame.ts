@@ -55,7 +55,7 @@ export default function useCreateGame() {
                     // @ts-ignore
                     ...old,
                     // @ts-ignore
-                    Games: [...x.Games, newGame],
+                    Games: [...(old.Games ?? []), newGame],
                   };
 
                   console.log('Single result: ', result);

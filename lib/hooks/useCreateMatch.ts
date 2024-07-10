@@ -24,9 +24,9 @@ export default function useCreateMatch() {
     () => ({
       mutate: async (matchData: SimplePostRequest) => {
         createMatch(matchData, {
-          onSuccess: newMatch => {
+          onSuccess: async newMatch => {
             console.log('useCreateMatch onSuccess callback');
-            console.log('NEW GAME: ', newMatch);
+            console.log('NEW MATCH: ', newMatch);
 
             //add to "matches"
             queryClient.setQueriesData(eventFilters, (old: unknown) => {
@@ -55,7 +55,7 @@ export default function useCreateMatch() {
                     // @ts-ignore
                     ...old,
                     // @ts-ignore
-                    Matches: [...x.Matches, newMatch],
+                    Matches: [...(old.Matches ?? []), newMatch],
                   };
 
                   console.log('Single result: ', result);
@@ -64,7 +64,8 @@ export default function useCreateMatch() {
               }
             });
 
-            createGame({
+            console.log('Now, should create game ');
+            await createGame({
               gameNumber: 1,
               matchId: newMatch.id,
               startingHand: 7,
@@ -75,6 +76,6 @@ export default function useCreateMatch() {
       },
       isPending,
     }),
-    [isPending],
+    [createGame, isPending],
   );
 }

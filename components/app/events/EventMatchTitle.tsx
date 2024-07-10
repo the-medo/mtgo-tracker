@@ -32,6 +32,7 @@ export default function EventMatchTitle({ eventId, eventRound }: EventMatchTitle
       formatId: data?.formatId,
       formatVersionId: data?.formatVersionId,
       deckId: data?.deckId,
+      matchType: data?.matchType,
     };
 
     createMatch(matchData);
