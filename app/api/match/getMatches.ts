@@ -3,6 +3,13 @@ import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { MatchExtended } from '@/app/api/match/route';
+import { parseDate, Stringify } from '@/app/api/parsers';
+
+export const parseMatch = (j: Stringify<MatchExtended>): MatchExtended =>
+  ({
+    ...j,
+    startTime: parseDate(j.startTime),
+  }) as unknown as MatchExtended;
 
 export type GetMatchesRequest = PrismaQueryApiParams<'Match'>;
 

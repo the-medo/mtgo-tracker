@@ -3,6 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
+import { MatchExtended, matchExtension } from '@/app/api/match/route';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -56,4 +57,23 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   } else {
     throw new Error('You have no rights to delete this match');
   }
+}
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  if (!params.id || params.id.length === 0) {
+    return NextResponse.json({ error: 'Failed to load the match' }, { status: 403 });
+  }
+
+  const data: MatchExtended | null = await prisma.match.findFirst({
+    where: {
+      id: parseInt(params.id),
+    },
+    ...matchExtension,
+  });
+
+  if (!data) {
+    return NextResponse.json({ error: 'Failed to load the match' }, { status: 403 });
+  }
+
+  return NextResponse.json(data);
 }

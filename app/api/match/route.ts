@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   }
 }
 
-const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
+export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
   include: {
     MatchTags: true,
     Games: true,

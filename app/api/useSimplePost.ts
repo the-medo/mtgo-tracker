@@ -54,18 +54,25 @@ export default function useSimplePost<T extends QK>(qk: QK) {
     //   queryClient.setQueryData([qk], context?.previousData);
     // },
     onSuccess: data => {
-      console.log('useSimplePost onSuccess callback');
+      console.log('useSimplePost onSuccess callback', qk);
       const queries = queryClient.getQueryCache().findAll(filters);
 
+      console.log({ queries });
+
       queries.forEach(q => {
+        console.log('================== ', q);
         const queryKey = q.queryKey;
 
         if (Array.isArray(queryKey)) {
+          console.log('is array! length: ', queryKey.length);
           if (queryKey.length > 1) {
-            if (typeof queryKey[0] === 'object') {
+            console.log('type: ', typeof queryKey[1]);
+            if (typeof queryKey[1] === 'object') {
               if (Object.keys(queryKey[0]).length > 0) {
+                console.log(queryKey, ' => INVALIDATING');
                 queryClient.invalidateQueries({ queryKey });
               } else {
+                console.log(queryKey, ' => SETTING');
                 queryClient.setQueryData(queryKey, (old: InfiniteData<QTypes[T][number][]>) => ({
                   ...old,
                   pages: old.pages.map((o, i) => (i === 0 ? [data, ...o] : o)),
@@ -76,6 +83,8 @@ export default function useSimplePost<T extends QK>(qk: QK) {
             }
           }
         }
+
+        console.log('================== =');
       });
 
       queryClient.setQueryData([qk, data.id], old => data);

@@ -2,17 +2,20 @@
 
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import { Input } from '@nextui-org/input';
-import { ChangeEventHandler, useCallback, useState } from 'react';
+import { ChangeEventHandler, FormEventHandler, useCallback, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import useCreateMatch from '@/lib/hooks/useCreateMatch';
+import Title from '@/components/typography/Title';
 
-interface EventMatchTitleProps {
+interface EventMatchCreationFormProps {
   eventId: number;
   eventRound?: number;
-  matchId?: number;
 }
 
-export default function EventMatchTitle({ eventId, eventRound }: EventMatchTitleProps) {
+export default function EventMatchCreationForm({
+  eventId,
+  eventRound,
+}: EventMatchCreationFormProps) {
   const { data } = useEvent(eventId);
   const { mutate: createMatch, isPending } = useCreateMatch();
   const [oppName, setOppName] = useState<string>('');
@@ -38,25 +41,32 @@ export default function EventMatchTitle({ eventId, eventRound }: EventMatchTitle
     createMatch(matchData);
   }, [createMatch, data, eventId, eventRound, oppName]);
 
+  const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
+    async e => {
+      e.preventDefault();
+      createMatchHandler();
+    },
+    [createMatchHandler],
+  );
+
   return (
-    <>
-      <div className="flex flex-col w-full gap-4 max-w-xs">
-        <Input
-          type="text"
-          label="Opponent name"
-          size="sm"
-          name="oppName"
-          value={oppName}
-          onChange={onOppNameChange}
-        />
-        <Button
-          onPress={createMatchHandler}
-          isDisabled={oppName.length === 0 || isPending}
-          isLoading={isPending}
-        >
-          Create
-        </Button>
-      </div>
-    </>
+    <form className="flex w-full gap-4 max-w-md align-middle items-center" onSubmit={submitHandler}>
+      <Title title={`Round ${eventRound}`} />
+      <Input
+        type="text"
+        label="Opponent name"
+        size="sm"
+        name="oppName"
+        value={oppName}
+        onChange={onOppNameChange}
+      />
+      <Button
+        onPress={createMatchHandler}
+        isDisabled={oppName.length === 0 || isPending}
+        isLoading={isPending}
+      >
+        Create
+      </Button>
+    </form>
   );
 }
