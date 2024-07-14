@@ -99,6 +99,12 @@ enum MatchType {
   OTHER
 }
 
+enum MatchResult {
+  WIN
+  LOSE
+  DRAW
+}
+
 enum DeckServiceType {
   MOXFIELD
   GOLDFISH
@@ -210,7 +216,7 @@ model Match {
   matchType        MatchType
   eventId          Int?
   deckId           Int
-  isWin            Boolean?
+  result           MatchResult?
   startTime        DateTime
   public           Boolean
   notes            String?   @db.Text
