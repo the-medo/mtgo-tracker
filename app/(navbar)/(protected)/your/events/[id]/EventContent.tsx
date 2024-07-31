@@ -2,10 +2,11 @@
 
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import { useMemo } from 'react';
-import { Accordion, AccordionItem } from '@nextui-org/accordion';
-import EventMatchTitle from '@/components/app/events/EventMatchTitle';
-import { useInfiniteMatches } from '@/app/api/match/getMatches';
+import EventMatchSection from '@/components/app/events/EventMatchSection';
+import { GetMatchesRequest, useInfiniteMatches } from '@/app/api/match/getMatches';
 import { Spinner } from '@nextui-org/spinner';
+import Title from '@/components/typography/Title';
+import { GetGamesRequest, useInfiniteGames } from '@/app/api/game/getGames';
 
 type EventMatchDisplayInfo = {
   round: number;
@@ -19,8 +20,24 @@ interface EventContentProps {
 
 export default function EventContent({ eventId }: EventContentProps) {
   const { data } = useEvent(eventId);
-  const matchFilter = useMemo(() => ({ where: { eventId } }), [eventId]);
+
+  const matchFilter: GetMatchesRequest = useMemo(() => ({ where: { eventId } }), [eventId]);
   const { data: matches, isLoading } = useInfiniteMatches(matchFilter);
+
+  /* for preloading games of current event */
+  const gameFilter: GetGamesRequest = useMemo(
+    () => ({
+      where: {
+        match: {
+          eventId,
+        },
+      },
+      take: 50,
+    }),
+    [eventId],
+  );
+  const { data: _ } = useInfiniteGames(gameFilter);
+  /* ===================================== */
 
   const matchesToFill = useMemo(
     () => new Array(data?.rounds ?? 0).fill(0).map((_, i) => i + 1),
@@ -82,26 +99,14 @@ export default function EventContent({ eventId }: EventContentProps) {
       {isLoading || (!isLoading && eventMatchDisplayInfo.result.length === 0) ? (
         <Spinner />
       ) : (
-        <Accordion
-          variant="light"
-          selectionMode="multiple"
-          showDivider={false}
-          defaultSelectedKeys={eventMatchDisplayInfo.defaultSelectedKeys}
-          keepContentMounted={true}
-        >
-          {eventMatchDisplayInfo.result.map((em, i) => (
-            <AccordionItem
-              key={em.key}
-              aria-label={`Accordion ${i}`}
-              title={`Round ${em.round}`}
-              classNames={{
-                base: `${em.matchId ? 'bg-zinc-50' : 'bg-white border-2 border-dashed'} my-4 px-4`,
-              }}
-            >
-              <EventMatchTitle eventId={eventId} eventRound={em.round} matchId={em.matchId} />
-            </AccordionItem>
-          ))}
-        </Accordion>
+        eventMatchDisplayInfo.result.map((em, i) => (
+          <EventMatchSection
+            key={em.key}
+            eventId={eventId}
+            eventRound={em.round}
+            matchId={em.matchId}
+          />
+        ))
       )}
     </div>
   );

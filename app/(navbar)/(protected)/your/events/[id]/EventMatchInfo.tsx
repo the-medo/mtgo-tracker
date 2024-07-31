@@ -1,7 +1,7 @@
 'use client';
 
 import { useEvent } from '@/app/api/event/[id]/getEvent';
-import EventMatchTitle from '@/components/app/events/EventMatchTitle';
+import EventMatchSection from '@/components/app/events/EventMatchSection';
 
 interface EventMatchInfoProps {
   eventId: number;
@@ -11,5 +11,5 @@ interface EventMatchInfoProps {
 export default function EventMatchInfo({ eventId, matchNumber }: EventMatchInfoProps) {
   const { data } = useEvent(eventId);
 
-  return <EventMatchTitle eventId={eventId} eventRound={matchNumber} />;
+  return <EventMatchSection eventId={eventId} eventRound={matchNumber} />;
 }

@@ -6,7 +6,7 @@ import { tagArrayPropertyNameByQK } from '@/types/tags';
 export type SimplePatchRequest = {
   id: string | number;
   field: string;
-  value: string | number | boolean;
+  value: string | number | boolean | null;
 };
 
 export default function useSimplePatch<T extends QK>(qk: QK) {

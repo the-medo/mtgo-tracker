@@ -7,6 +7,9 @@ import Title from '@/components/typography/Title';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import MatchGameSection from '@/components/app/events/MatchGameSection';
+import { useEvent } from '@/app/api/event/[id]/getEvent';
+import MatchTitle from '@/components/app/events/MatchTitle';
+import MatchFooter from '@/components/app/events/MatchFooter';
 
 type MatchGameDisplayInfo = {
   gameId?: number;
@@ -16,10 +19,12 @@ type MatchGameDisplayInfo = {
 
 interface MatchContentProps {
   matchId: number;
+  eventId: number;
 }
 
-export default function MatchContent({ matchId }: MatchContentProps) {
+export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
+  const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
 
   const gamesToFill = useMemo(
     () =>
@@ -78,19 +83,23 @@ export default function MatchContent({ matchId }: MatchContentProps) {
   }, [isLoading, gamesToFill, match]);
 
   return (
-    <div className="flex flex-row w-full gap-4">
-      {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
-        <Spinner />
-      ) : (
-        matchGameDisplayInfo.map((em, i) => (
-          <MatchGameSection
-            key={em.key}
-            matchId={matchId}
-            gameNumber={em.gameNumber}
-            gameId={em.gameId}
-          />
-        ))
-      )}
-    </div>
+    <>
+      <MatchTitle matchId={matchId} eventId={eventId} />
+      <div className="flex flex-row w-full gap-4">
+        {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
+          <Spinner />
+        ) : (
+          matchGameDisplayInfo.map((em, i) => (
+            <MatchGameSection
+              key={em.key}
+              matchId={matchId}
+              gameNumber={em.gameNumber}
+              gameId={em.gameId}
+            />
+          ))
+        )}
+      </div>
+      <MatchFooter matchId={matchId} eventId={eventId} />
+    </>
   );
 }

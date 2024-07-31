@@ -8,6 +8,7 @@ import useCreateMatch from '@/lib/hooks/useCreateMatch';
 import Title from '@/components/typography/Title';
 import EventMatchCreationForm from '@/components/app/events/EventMatchCreationForm';
 import MatchGameCreationForm from '@/components/app/events/MatchGameCreationForm';
+import GameContent from '@/components/app/events/GameContent';
 
 interface MatchGameSectionProps {
   matchId: number;
@@ -24,7 +25,7 @@ export default function MatchGameSection({ matchId, gameNumber, gameId }: MatchG
       {!gameId ? (
         <MatchGameCreationForm matchId={matchId} gameNumber={gameNumber} />
       ) : (
-        <>existing game</>
+        <GameContent matchId={matchId} gameId={gameId} />
       )}
     </div>
   );

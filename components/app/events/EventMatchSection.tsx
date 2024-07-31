@@ -27,7 +27,7 @@ export default function EventMatchSection({
       {!matchId ? (
         <EventMatchCreationForm eventId={eventId} eventRound={eventRound} />
       ) : (
-        <MatchContent matchId={matchId} />
+        <MatchContent matchId={matchId} eventId={eventId} />
       )}
     </div>
   );

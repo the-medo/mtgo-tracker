@@ -238,7 +238,7 @@ model Game {
   gameNumber      Int
   matchId         Int
   mtgoGameId      String?
-  isWin           Boolean?
+  result          MatchResult?
   isOnPlay        Boolean?
   turns           Int?
   startingHand    Int?

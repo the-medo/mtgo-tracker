@@ -25,7 +25,6 @@ export async function POST(req: Request) {
         oppUserId: undefined,
         oppMatchId: undefined,
         matchType: data.matchType,
-        isWin: false,
         startTime: parseDate(data.startTime) ?? new Date(),
         public: false,
       },
@@ -44,6 +43,7 @@ export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
   include: {
     MatchTags: true,
     Games: true,
+    oppArchetype: true,
   },
 });
 

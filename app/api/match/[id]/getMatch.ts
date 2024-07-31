@@ -16,5 +16,6 @@ export function useMatch(matchId: number, skipQuery?: boolean) {
   return useQuery({
     queryKey: [QK.MATCH, matchId],
     queryFn: skipQuery ? skipToken : queryFn,
+    staleTime: Infinity,
   });
 }

@@ -27,6 +27,7 @@ export type TableFieldProps = {
   endContent?: ReactNode;
   onChange?: TableFieldPatchRequest;
   isPending?: boolean;
+  customLabel?: ReactNode;
 };
 
 type Props =

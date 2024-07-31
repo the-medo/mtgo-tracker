@@ -35,7 +35,7 @@ export async function POST(req: Request) {
   }
 }
 
-const gameExtension = Prisma.validator<Prisma.GameDefaultArgs>()({
+export const gameExtension = Prisma.validator<Prisma.GameDefaultArgs>()({
   include: {
     GameTags: true,
     match: true,

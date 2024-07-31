@@ -14,18 +14,17 @@ export function HandSizeSelectorButton({
 }: HandSizeSelectorButtonProps) {
   const onClickHandler = useCallback(() => onValueChange(n), [n, onValueChange]);
 
-  if (n)
-    return (
-      <Button
-        onPress={onClickHandler}
-        size={n > 4 ? 'md' : 'sm'}
-        // className={n > 4 ? 'h-6' : 'h-5'}
-        style={{ width: '15px !important' }}
-        variant={isSelected ? 'solid' : 'bordered'}
-      >
-        {n}
-      </Button>
-    );
+  return (
+    <Button
+      onPress={onClickHandler}
+      size={n > 4 ? 'md' : 'sm'}
+      // className={n > 4 ? 'h-6' : 'h-5'}
+      style={{ width: '15px !important' }}
+      variant={isSelected ? 'solid' : 'bordered'}
+    >
+      {n}
+    </Button>
+  );
 }
 
 interface HandSizeSelectorProps {

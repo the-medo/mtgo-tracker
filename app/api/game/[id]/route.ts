@@ -3,6 +3,8 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber, parseString } from '@/app/api/parsers';
+import { EventExtended, eventExtension } from '@/app/api/event/route';
+import { GameExtended, gameExtension } from '@/app/api/game/route';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -52,4 +54,23 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   } else {
     throw new Error('You have no rights to delete this game');
   }
+}
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  if (!params.id || params.id.length === 0) {
+    return NextResponse.json({ error: 'Failed to load the game' }, { status: 403 });
+  }
+
+  const data: GameExtended | null = await prisma.game.findFirst({
+    where: {
+      id: parseInt(params.id),
+    },
+    ...gameExtension,
+  });
+
+  if (!data) {
+    return NextResponse.json({ error: 'Failed to load the game' }, { status: 403 });
+  }
+
+  return NextResponse.json(data);
 }

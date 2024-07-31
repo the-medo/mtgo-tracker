@@ -16,5 +16,6 @@ export function useEvent(eventId: number, skipQuery?: boolean) {
   return useQuery({
     queryKey: [QK.EVENT, eventId],
     queryFn: skipQuery ? skipToken : queryFn,
+    staleTime: Infinity,
   });
 }
