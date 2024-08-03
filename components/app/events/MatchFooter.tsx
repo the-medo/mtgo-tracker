@@ -6,7 +6,7 @@ import { QK } from '@/app/api/queryHelpers';
 import TableField from '@/components/form/table-form/TableField';
 import { deckInfoIdentificator } from '@/app/(navbar)/(protected)/your/decks/[id]/DeckInfo';
 import { useEvent } from '@/app/api/event/[id]/getEvent';
-import MatchResultSelector from '@/components/form/MatchResultSelector';
+import ResultSelector from '@/components/form/ResultSelector';
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { useCallback } from 'react';
 import { MatchResult } from '@prisma/client';
@@ -36,7 +36,7 @@ export default function MatchFooter({ matchId, eventId }: MatchFooterProps) {
 
   return (
     <div className="flex flex-row w-full gap-4 items-center">
-      <MatchResultSelector
+      <ResultSelector
         value={matchResult}
         onValueChange={valueChangeHandler}
         isLoading={isPending || isLoading || isLoadingEvent}

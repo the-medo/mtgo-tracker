@@ -2,17 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { MatchResult } from '@prisma/client';
 
-interface MatchResultSelectorProps {
+interface ResultSelectorProps {
   value?: MatchResult;
   onValueChange: (x: MatchResult | undefined) => void;
   isLoading?: boolean;
 }
 
-export default function MatchResultSelector({
-  value,
-  onValueChange,
-  isLoading,
-}: MatchResultSelectorProps) {
+export default function ResultSelector({ value, onValueChange, isLoading }: ResultSelectorProps) {
   const [localValue, setLocalValue] = useState(value);
 
   const valueChangeHandler = useCallback(
