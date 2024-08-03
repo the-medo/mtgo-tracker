@@ -13,6 +13,9 @@ import ResultSelector from '@/components/form/ResultSelector';
 import { Chip, ChipProps } from '@nextui-org/chip';
 import { TbCards, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
+import { useQueryClient } from '@tanstack/react-query';
+import { MatchExtended } from '@/app/api/match/route';
+import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 
 interface GameContentProps {
   matchId: number;
@@ -20,8 +23,11 @@ interface GameContentProps {
 }
 
 export default function GameContent({ matchId, gameId }: GameContentProps) {
+  const queryClient = useQueryClient();
+  const { data: match, isLoading: isLoadingMatch } = useMatch(matchId);
   const { data: game, isLoading } = useGame(gameId);
   const { mutate: patchGame, isPending } = useSimplePatch(QK.GAME);
+  const { mutate: patchMatch, isPending: isPendingMatch } = useSimplePatch(QK.MATCH);
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const gameResult = game?.result ?? undefined;
@@ -61,13 +67,46 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
 
   const resultChangeHandler = useCallback(
     (value: MatchResult | undefined) => {
-      patchGame({
-        id: gameId,
-        field: 'result',
-        value: value ? value.toString() : null,
-      });
+      patchGame(
+        {
+          id: gameId,
+          field: 'result',
+          value: value ? value.toString() : null,
+        },
+        {
+          onSuccess: data => {
+            queryClient.setQueryData([QK.MATCH, matchId], (old: MatchExtended | undefined) => ({
+              ...(old ?? {}),
+              Games: (old?.Games ?? []).map(g => ({
+                ...g,
+                result: g.id === gameId ? value : g.result,
+              })),
+            }));
+          },
+        },
+      );
+
+      if (match) {
+        const gamesOfThisResult = match.Games.filter(g => g.result === value || g.id === gameId);
+        if (value === MatchResult.WIN || value === MatchResult.LOSE) {
+          const winsNeeded = maxGameCountBasedOnMatchType[match.matchType].winsNeeded;
+          if (gamesOfThisResult.length === winsNeeded) {
+            patchMatch({
+              id: matchId,
+              field: 'result',
+              value: value ? value.toString() : null,
+            });
+          }
+        } else if (value === MatchResult.DRAW || value === undefined) {
+          patchMatch({
+            id: matchId,
+            field: 'result',
+            value: value ? value.toString() : null,
+          });
+        }
+      }
     },
-    [patchGame, gameId],
+    [patchGame, patchMatch, gameId, matchId, match],
   );
 
   const color: ChipProps['color'] = useMemo(() => {
