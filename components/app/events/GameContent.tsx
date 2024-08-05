@@ -16,6 +16,7 @@ import { Button } from '@nextui-org/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { MatchExtended } from '@/app/api/match/route';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
+import { getChipColorBasedOnMatchResult } from '@/lib/helpers';
 
 interface GameContentProps {
   matchId: number;
@@ -109,18 +110,7 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
     [patchGame, patchMatch, gameId, matchId, match],
   );
 
-  const color: ChipProps['color'] = useMemo(() => {
-    switch (game?.result) {
-      case MatchResult.WIN:
-        return 'success';
-      case MatchResult.LOSE:
-        return 'danger';
-      case MatchResult.DRAW:
-        return 'warning';
-      default:
-        return 'default';
-    }
-  }, [game?.result]);
+  const chipColor = useMemo(() => getChipColorBasedOnMatchResult(game?.result), [game?.result]);
 
   const content = useMemo(() => {
     if (editMode) {
@@ -162,7 +152,7 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
             className="cursor-pointer"
             size="sm"
             variant="flat"
-            color={color}
+            color={chipColor}
             startContent={<TbCards size={24} />}
             onClick={() => setEditMode(true)}
           >
@@ -182,7 +172,7 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
     }
   }, [
     editMode,
-    color,
+    chipColor,
     gameResult,
     resultChangeHandler,
     isPending,

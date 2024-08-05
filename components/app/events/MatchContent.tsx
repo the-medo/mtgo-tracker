@@ -1,9 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import EventMatchSection from '@/components/app/events/EventMatchSection';
 import { Spinner } from '@nextui-org/spinner';
-import Title from '@/components/typography/Title';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import MatchGameSection from '@/components/app/events/MatchGameSection';
@@ -85,7 +83,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   return (
     <>
       <MatchTitle matchId={matchId} eventId={eventId} />
-      <div className="flex flex-row w-full gap-4">
+      <div className={`flex flex-row w-full gap-4`}>
         {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
           <Spinner />
         ) : (

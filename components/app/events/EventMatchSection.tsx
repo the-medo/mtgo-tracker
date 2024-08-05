@@ -1,13 +1,10 @@
 'use client';
 
-import { useEvent } from '@/app/api/event/[id]/getEvent';
-import { Input } from '@nextui-org/input';
-import { ChangeEventHandler, useCallback, useState } from 'react';
-import { Button } from '@nextui-org/button';
-import useCreateMatch from '@/lib/hooks/useCreateMatch';
-import Title from '@/components/typography/Title';
+import { useMemo } from 'react';
 import EventMatchCreationForm from '@/components/app/events/EventMatchCreationForm';
 import MatchContent from '@/components/app/events/MatchContent';
+import { useMatch } from '@/app/api/match/[id]/getMatch';
+import { getBgColorBasedOnMatchResult, getBorderColorBasedOnMatchResult } from '@/lib/helpers';
 
 interface EventMatchSectionProps {
   eventId: number;
@@ -20,9 +17,17 @@ export default function EventMatchSection({
   eventRound,
   matchId,
 }: EventMatchSectionProps) {
+  const { data: match, isLoading } = useMatch(matchId ?? 0, !matchId);
+
+  const bgColor = useMemo(() => getBgColorBasedOnMatchResult(match?.result), [match?.result]);
+  const borderColor = useMemo(
+    () => getBorderColorBasedOnMatchResult(match?.result),
+    [match?.result],
+  );
+
   return (
     <div
-      className={`${matchId ? 'bg-zinc-50' : 'bg-white border-2 border-dashed'} p-4 flex flex-col gap-2`}
+      className={`${matchId ? '' : 'bg-white border-dashed'} p-4 flex flex-col gap-2 border-2 bg-${bgColor} border-${borderColor}`}
     >
       {!matchId ? (
         <EventMatchCreationForm eventId={eventId} eventRound={eventRound} />

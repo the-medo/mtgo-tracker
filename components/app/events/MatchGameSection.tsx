@@ -1,12 +1,5 @@
 'use client';
 
-import { useEvent } from '@/app/api/event/[id]/getEvent';
-import { Input } from '@nextui-org/input';
-import { ChangeEventHandler, useCallback, useState } from 'react';
-import { Button } from '@nextui-org/button';
-import useCreateMatch from '@/lib/hooks/useCreateMatch';
-import Title from '@/components/typography/Title';
-import EventMatchCreationForm from '@/components/app/events/EventMatchCreationForm';
 import MatchGameCreationForm from '@/components/app/events/MatchGameCreationForm';
 import GameContent from '@/components/app/events/GameContent';
 
