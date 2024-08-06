@@ -3,7 +3,6 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber, parseString } from '@/app/api/parsers';
-import { EventExtended, eventExtension } from '@/app/api/event/route';
 import { GameExtended, gameExtension } from '@/app/api/game/route';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {

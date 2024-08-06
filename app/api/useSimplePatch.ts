@@ -22,7 +22,10 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
   );
 
   return useMutation({
+    mutationKey: [qk],
     mutationFn: async (data: SimplePatchRequest): Promise<QTypes[T][number]> => {
+      console.log('MUTATION FN', data, `/api/${qkRedirect[qk] ?? qk}/${data.id}`);
+
       const res = await fetch(`/api/${qkRedirect[qk] ?? qk}/${data.id}`, {
         method: 'PATCH',
         body: JSON.stringify({
@@ -36,9 +39,10 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
       return await res.json();
     },
     onMutate: async data => {
-      await queryClient.cancelQueries(filters);
+      // await queryClient.cancelQueries(filters);
       const previousData = queryClient.getQueriesData(filters);
 
+      console.log(`/api/${qkRedirect[qk] ?? qk}/${data.id}`);
       console.log('previous data!', previousData);
 
       const valueParser = QTypeParsers[qk]?.[data.field] ?? anyParser;
@@ -81,6 +85,8 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
             return result;
           }
         }
+
+        return old;
       });
 
       queryClient.setQueryData([qk], (old: QTypes[T]) => [

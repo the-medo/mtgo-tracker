@@ -20,9 +20,6 @@ export default function EventMatchContent({
   eventRound,
   matchId,
 }: EventMatchContentProps) {
-  const { data: eventData } = useEvent(eventId);
-  const { data: matchData } = useMatch(matchId);
-
   return (
     <div
       className={`${matchId ? 'bg-zinc-50' : 'bg-white border-2 border-dashed'} p-4 flex flex-col gap-2`}

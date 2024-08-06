@@ -5,9 +5,8 @@ import { Spinner } from '@nextui-org/spinner';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import MatchGameSection from '@/components/app/events/MatchGameSection';
-import { useEvent } from '@/app/api/event/[id]/getEvent';
 import MatchTitle from '@/components/app/events/MatchTitle';
-import MatchFooter from '@/components/app/events/MatchFooter';
+import { getBgColorBasedOnMatchResult, getBorderColorBasedOnMatchResult } from '@/lib/helpers';
 
 type MatchGameDisplayInfo = {
   gameId?: number;
@@ -22,7 +21,12 @@ interface MatchContentProps {
 
 export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
-  const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
+
+  const bgColor = useMemo(() => getBgColorBasedOnMatchResult(match?.result), [match?.result]);
+  const borderColor = useMemo(
+    () => getBorderColorBasedOnMatchResult(match?.result),
+    [match?.result],
+  );
 
   const gamesToFill = useMemo(
     () =>
@@ -81,7 +85,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   }, [isLoading, gamesToFill, match]);
 
   return (
-    <>
+    <div className={`p-4 flex flex-col gap-2 border-2 bg-${bgColor} border-${borderColor}`}>
       <MatchTitle matchId={matchId} eventId={eventId} />
       <div className={`flex flex-row w-full gap-4`}>
         {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
@@ -97,7 +101,6 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
           ))
         )}
       </div>
-      <MatchFooter matchId={matchId} eventId={eventId} />
-    </>
+    </div>
   );
 }
