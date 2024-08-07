@@ -10,7 +10,6 @@ import {
   TbUsers,
   TbZeppelin,
 } from 'react-icons/tb';
-import { useMemo } from 'react';
 
 const dashboardIcon = <TbGraph size={24} />;
 const matchIcon = <TbArticle size={24} />;
@@ -53,20 +52,6 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
         </Listbox>
       )}
 
-      <Listbox variant="flat" aria-label="Side menu">
-        <ListboxSection title="PUBLIC">
-          <ListboxItem key="public-matches" startContent={matchIcon} href="/matches">
-            Matches
-          </ListboxItem>
-          <ListboxItem key="public-decks" startContent={deckIcon} href="/decks">
-            Decks
-          </ListboxItem>
-          <ListboxItem key="public-users" startContent={userIcon} href="/users">
-            Users
-          </ListboxItem>
-        </ListboxSection>
-      </Listbox>
-
       {isAdmin && (
         <Listbox variant="flat" aria-label="Side menu">
           <ListboxSection title="ADMIN">
@@ -79,6 +64,9 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
             </ListboxItem>
             <ListboxItem key="admin-formats" startContent={formatIcon} href="/admin/formats">
               Formats
+            </ListboxItem>
+            <ListboxItem key="public-users" startContent={userIcon} href="/users">
+              Users
             </ListboxItem>
           </ListboxSection>
         </Listbox>
