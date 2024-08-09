@@ -20,6 +20,7 @@ export default function useSimplePost<T extends QK>(qk: QK) {
   );
 
   return useMutation({
+    mutationKey: [`${qk}-post`],
     mutationFn: async (data: SimplePostRequest): Promise<QTypes[T][number]> => {
       const res = await fetch(`/api/${qkRedirect[qk] ?? qk}`, {
         method: 'POST',
@@ -31,28 +32,6 @@ export default function useSimplePost<T extends QK>(qk: QK) {
 
       return await res.json();
     },
-    // onMutate: async data => {
-    //   await queryClient.cancelQueries({ queryKey: [qk] });
-    //   const previousData = queryClient.getQueryData([qk]);
-    //
-    //   const newData = {
-    //     ...data,
-    //   };
-    //
-    //   Object.keys(data).forEach(field => {
-    //     const valueParser = QTypeParsers[qk]?.[field];
-    //     if (valueParser) {
-    //       newData[field] = valueParser(data[field]);
-    //     }
-    //   });
-    //
-    //   // queryClient.setQueryData([qk], (old: QTypes[T]) => [...(old ?? []), { ...newData, id: -1 }]);
-    //
-    //   return { previousData };
-    // },
-    // onError: (err, newData, context) => {
-    //   queryClient.setQueryData([qk], context?.previousData);
-    // },
     onSuccess: data => {
       console.log('useSimplePost onSuccess callback', qk);
       const queries = queryClient.getQueryCache().findAll(filters);
@@ -64,15 +43,15 @@ export default function useSimplePost<T extends QK>(qk: QK) {
         const queryKey = q.queryKey;
 
         if (Array.isArray(queryKey)) {
-          console.log('is array! length: ', queryKey.length);
+          // console.log('is array! length: ', queryKey.length);
           if (queryKey.length > 1) {
-            console.log('type: ', typeof queryKey[1]);
+            // console.log('type: ', typeof queryKey[1]);
             if (typeof queryKey[1] === 'object') {
               if (Object.keys(queryKey[0]).length > 0) {
-                console.log(queryKey, ' => INVALIDATING');
+                // console.log(queryKey, ' => INVALIDATING');
                 queryClient.invalidateQueries({ queryKey });
               } else {
-                console.log(queryKey, ' => SETTING');
+                // console.log(queryKey, ' => SETTING');
                 queryClient.setQueryData(queryKey, (old: InfiniteData<QTypes[T][number][]>) => ({
                   ...old,
                   pages: old.pages.map((o, i) => (i === 0 ? [data, ...o] : o)),

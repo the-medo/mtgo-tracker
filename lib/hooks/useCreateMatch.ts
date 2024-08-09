@@ -30,6 +30,7 @@ export default function useCreateMatch() {
 
             //add to "matches"
             queryClient.setQueriesData(eventFilters, (old: unknown) => {
+              console.log('OLD', old);
               // @ts-ignore
               if ('pages' in old && Array.isArray(old.pages)) {
                 const pgs = old.pages as EventExtended[][];

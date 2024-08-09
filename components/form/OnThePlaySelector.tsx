@@ -24,14 +24,14 @@ export default function OnThePlaySelector({ value, onValueChange }: OnThePlaySel
   return (
     <div className="flex flex-row gap-1">
       <Button
-        size="md"
+        size="sm"
         onClick={() => valueChangeHandler(true)}
         variant={localValue === true ? 'solid' : 'bordered'}
       >
         On the play
       </Button>
       <Button
-        size="md"
+        size="sm"
         onClick={() => valueChangeHandler(false)}
         variant={localValue === false ? 'solid' : 'bordered'}
       >

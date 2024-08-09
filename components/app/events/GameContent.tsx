@@ -184,7 +184,9 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
   ]);
 
   return (
-    <div className={`flex flex-${editMode || !gameResult ? 'col' : 'row'} w-full gap-4`}>
+    <div
+      className={`flex flex-${editMode || !gameResult ? 'col' : 'row'} w-full gap-4 items-center`}
+    >
       {content}
     </div>
   );

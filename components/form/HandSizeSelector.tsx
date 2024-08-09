@@ -17,8 +17,7 @@ export function HandSizeSelectorButton({
   return (
     <Button
       onPress={onClickHandler}
-      size={n > 4 ? 'md' : 'sm'}
-      // className={n > 4 ? 'h-6' : 'h-5'}
+      size="sm"
       style={{ width: '15px !important' }}
       variant={isSelected ? 'solid' : 'bordered'}
     >
@@ -63,7 +62,7 @@ export default function HandSizeSelector({ value, onValueChange }: HandSizeSelec
           />
         ))}
         {!extendedView && (
-          <Button size="md" onClick={() => setExtendedView(p => !p)}>
+          <Button size="sm" onClick={() => setExtendedView(p => !p)}>
             ...
           </Button>
         )}

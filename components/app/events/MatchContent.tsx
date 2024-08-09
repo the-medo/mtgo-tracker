@@ -41,7 +41,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
 
     if (!isLoading && match) {
       const usedGames: Record<number, boolean | undefined> = {};
-      const matchGames = match.Games;
+      const matchGames = match.Games ?? [];
 
       const getKey = (r: number | undefined, gid: number | undefined) =>
         `game-number_${r ?? 'x'}-game_${gid ?? 'x'}`;

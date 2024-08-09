@@ -38,7 +38,7 @@ export default function MatchTitle({ matchId, eventId }: MatchTitleProps) {
 
   return (
     <div className="flex flex-row w-full gap-4 items-center justify-between">
-      <div className="flex flex-row w-full gap-4 items-center">
+      <div className="flex flex-row gap-4 items-center">
         <Title title={`Round ${match?.round}`} />
         vs. <i>{match?.oppName}</i>
         <TableField

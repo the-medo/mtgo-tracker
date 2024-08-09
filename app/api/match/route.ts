@@ -6,6 +6,14 @@ import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
 import { Prisma } from '@prisma/client';
 
+export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
+  include: {
+    MatchTags: true,
+    Games: true,
+    oppArchetype: true,
+  },
+});
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   const data = await req.json();
@@ -28,9 +36,7 @@ export async function POST(req: Request) {
         startTime: parseDate(data.startTime) ?? new Date(),
         public: false,
       },
-      include: {
-        MatchTags: true,
-      },
+      ...matchExtension,
     });
 
     return NextResponse.json(record);
@@ -38,14 +44,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Only logged user can add new match!' }, { status: 403 });
   }
 }
-
-export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
-  include: {
-    MatchTags: true,
-    Games: true,
-    oppArchetype: true,
-  },
-});
 
 export type MatchExtended = Prisma.MatchGetPayload<typeof matchExtension>;
 
