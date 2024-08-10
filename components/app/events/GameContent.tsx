@@ -10,13 +10,12 @@ import { useCallback, useMemo, useState } from 'react';
 import { MatchResult } from '@prisma/client';
 import { useGame } from '@/app/api/game/[id]/getGame';
 import ResultSelector from '@/components/form/ResultSelector';
-import { Chip, ChipProps } from '@nextui-org/chip';
-import { TbCards, TbX } from 'react-icons/tb';
+import { TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { MatchExtended } from '@/app/api/match/route';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
-import { getChipColorBasedOnMatchResult } from '@/lib/helpers';
+import GameResultChip from '@/components/app/events/GameResultChip';
 
 interface GameContentProps {
   matchId: number;
@@ -110,8 +109,6 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
     [patchGame, patchMatch, gameId, matchId, match],
   );
 
-  const chipColor = useMemo(() => getChipColorBasedOnMatchResult(game?.result), [game?.result]);
-
   const content = useMemo(() => {
     if (editMode) {
       return (
@@ -148,18 +145,13 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
       return (
         <>
           <Title title={`Game ${game?.gameNumber}`} />
-          <Chip
-            className="cursor-pointer"
-            size="sm"
-            variant="flat"
-            color={chipColor}
-            startContent={<TbCards size={24} />}
+          <GameResultChip
+            result={game?.result}
+            startingHand={game?.startingHand}
+            oppStartingHand={game?.oppStartingHand}
+            isOnPlay={game?.isOnPlay}
             onClick={() => setEditMode(true)}
-          >
-            {game?.startingHand ?? '-'}v{game?.oppStartingHand ?? '-'}
-            {game?.isOnPlay ? ' (OTPlay)' : ''}
-            {game?.isOnPlay === false ? ' (OTDraw)' : ''}
-          </Chip>
+          />
           {!gameResult ? (
             <ResultSelector
               value={gameResult}
@@ -172,15 +164,18 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
     }
   }, [
     editMode,
-    chipColor,
-    gameResult,
-    resultChangeHandler,
-    isPending,
-    isLoading,
     game?.gameNumber,
     game?.startingHand,
     game?.oppStartingHand,
     game?.isOnPlay,
+    game?.result,
+    startingHandChangeHandler,
+    oppStartingHandChangeHandler,
+    isOnPlayChangeHandler,
+    gameResult,
+    resultChangeHandler,
+    isPending,
+    isLoading,
   ]);
 
   return (

@@ -64,14 +64,6 @@ export default function useCreateMatch() {
                 }
               }
             });
-
-            console.log('Now, should create game ');
-            await createGame({
-              gameNumber: 1,
-              matchId: newMatch.id,
-              startingHand: 7,
-              oppStartingHand: 7,
-            });
           },
         });
       },
