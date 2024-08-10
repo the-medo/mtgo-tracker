@@ -47,6 +47,8 @@ export default function SelectDeckArchetype({
   const [debouncedFilter, setDebouncedFilter] = useState<string>('');
   const [items, setItems] = useState<DeckArchetype[]>([]);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetFilter = useCallback(
     debounce(v => setDebouncedFilter(v), 250),
     [setDebouncedFilter],
@@ -137,11 +139,12 @@ export default function SelectDeckArchetype({
 
   return (
     <>
+      {/*{JSON.stringify(items)}*/}
       <Autocomplete
         size="sm"
         label={customLabel !== undefined ? customLabel : getDeckArchetypeLabel()}
         className="max-w-xs"
-        inputValue={filter}
+        inputValue={filter === '' ? selectedValue?.name ?? filter : filter}
         onInputChange={onInputChangeHandler}
         onSelectionChange={onSelectionChangeHandler}
         clearButtonProps={{

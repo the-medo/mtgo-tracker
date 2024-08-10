@@ -2,20 +2,23 @@
 
 import EventMatchCreationForm from '@/components/app/events/EventMatchCreationForm';
 import MatchContent from '@/components/app/events/MatchContent';
+import { MatchResult } from '@prisma/client';
 
 interface EventMatchSectionProps {
   eventId: number;
   eventRound?: number;
   matchId?: number;
+  matchResult?: MatchResult | null;
 }
 
 export default function EventMatchSection({
   eventId,
   eventRound,
   matchId,
+  matchResult,
 }: EventMatchSectionProps) {
   if (matchId) {
-    return <MatchContent matchId={matchId} eventId={eventId} />;
+    return <MatchContent matchId={matchId} eventId={eventId} matchResult={matchResult} />;
   }
 
   return (

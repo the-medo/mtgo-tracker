@@ -12,23 +12,17 @@ import { TbCards } from 'react-icons/tb';
 import { Chip } from '@nextui-org/chip';
 import { getChipColorBasedOnMatchResult } from '@/lib/helpers';
 import { MatchResult } from '@prisma/client';
+import { useGame } from '@/app/api/game/[id]/getGame';
 
 interface GameResultChipProps {
-  result?: MatchResult | null;
+  gameId: number;
   onClick?: () => void;
-  startingHand?: number | null;
-  oppStartingHand?: number | null;
-  isOnPlay?: boolean | null;
 }
 
-export default function GameResultChip({
-  result,
-  onClick,
-  startingHand,
-  oppStartingHand,
-  isOnPlay,
-}: GameResultChipProps) {
-  const chipColor = useMemo(() => getChipColorBasedOnMatchResult(result), [result]);
+export default function GameResultChip({ gameId, onClick }: GameResultChipProps) {
+  const { data: game, isLoading } = useGame(gameId);
+
+  const chipColor = useMemo(() => getChipColorBasedOnMatchResult(game?.result), [game?.result]);
 
   return (
     <Chip
@@ -39,9 +33,9 @@ export default function GameResultChip({
       startContent={<TbCards size={24} />}
       onClick={onClick}
     >
-      {startingHand ?? '-'}v{oppStartingHand ?? '-'}
-      {isOnPlay ? ' (OTPlay)' : ''}
-      {isOnPlay === false ? ' (OTDraw)' : ''}
+      {game?.startingHand ?? '-'}v{game?.oppStartingHand ?? '-'}
+      {game?.isOnPlay ? ' (OTPlay)' : ''}
+      {game?.isOnPlay === false ? ' (OTDraw)' : ''}
     </Chip>
   );
 }
