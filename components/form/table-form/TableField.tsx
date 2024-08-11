@@ -15,6 +15,9 @@ import TableFieldTags, { TableFieldTagsProps } from '@/components/form/table-for
 import TableFieldBoolean, {
   TableFieldBooleanProps,
 } from '@/components/form/table-form/TableFieldBoolean';
+import TableFieldTextarea, {
+  TableFieldTextareaProps,
+} from '@/components/form/table-form/TableFieldTextarea';
 
 export type TableFieldProps = {
   tableId: string;
@@ -32,6 +35,7 @@ export type TableFieldProps = {
 
 type Props =
   | TableFieldStringProps
+  | TableFieldTextareaProps
   | TableFieldDateProps
   | TableFieldSelectProps
   | TableFieldTagsProps
@@ -57,6 +61,8 @@ export default function TableField(props: Props) {
     case 'string':
     case 'number':
       return <TableFieldString {...props} onChange={onChange} isPending={isPending} />;
+    case 'textarea':
+      return <TableFieldTextarea {...props} onChange={onChange} isPending={isPending} />;
     case 'date':
       return <TableFieldDate {...props} onChange={onChange} isPending={isPending} />;
     case 'select':

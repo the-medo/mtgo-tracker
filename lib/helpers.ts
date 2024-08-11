@@ -19,27 +19,12 @@ export const getChipColorBasedOnMatchResult = (
 export const getBgColorBasedOnMatchResult = (result: MatchResult | undefined | null): string => {
   switch (result) {
     case MatchResult.WIN:
-      return 'success-100';
+      return 'bg-success-300';
     case MatchResult.LOSE:
-      return 'danger-100';
+      return 'bg-danger-300';
     case MatchResult.DRAW:
-      return 'warning-100';
+      return 'bg-warning-200';
     default:
-      return 'default-100';
-  }
-};
-
-export const getBorderColorBasedOnMatchResult = (
-  result: MatchResult | undefined | null,
-): string => {
-  switch (result) {
-    case MatchResult.WIN:
-      return 'success-700';
-    case MatchResult.LOSE:
-      return 'danger-700';
-    case MatchResult.DRAW:
-      return 'warning-700';
-    default:
-      return 'default-700';
+      return 'bg-default-200';
   }
 };

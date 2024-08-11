@@ -1,7 +1,7 @@
 'use client';
 
 import { TableFieldProps } from '@/components/form/table-form/TableField';
-import { Input } from '@nextui-org/input';
+import { Textarea } from '@nextui-org/input';
 import useStore from '@/store/store';
 import { ChangeEventHandler, useCallback, useMemo, useRef } from 'react';
 import debounce from 'lodash.debounce';
@@ -9,14 +9,14 @@ import FieldCircularProgress from '@/components/form/table-form/FieldCircularPro
 import LabelledValue from '@/components/typography/LabelledValue';
 import Title from '@/components/typography/Title';
 
-export type TableFieldStringProps = {
-  type: 'string' | 'number';
-  value?: string | number;
+export type TableFieldTextareaProps = {
+  type: 'textarea';
+  value?: string;
   selectAllOnFocus?: boolean;
   isMainTitle?: boolean;
 } & TableFieldProps;
 
-export default function TableFieldString({
+export default function TableFieldTextarea({
   type,
   tableId,
   id,
@@ -29,15 +29,15 @@ export default function TableFieldString({
   isPending,
   isLabelledView,
   isMainTitle,
-}: TableFieldStringProps) {
-  const ref = useRef<HTMLInputElement>(null);
+}: TableFieldTextareaProps) {
+  const ref = useRef<HTMLTextAreaElement>(null);
   const isSelected = useStore(state => state.tables[tableId]?.selectedIds[id]);
   const setSelectedId = useStore(state => state.setSelectedId);
   const setClickedColumn = useStore(state => state.setClickedColumn);
 
   const changeHandler = useCallback(
     (e: { target: { value?: string } }) => {
-      const val = type === 'number' ? parseInt(e.target.value ?? '') : e.target.value ?? '';
+      const val = e.target.value ?? '';
       if (value !== val) {
         if (onChange) onChange(id, fieldName, val);
       }
@@ -50,19 +50,15 @@ export default function TableFieldString({
     [changeHandler],
   );
 
-  const stringValue = typeof value === 'number' ? value.toString() : value;
-
   const content = useMemo(() => {
     if (isSelected)
       return (
-        <Input
+        <Textarea
           ref={ref}
-          className="bg-white"
-          type={type === 'string' ? 'text' : 'number'}
           label={label}
           size="sm"
           name={fieldName}
-          defaultValue={stringValue}
+          defaultValue={value}
           onChange={debouncedChangeHandler}
           onBlur={changeHandler}
           endContent={isPending ? <FieldCircularProgress /> : endContent}
@@ -99,7 +95,7 @@ export default function TableFieldString({
     <LabelledValue label={label} value={content} onClick={selectRow} />
   ) : (
     <div className="w-full min-h-[48px] flex items-center justify-items-start" onClick={selectRow}>
-      {isMainTitle && !isSelected ? <Title title={stringValue ?? '-'} size="xl" /> : content}
+      {isMainTitle && !isSelected ? <Title title={value ?? '-'} size="xl" /> : content}
     </div>
   );
 }

@@ -34,8 +34,8 @@ export default function GameResultChip({ gameId, onClick }: GameResultChipProps)
       onClick={onClick}
     >
       {game?.startingHand ?? '-'}v{game?.oppStartingHand ?? '-'}
-      {game?.isOnPlay ? ' (OTPlay)' : ''}
-      {game?.isOnPlay === false ? ' (OTDraw)' : ''}
+      {game?.isOnPlay ? ' P' : ''}
+      {game?.isOnPlay === false ? ' d' : ''}
     </Chip>
   );
 }

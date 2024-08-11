@@ -98,7 +98,7 @@ export default function EventContent({ eventId }: EventContentProps) {
   }, [isLoading, matches?.pages, matchesToFill]);
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-2">
       {isLoading || (!isLoading && eventMatchDisplayInfo.result.length === 0) ? (
         <Spinner />
       ) : (
