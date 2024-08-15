@@ -11,7 +11,6 @@ import { MatchResult } from '@prisma/client';
 type EventMatchDisplayInfo = {
   round: number;
   matchId?: number;
-  matchResult?: MatchResult | null;
   key: string;
 };
 
@@ -68,7 +67,6 @@ export default function EventContent({ eventId }: EventContentProps) {
             ...existingMatches.map(em => ({
               round: m,
               matchId: em.id,
-              matchResult: em.result,
               key: getKey(m, em.id),
             })),
           );
@@ -87,7 +85,6 @@ export default function EventContent({ eventId }: EventContentProps) {
           result.push({
             round: m.round ?? 0,
             matchId: m.id,
-            matchResult: m.result,
             key: getKey(m.round ?? 0, m.id),
           });
         }
@@ -108,7 +105,6 @@ export default function EventContent({ eventId }: EventContentProps) {
             eventId={eventId}
             eventRound={em.round}
             matchId={em.matchId}
-            matchResult={em.matchResult}
           />
         ))
       )}

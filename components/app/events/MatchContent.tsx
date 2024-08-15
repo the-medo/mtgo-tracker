@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
@@ -28,20 +28,29 @@ type MatchGameDisplayInfo = {
 interface MatchContentProps {
   matchId: number;
   eventId: number;
-  matchResult?: MatchResult | null;
 }
 
-export default function MatchContent({
-  matchId,
-  eventId,
-  matchResult: matchResultProp,
-}: MatchContentProps) {
-  const [matchEditMode, setMatchEditMode] = useState(!matchResultProp);
+export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
 
+  const [matchLoaded, setMatchLoaded] = useState(false);
+  const [matchEditMode, setMatchEditMode] = useState(false);
+
   const { mutate: patchMatch, isPending } = useSimplePatch(QK.MATCH);
   const setSelectedId = useStore(state => state.setSelectedId);
+
+  useEffect(() => {
+    if (!isLoading && !matchLoaded) {
+      const hasStartedGame = match?.Games.find(g => g.result === null) !== undefined;
+      const isEditMode = !match?.result || hasStartedGame;
+      setMatchLoaded(true);
+      setMatchEditMode(isEditMode);
+      if (isEditMode) {
+        setSelectedId(deckInfoIdentificator, matchId);
+      }
+    }
+  }, [isLoading, matchLoaded, match?.Games, match?.result, setSelectedId, matchId]);
 
   const matchResult = match?.result ?? undefined;
 
@@ -200,10 +209,16 @@ export default function MatchContent({
                 </div>
               )}
             </div>
-            {!matchEditMode &&
-              match?.Games.sort((a, b) => a.gameNumber - b.gameNumber).map(g => (
-                <GameResultChip key={g.id} gameId={g.id} />
-              ))}
+            {!matchEditMode && (
+              <>
+                <div className="flex flex-row gap-2 items-center min-w-[220px]">
+                  {match?.Games.sort((a, b) => a.gameNumber - b.gameNumber).map(g => (
+                    <GameResultChip key={g.id} gameId={g.id} />
+                  ))}
+                </div>
+                {match?.notes && <div className="italic text-xs">{match.notes}</div>}
+              </>
+            )}
           </div>
 
           {matchEditMode && (

@@ -13,6 +13,7 @@ import { Chip } from '@nextui-org/chip';
 import { getChipColorBasedOnMatchResult } from '@/lib/helpers';
 import { MatchResult } from '@prisma/client';
 import { useGame } from '@/app/api/game/[id]/getGame';
+import cn from 'classnames';
 
 interface GameResultChipProps {
   gameId: number;
@@ -26,7 +27,10 @@ export default function GameResultChip({ gameId, onClick }: GameResultChipProps)
 
   return (
     <Chip
-      className={onClick ? 'cursor-pointer' : 'cursor-default'}
+      className={cn({
+        'cursor-pointer': !!onClick,
+        'cursor-default': !onClick,
+      })}
       size="sm"
       variant="flat"
       color={chipColor}

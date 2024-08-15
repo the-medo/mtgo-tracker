@@ -8,17 +8,15 @@ interface EventMatchSectionProps {
   eventId: number;
   eventRound?: number;
   matchId?: number;
-  matchResult?: MatchResult | null;
 }
 
 export default function EventMatchSection({
   eventId,
   eventRound,
   matchId,
-  matchResult,
 }: EventMatchSectionProps) {
   if (matchId) {
-    return <MatchContent matchId={matchId} eventId={eventId} matchResult={matchResult} />;
+    return <MatchContent matchId={matchId} eventId={eventId} />;
   }
 
   return (
