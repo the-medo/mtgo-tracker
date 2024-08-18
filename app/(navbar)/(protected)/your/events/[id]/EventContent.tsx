@@ -94,7 +94,6 @@ export default function EventContent({ eventId }: EventContentProps) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      Event loaded
       {isLoading || (!isLoading && eventMatchDisplayInfo.result.length === 0) ? (
         <Spinner />
       ) : (

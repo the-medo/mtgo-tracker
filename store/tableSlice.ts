@@ -1,5 +1,6 @@
 import { create, StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
+import { underline } from 'next/dist/lib/picocolors';
 
 type SelectedIdMap = Record<number | string, boolean | undefined>;
 
@@ -15,6 +16,7 @@ export type TableState = {
 export type TableActions = {
   clearTableData: (tableId: string) => void;
   setSelectedId: (tableId: string, id: string | number) => void;
+  unsetSelectedId: (tableId: string, id: string | number) => void;
   toggleSelectedId: (tableId: string, id: string | number) => void;
   setClickedColumn: (tableId: string, value: string | undefined) => void;
 };
@@ -43,6 +45,20 @@ export const createTableSlice: StateCreator<AllSlices, [], [], TableSlice> = set
           selectedIds: {
             ...state.tables[tableId]?.selectedIds,
             [id]: true,
+          },
+        },
+      },
+    }));
+  },
+  unsetSelectedId: (tableId: string, id: string | number) => {
+    set(state => ({
+      tables: {
+        ...state.tables,
+        [tableId]: {
+          ...state.tables[tableId],
+          selectedIds: {
+            ...state.tables[tableId]?.selectedIds,
+            [id]: undefined,
           },
         },
       },

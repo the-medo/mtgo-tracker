@@ -5,6 +5,7 @@ import {
   TbArticle,
   TbCards,
   TbGraph,
+  TbTags,
   TbTower,
   TbTrophy,
   TbUsers,
@@ -20,6 +21,7 @@ const deckIcon = <TbCards size={24} />;
 const userIcon = <TbUsers size={24} />;
 const formatIcon = <TbTower size={24} />;
 const archetypeIcon = <TbZeppelin size={24} />;
+const tagIcon = <TbTags size={24} />;
 
 interface Props {
   isAuthenticated?: boolean;
@@ -72,6 +74,16 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
               className={getActiveStyle('/your/decks')}
             >
               Your decks
+            </ListboxItem>
+          </ListboxSection>
+          <ListboxSection title="SETTINGS">
+            <ListboxItem
+              key="settings-tags"
+              startContent={tagIcon}
+              href="/settings/tags"
+              className={getActiveStyle('/settings/tags')}
+            >
+              Tags
             </ListboxItem>
           </ListboxSection>
         </Listbox>

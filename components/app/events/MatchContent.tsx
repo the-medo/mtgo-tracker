@@ -10,7 +10,6 @@ import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
 import { MatchResult } from '@prisma/client';
 import TableField from '@/components/form/table-form/TableField';
-import { deckInfoIdentificator } from '@/app/(navbar)/(protected)/your/decks/[id]/DeckInfo';
 import ResultSelector from '@/components/form/ResultSelector';
 import { TbEdit, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
@@ -30,6 +29,8 @@ interface MatchContentProps {
   eventId: number;
 }
 
+export const matchContentIdentificator = `MatchContent`;
+
 export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
@@ -39,6 +40,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
 
   const { mutate: patchMatch, isPending } = useSimplePatch(QK.MATCH);
   const setSelectedId = useStore(state => state.setSelectedId);
+  const unsetSelectedId = useStore(state => state.unsetSelectedId);
 
   useEffect(() => {
     if (!isLoading && !matchLoaded) {
@@ -47,7 +49,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
       setMatchLoaded(true);
       setMatchEditMode(isEditMode);
       if (isEditMode) {
-        setSelectedId(deckInfoIdentificator, matchId);
+        setSelectedId(matchContentIdentificator, matchId);
       }
     }
   }, [isLoading, matchLoaded, match?.Games, match?.result, setSelectedId, matchId]);
@@ -123,9 +125,15 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   }, [isLoading, gamesToFill, match]);
 
   const editModeHandler = useCallback(() => {
-    setSelectedId(deckInfoIdentificator, matchId);
-    setMatchEditMode(p => !p);
-  }, [matchId, setSelectedId]);
+    setMatchEditMode(p => {
+      if (p) {
+        unsetSelectedId(matchContentIdentificator, matchId);
+      } else {
+        setSelectedId(matchContentIdentificator, matchId);
+      }
+      return !p;
+    });
+  }, [matchId, setSelectedId, unsetSelectedId]);
 
   // bg-${bgColor}
 
@@ -157,7 +165,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                       selectType={QK.DECK_ARCHETYPE}
                       formatId={event?.formatId}
                       type="select"
-                      tableId={deckInfoIdentificator}
+                      tableId={matchContentIdentificator}
                       id={matchId}
                       fieldName="oppArchetypeId"
                       label="Opp. Archetype"
@@ -168,7 +176,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                     <TableField
                       qk={QK.MATCH}
                       type="string"
-                      tableId={deckInfoIdentificator}
+                      tableId={matchContentIdentificator}
                       id={matchId}
                       fieldName="oppArchetypeNote"
                       label="Opp. Archetype Note"
@@ -179,7 +187,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                     <TableField
                       qk={QK.MATCH}
                       type="string"
-                      tableId={deckInfoIdentificator}
+                      tableId={matchContentIdentificator}
                       id={matchId}
                       fieldName="oppName"
                       label="Opp. Name"
@@ -191,7 +199,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                   <TableField
                     qk={QK.MATCH}
                     type="textarea"
-                    tableId={deckInfoIdentificator}
+                    tableId={matchContentIdentificator}
                     id={matchId}
                     fieldName="notes"
                     label="Match Notes"
@@ -222,17 +230,53 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
           </div>
 
           {matchEditMode && (
-            <div className="flex flex-row gap-2 items-center">
-              <span>Result:</span>
-              <ResultSelector
-                value={matchResult}
-                onValueChange={matchResultChangeHandler}
-                isLoading={isPending || isLoading}
-              />
+            <div className="flex flex-col gap-2 items-center">
+              <div className="flex flex-row gap-2 items-center">
+                <span>Result:</span>
+                <ResultSelector
+                  value={matchResult}
+                  onValueChange={matchResultChangeHandler}
+                  isLoading={isPending || isLoading}
+                />
+              </div>
+              <div className="flex flex-row gap-2 items-center">
+                <span>Tags:</span>
+                <div className="flex flex-row items-center max-w-[300px]">
+                  <TableField
+                    qk={QK.MATCH}
+                    type="tags"
+                    tableId={matchContentIdentificator}
+                    id={matchId}
+                    fieldName="tags"
+                    label="Tags"
+                    displaySelect={false}
+                    // @ts-ignore
+                    values={match?.MatchTags}
+                  />
+                </div>
+              </div>
             </div>
           )}
           <div className="flex flex-row gap-4 items-center">
-            {matchEditMode ? null : <i>{match?.oppName}</i>}
+            {matchEditMode ? null : (
+              <>
+                <div className="flex flex-row items-center max-w-[300px]">
+                  <TableField
+                    qk={QK.MATCH}
+                    type="tags"
+                    tableId={matchContentIdentificator}
+                    id={matchId}
+                    fieldName="tags"
+                    label="Tags"
+                    displaySelect={false}
+                    // @ts-ignore
+                    values={match?.MatchTags}
+                    editable={false}
+                  />
+                </div>
+                <i>{match?.oppName}</i>
+              </>
+            )}
             <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
               {matchEditMode ? <TbX /> : <TbEdit />}
             </Button>

@@ -8,7 +8,7 @@ import { TagType } from '@prisma/client';
 import { Spinner } from '@nextui-org/spinner';
 import { tagTypeToQK, useTags } from '@/app/api/tag/getTags';
 import { Chip } from '@nextui-org/chip';
-import { TbTag, TbTrash } from 'react-icons/tb';
+import { TbTag, TbTrash, TbX } from 'react-icons/tb';
 import useSimpleDelete from '@/app/api/useSimpleDelete';
 import useSimplePatch from '@/app/api/useSimplePatch';
 
@@ -25,7 +25,7 @@ export default function TagAdmin({ type }: TagAdminProps) {
 
   const { createTag, isPending } = useCreateTag({ type, formRef, inputRef });
   const { mutate: patchTag, isPending: isPendingPatch } = useSimplePatch(tagTypeToQK[type]);
-  const { data } = useTags(type);
+  const { data, isLoading } = useTags(type);
 
   const { mutate: deleteTag } = useSimpleDelete(tagTypeToQK[type]);
 
@@ -57,6 +57,14 @@ export default function TagAdmin({ type }: TagAdminProps) {
     setSelectedId(id);
     if (inputRef.current) {
       setValue(name);
+      inputRef?.current?.focus();
+    }
+  }, []);
+
+  const unselectTag = useCallback(() => {
+    setSelectedId(undefined);
+    if (inputRef.current) {
+      setValue('');
       inputRef?.current?.focus();
     }
   }, []);
@@ -95,6 +103,8 @@ export default function TagAdmin({ type }: TagAdminProps) {
           value={value}
           onValueChange={setValue}
           autoComplete="off"
+          isClearable={!selectedId}
+          onClear={unselectTag}
         />
         <Button type="submit" size="sm" disabled={value.length === 0}>
           {loading ? <Spinner size="sm" color="primary" /> : buttonText}
@@ -111,6 +121,8 @@ export default function TagAdmin({ type }: TagAdminProps) {
         </Button>
       </form>
       <div className="flex gap-2 flex-wrap">
+        {isLoading && <Spinner size="sm" color="primary" />}
+        {!isLoading && (data ?? []).length === 0 && <p className="italic text-sm">No tags</p>}
         {(data ?? []).map((tag, index) => (
           <Chip
             key={tag.id}

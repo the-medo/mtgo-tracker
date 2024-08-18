@@ -6,13 +6,16 @@ import HandSizeSelector from '@/components/form/HandSizeSelector';
 import OnThePlaySelector from '@/components/form/OnThePlaySelector';
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { MatchResult } from '@prisma/client';
 import { useGame } from '@/app/api/game/[id]/getGame';
 import ResultSelector from '@/components/form/ResultSelector';
 import { useQueryClient } from '@tanstack/react-query';
 import { MatchExtended } from '@/app/api/match/route';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
+import { Button } from '@nextui-org/button';
+import { TbX } from 'react-icons/tb';
+import GameResultChip from '@/components/app/events/GameResultChip';
 
 interface GameContentProps {
   matchId: number;
@@ -20,6 +23,7 @@ interface GameContentProps {
 }
 
 export default function GameContent({ matchId, gameId }: GameContentProps) {
+  const [editMode, setEditMode] = useState(false);
   const queryClient = useQueryClient();
   const { data: match, isLoading: isLoadingMatch } = useMatch(matchId);
   const { data: game, isLoading } = useGame(gameId);
@@ -109,25 +113,37 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
     <div className={`flex flex-col w-full gap-4 items-center`}>
       <div className={`flex flex-row w-full justify-between`}>
         <Title title={`Game ${game?.gameNumber}`} />
-        {/*<Button size="sm" color="default" isIconOnly onPress={() => setEditMode(false)}>
-              <TbX />
-            </Button>*/}
+        {editMode ? (
+          <Button size="sm" color="default" isIconOnly onPress={() => setEditMode(false)}>
+            <TbX />
+          </Button>
+        ) : (
+          <GameResultChip
+            gameId={gameId}
+            includeEditIcon={true}
+            onClick={() => setEditMode(true)}
+          />
+        )}
       </div>
-      <span>Your starting hand: </span>
-      <HandSizeSelector
-        value={game?.startingHand ?? undefined}
-        onValueChange={startingHandChangeHandler}
-      />
-      <span>Opp. starting hand: </span>
-      <HandSizeSelector
-        value={game?.oppStartingHand ?? undefined}
-        onValueChange={oppStartingHandChangeHandler}
-      />
+      {editMode && (
+        <>
+          <span>Your starting hand: </span>
+          <HandSizeSelector
+            value={game?.startingHand ?? undefined}
+            onValueChange={startingHandChangeHandler}
+          />
+          <span>Opp. starting hand: </span>
+          <HandSizeSelector
+            value={game?.oppStartingHand ?? undefined}
+            onValueChange={oppStartingHandChangeHandler}
+          />
 
-      <OnThePlaySelector
-        value={game?.isOnPlay ?? undefined}
-        onValueChange={isOnPlayChangeHandler}
-      />
+          <OnThePlaySelector
+            value={game?.isOnPlay ?? undefined}
+            onValueChange={isOnPlayChangeHandler}
+          />
+        </>
+      )}
       <ResultSelector
         value={gameResult}
         onValueChange={resultChangeHandler}

@@ -52,5 +52,6 @@ export function useTags(
   return useQuery({
     queryKey: [tagTypeToQK[tagType]],
     queryFn: skipQuery ? skipToken : queryFn,
+    staleTime: 1000 * 60 * 60,
   });
 }

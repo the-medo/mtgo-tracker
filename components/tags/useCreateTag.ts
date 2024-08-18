@@ -26,7 +26,7 @@ export default function useCreateTag({ type, formRef, inputRef }: Props) {
 
       inputRef?.current?.focus();
     },
-    [mutate],
+    [formRef, inputRef, mutate, type],
   );
 
   return {

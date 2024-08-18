@@ -13,6 +13,7 @@ import useTagAssignmentPost from '@/app/api/tag-assignment/useTagAssignmentPost'
 import { TagAssignment } from '@/types/tags';
 import useTagAssignmentDelete from '@/app/api/tag-assignment/useTagAssignmentDelete';
 import LabelledValue from '@/components/typography/LabelledValue';
+import cn from 'classnames';
 
 export type TableFieldTagsProps = {
   type: 'tags';
@@ -116,6 +117,7 @@ export default function TableFieldTags({
     } else if (isSelected && !displaySelect) {
       return (
         <div className="flex flex-row gap-2 flex-wrap">
+          {(tags ?? [])?.length === 0 && <p className="text-xs italic">No tags to choose from</p>}
           {(tags ?? []).map(v => {
             const isTagSelected = selectedKeys.find(k => k === v.id.toString());
 
@@ -123,12 +125,14 @@ export default function TableFieldTags({
               <Chip
                 size="sm"
                 key={v.id}
-                variant={isTagSelected ? 'bordered' : 'flat'}
+                color="default"
+                variant={isTagSelected ? 'flat' : 'bordered'}
                 onClick={() => toggleTag(v.id)}
-                // onClose={() => deleteTag({ id: tag.id })}
-                className={
-                  isTagSelected ? 'cursor-pointer' : 'border-2 border-transparent cursor-pointer'
-                }
+                className={cn('cursor-pointer border-2', {
+                  'border-transparent': isTagSelected,
+                  'opacity-70': !isTagSelected,
+                  'hover:opacity-100': !isTagSelected,
+                })}
               >
                 {v.name}
               </Chip>
@@ -142,7 +146,7 @@ export default function TableFieldTags({
           {(tags ?? [])
             .filter(t => values.find(v => v.tagId === t.id))
             .map(v => (
-              <Chip key={v.id} variant="flat" size="sm">
+              <Chip key={v.id} color="default" variant="flat" size="sm">
                 {v.name}
               </Chip>
             ))}

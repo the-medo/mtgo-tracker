@@ -62,6 +62,8 @@ export default function useSimpleDelete<T extends QK>(qk: QK) {
         }
       });
 
+      queryClient.setQueryData([qk], (old: QTypes[T]) => (old ?? []).filter(o => o.id !== id));
+
       /* This is for single property fetch  */
       queryClient.removeQueries({
         queryKey: [qk, id],
