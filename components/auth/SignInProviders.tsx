@@ -4,9 +4,8 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 
-export function SignInButton() {
+export function SignInProviders() {
   const { status } = useSession();
-
   if (status === 'loading') return <>...</>;
 
   if (status === 'authenticated') {
@@ -23,8 +22,16 @@ export function SignInButton() {
   }
 
   return (
-    <Button variant="shadow" size="lg" onClick={() => signIn()}>
-      Sign In
-    </Button>
+    <>
+      <h1>Sign In</h1>
+      <Button
+        variant="shadow"
+        size="lg"
+        className="w-[300px] bg-gradient-to-tr from-zinc-700 to-zinc-900 text-white"
+        onClick={() => signIn('github')}
+      >
+        GitHub
+      </Button>
+    </>
   );
 }
