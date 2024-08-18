@@ -1,36 +1,50 @@
 'use client';
 
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/button';
-import { Link } from '@nextui-org/link';
+import { redirect } from 'next/navigation';
 
 export function SignInProviders() {
   const { status } = useSession();
   if (status === 'loading') return <>...</>;
 
   if (status === 'authenticated') {
-    return (
-      <>
-        <Link href="/your/dashboard">
-          <Button variant="shadow" size="lg">
-            Browse your stats
-          </Button>
-        </Link>
-        <Button onClick={() => signOut()}>Logout</Button>
-      </>
-    );
+    redirect('/your/dashboard');
   }
 
   return (
     <>
-      <h1>Sign In</h1>
       <Button
         variant="shadow"
         size="lg"
-        className="w-[300px] bg-gradient-to-tr from-zinc-700 to-zinc-900 text-white"
-        onClick={() => signIn('github')}
+        className="w-[300px] bg-zinc-400 text-zinc-800"
+        onClick={() => signIn('google')}
+        startContent={
+          <img
+            height={24}
+            width={24}
+            src={'https://authjs.dev/img/providers/google.svg'}
+            alt="Google logo"
+          />
+        }
       >
-        GitHub
+        Continue with Google
+      </Button>
+      <Button
+        variant="shadow"
+        size="lg"
+        className="w-[300px] bg-zinc-400 text-zinc-800"
+        onClick={() => signIn('github')}
+        startContent={
+          <img
+            height={24}
+            width={24}
+            src={'https://authjs.dev/img/providers/github.svg'}
+            alt="GitHub logo"
+          />
+        }
+      >
+        Continue with GitHub
       </Button>
     </>
   );

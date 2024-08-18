@@ -10,7 +10,7 @@ export default async function AdminLayout({
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect('/api/auth/signin');
+    redirect('/');
   }
 
   if (!session.user.isAdmin) {
