@@ -19,10 +19,9 @@ interface EventContentProps {
 }
 
 export default function EventContent({ eventId }: EventContentProps) {
-  const { data } = useEvent(eventId);
+  const { data: ev, isLoading } = useEvent(eventId);
 
-  const matchFilter: GetMatchesRequest = useMemo(() => ({ where: { eventId } }), [eventId]);
-  const { data: matches, isLoading } = useInfiniteMatches(matchFilter);
+  const matches = ev?.Matches;
 
   /* for preloading games of current event */
   const gameFilter: GetGamesRequest = useMemo(
@@ -40,23 +39,22 @@ export default function EventContent({ eventId }: EventContentProps) {
   /* ===================================== */
 
   const matchesToFill = useMemo(
-    () => new Array(data?.rounds ?? 0).fill(0).map((_, i) => i + 1),
-    [data?.rounds],
+    () => new Array(ev?.rounds ?? 0).fill(0).map((_, i) => i + 1),
+    [ev?.rounds],
   );
 
   const eventMatchDisplayInfo = useMemo(() => {
     const result: EventMatchDisplayInfo[] = [];
     const defaultSelectedKeys: string[] = [];
 
-    if (!isLoading) {
+    if (!isLoading && matches) {
       const usedMatches: Record<number, boolean | undefined> = {};
-      const eventMatches = matches?.pages?.flat() ?? [];
 
       const getKey = (r: number | undefined, mid: number | undefined) =>
         `round_${r ?? 'x'}-match_${mid ?? 'x'}`;
 
       matchesToFill.forEach(m => {
-        const existingMatches = eventMatches.filter(em => {
+        const existingMatches = matches.filter(em => {
           const isRound = em.round === m;
           if (isRound) usedMatches[em.id] = true;
           return isRound;
@@ -80,7 +78,7 @@ export default function EventContent({ eventId }: EventContentProps) {
         }
       });
 
-      eventMatches.forEach(m => {
+      matches.forEach(m => {
         if (!usedMatches[m.id]) {
           result.push({
             round: m.round ?? 0,
@@ -92,10 +90,11 @@ export default function EventContent({ eventId }: EventContentProps) {
     }
 
     return { result, defaultSelectedKeys };
-  }, [isLoading, matches?.pages, matchesToFill]);
+  }, [isLoading, matches, matchesToFill]);
 
   return (
     <div className="flex flex-col w-full gap-2">
+      Event loaded
       {isLoading || (!isLoading && eventMatchDisplayInfo.result.length === 0) ? (
         <Spinner />
       ) : (

@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { parseDatePickerToIso, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
 import { Prisma } from '@prisma/client';
+import { matchExtension } from '@/app/api/match/route';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -87,7 +88,9 @@ export const eventExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
   include: {
     deck: true,
     EventTags: true,
-    Matches: true,
+    Matches: {
+      ...matchExtension,
+    },
   },
 });
 

@@ -3,8 +3,7 @@ import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { GameExtended } from '@/app/api/game/route';
-import { parseDate, Stringify } from '@/app/api/parsers';
-import { MatchExtended } from '@/app/api/match/route';
+import { Stringify } from '@/app/api/parsers';
 
 export const parseGame = (j: Stringify<GameExtended>): GameExtended => j as unknown as GameExtended;
 

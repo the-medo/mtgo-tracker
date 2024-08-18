@@ -5,11 +5,14 @@ import { NextResponse } from 'next/server';
 import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
 import { Prisma } from '@prisma/client';
+import { gameExtension } from '@/app/api/game/route';
 
 export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
   include: {
     MatchTags: true,
-    Games: true,
+    Games: {
+      ...gameExtension,
+    },
     oppArchetype: true,
   },
 });

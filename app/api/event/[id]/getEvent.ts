@@ -3,11 +3,22 @@ import { QK } from '@/app/api/queryHelpers';
 import { Stringify } from '@/app/api/parsers';
 import { EventExtended } from '@/app/api/event/route';
 import { parseEvent } from '@/app/api/event/getEvents';
+import { queryClient } from '@/app/providers';
+import { addMatchToCache } from '@/app/api/match/[id]/getMatch';
+
+export const addEventToCache = (e: EventExtended) => {
+  queryClient.setQueryData([QK.EVENT, e.id], e);
+  e.Matches.forEach(m => addMatchToCache(m));
+};
 
 export async function getEvent(eventId: number) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/event/${eventId}`);
   const data = (await response.json()) as Stringify<EventExtended>;
-  return parseEvent(data);
+  const parsedData = parseEvent(data);
+
+  addEventToCache(parsedData);
+
+  return parsedData;
 }
 
 export function useEvent(eventId: number, skipQuery?: boolean) {

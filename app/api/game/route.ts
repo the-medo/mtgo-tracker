@@ -16,7 +16,6 @@ export async function POST(req: Request) {
         gameNumber: parseNumber(data.gameNumber)!,
         matchId: parseNumber(data.matchId)!,
         mtgoGameId: parseString(data.mtgoGameId),
-        isWin: data.isWin,
         isOnPlay: data.isOnPlay,
         turns: parseNumber(data.turns),
         startingHand: parseNumber(data.startingHand),

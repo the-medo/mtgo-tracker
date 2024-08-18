@@ -4,11 +4,15 @@ import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { MatchExtended } from '@/app/api/match/route';
 import { parseDate, Stringify } from '@/app/api/parsers';
+import { GameExtended } from '@/app/api/game/route';
+import { parseGame } from '@/app/api/game/getGames';
+import { queryClient } from '@/app/providers';
 
 export const parseMatch = (j: Stringify<MatchExtended>): MatchExtended =>
   ({
     ...j,
     startTime: parseDate(j.startTime),
+    Games: (j.Games as unknown as Stringify<GameExtended>[]).map(g => parseGame(g)),
   }) as unknown as MatchExtended;
 
 export type GetMatchesRequest = PrismaQueryApiParams<'Match'>;
@@ -17,7 +21,15 @@ export async function getMatches({ where, orderBy, skip, take }: GetMatchesReque
   const params = createQueryApiParams({ where, orderBy, skip, take });
   const f = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/match${params}`);
 
-  return (await f.json()) as MatchExtended[];
+  const data = (await f.json()) as MatchExtended[];
+
+  data.forEach(match => {
+    match.Games.forEach(g => {
+      queryClient.setQueryData([QK.GAME, g.id], g);
+    });
+  });
+
+  return data;
 }
 
 export function useInfiniteMatches(request: GetMatchesRequest = {}) {
