@@ -43,7 +43,8 @@ export default function TableFieldTags({
   const { mutate: assignTag, isPending: isPendingPost } = useTagAssignmentPost(tagType, qk);
   const { mutate: deleteTag, isPending: isPendingDelete } = useTagAssignmentDelete(tagType, qk);
   const isLoading = isPendingPost || isPendingDelete;
-  const selectedKeys = useMemo(() => values.map(v => v.tagId.toString()), [values]);
+
+  const selectedKeys = useMemo(() => (values ?? []).map(v => v.tagId.toString()), [values]);
 
   const changeHandler: MultipleSelection['onSelectionChange'] = useCallback(
     (x: Selection) => {
@@ -71,7 +72,7 @@ export default function TableFieldTags({
         });
       }
     },
-    [selectedKeys, assignTag, id, deleteTag],
+    [selectedKeys, assignTag, tagType, id, deleteTag],
   );
 
   const toggleTag = useCallback(

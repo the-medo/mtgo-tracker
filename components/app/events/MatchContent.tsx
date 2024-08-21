@@ -26,14 +26,14 @@ type MatchGameDisplayInfo = {
 
 interface MatchContentProps {
   matchId: number;
-  eventId: number;
+  eventId: number | null;
 }
 
 export const matchContentIdentificator = `MatchContent`;
 
 export default function MatchContent({ matchId, eventId }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
-  const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
+  const { data: event, isLoading: isLoadingEvent } = useEvent(eventId ?? 0, !eventId);
 
   const [matchLoaded, setMatchLoaded] = useState(false);
   const [matchEditMode, setMatchEditMode] = useState(false);
@@ -251,7 +251,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                     label="Tags"
                     displaySelect={false}
                     // @ts-ignore
-                    values={match?.MatchTags}
+                    values={match?.MatchTags ?? []}
                   />
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                     label="Tags"
                     displaySelect={false}
                     // @ts-ignore
-                    values={match?.MatchTags}
+                    values={match?.MatchTags ?? []}
                     editable={false}
                   />
                 </div>

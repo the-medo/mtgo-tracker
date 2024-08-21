@@ -14,6 +14,9 @@ import useMatchFilters from '@/app/(navbar)/(protected)/your/matches/useMatchFil
 import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
 import { MatchExtended } from '@/app/api/match/route';
+import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
+import MatchContent from '@/components/app/events/MatchContent';
+import { MatchResult } from '@prisma/client';
 
 const TABLE_ID = 'MATCHES';
 
@@ -103,7 +106,7 @@ const renderCell = (data: MatchExtended, columnKey: Key) => {
           id={data.id}
           fieldName="isWin"
           label="Win"
-          value={data.isWin ?? undefined}
+          value={data.result === MatchResult.WIN}
         />
       );
     case 'startTime':
@@ -134,57 +137,16 @@ interface Props {}
 
 export default function MatchesClient({}: Props) {
   const { filters, sortDescriptor, onSortChange } = useMatchFilters();
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteMatches(filters);
-
-  const [loaderRef, scrollerRef] = useInfiniteScroll({
-    hasMore: hasNextPage,
-    onLoadMore: fetchNextPage,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteMatches(filters);
 
   const items = data?.pages?.flat() ?? [];
 
   return (
     <div className="flex flex-col gap-4">
-      <Table<As<MatchExtended>>
-        isHeaderSticky
-        aria-label="Table of matches"
-        baseRef={scrollerRef}
-        bottomContent={
-          hasNextPage ? (
-            <div className="flex w-full justify-center">
-              <Spinner ref={loaderRef} />
-            </div>
-          ) : null
-        }
-        classNames={{
-          base: 'max-h-[520px]',
-        }}
-        sortDescriptor={sortDescriptor}
-        onSortChange={onSortChange}
-      >
-        <TableHeader columns={columns}>
-          {column => (
-            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting={column.sortable}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          emptyContent="No matches to display."
-          isLoading={isLoading}
-          loadingContent={<Spinner color="default" label="Loading..." />}
-          items={items}
-        >
-          {item => (
-            <TableRow
-              key={item.id}
-              className={`hover:bg-zinc-50 ${item.id === -1 ? 'opacity-50' : ''}`}
-            >
-              {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {items.map(i => (
+        <MatchContent key={i.id} matchId={i.id} eventId={i.eventId} />
+      ))}
+      {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
     </div>
   );
 }

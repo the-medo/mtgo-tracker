@@ -34,7 +34,7 @@ export async function getMatches({ where, orderBy, skip, take }: GetMatchesReque
 
 export function useInfiniteMatches(request: GetMatchesRequest = {}) {
   const queryFn: QueryFunction<MatchExtended[], QueryKey, number> = useCallback(
-    ({ pageParam }) => getMatches({ ...request, skip: pageParam, take: request.take ?? 20 }),
+    ({ pageParam }) => getMatches({ ...request, skip: pageParam, take: request.take ?? 10 }),
     [request],
   );
 
