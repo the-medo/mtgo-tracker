@@ -23,21 +23,6 @@ export default function EventContent({ eventId }: EventContentProps) {
 
   const matches = ev?.Matches;
 
-  /* for preloading games of current event */
-  const gameFilter: GetGamesRequest = useMemo(
-    () => ({
-      where: {
-        match: {
-          eventId,
-        },
-      },
-      take: 50,
-    }),
-    [eventId],
-  );
-  const { data: _ } = useInfiniteGames(gameFilter);
-  /* ===================================== */
-
   const matchesToFill = useMemo(
     () => new Array(ev?.rounds ?? 0).fill(0).map((_, i) => i + 1),
     [ev?.rounds],

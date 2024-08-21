@@ -6,7 +6,7 @@ import HandSizeSelector from '@/components/form/HandSizeSelector';
 import OnThePlaySelector from '@/components/form/OnThePlaySelector';
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MatchResult } from '@prisma/client';
 import { useGame } from '@/app/api/game/[id]/getGame';
 import ResultSelector from '@/components/form/ResultSelector';
@@ -16,6 +16,10 @@ import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import { Button } from '@nextui-org/button';
 import { TbX } from 'react-icons/tb';
 import GameResultChip from '@/components/app/events/GameResultChip';
+import TableField from '@/components/form/table-form/TableField';
+import useStore from '@/store/store';
+
+export const gameContentIdentificator = `GameContent`;
 
 interface GameContentProps {
   matchId: number;
@@ -31,6 +35,12 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
   const { mutate: patchMatch, isPending: isPendingMatch } = useSimplePatch(QK.MATCH);
 
   const gameResult = game?.result ?? undefined;
+
+  const setSelectedId = useStore(state => state.setSelectedId);
+
+  useEffect(() => {
+    setSelectedId(gameContentIdentificator, gameId);
+  }, [setSelectedId, gameId]);
 
   const startingHandChangeHandler = useCallback(
     (value: number) => {
@@ -148,6 +158,28 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
         value={gameResult}
         onValueChange={resultChangeHandler}
         isLoading={isPending || isLoading}
+      />
+      <TableField
+        qk={QK.GAME}
+        type="textarea"
+        tableId={gameContentIdentificator}
+        id={gameId}
+        fieldName="notes"
+        label="Game Notes"
+        customLabel="Game Notes"
+        editable={true}
+        value={game?.notes ?? undefined}
+      />
+      <TableField
+        qk={QK.GAME}
+        type="tags"
+        tableId={gameContentIdentificator}
+        id={gameId}
+        fieldName="tags"
+        label="Tags"
+        displaySelect={false}
+        editable={true}
+        values={game?.GameTags ?? []}
       />
     </div>
   );
