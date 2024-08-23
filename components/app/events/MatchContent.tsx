@@ -27,11 +27,16 @@ type MatchGameDisplayInfo = {
 interface MatchContentProps {
   matchId: number;
   eventId: number | null;
+  showDeckName?: boolean;
 }
 
 export const matchContentIdentificator = `MatchContent`;
 
-export default function MatchContent({ matchId, eventId }: MatchContentProps) {
+export default function MatchContent({
+  matchId,
+  eventId,
+  showDeckName = false,
+}: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId ?? 0, !eventId);
 
@@ -154,7 +159,8 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
             <div
               className={cn(`flex flex-row gap-4 items-center`, {
                 'w-[600px]': matchEditMode,
-                'w-[200px]': !matchEditMode,
+                'w-[200px]': !matchEditMode && !showDeckName,
+                'w-[450px]': !matchEditMode && showDeckName,
               })}
             >
               {matchEditMode ? (
@@ -209,11 +215,21 @@ export default function MatchContent({ matchId, eventId }: MatchContentProps) {
                   />
                 </div>
               ) : (
-                <div className="flex flex-col gap-1">
-                  <p className="text-md">{match?.oppArchetype?.name}</p>
-                  {match?.oppArchetypeNote && (
-                    <p className="text-xs text-default-500">{match?.oppArchetypeNote}</p>
+                <div className="flex flex-row gap-2 items-center">
+                  {showDeckName && (
+                    <>
+                      <div className="flex flex-col gap-1 w-[200px]">
+                        <p className="text-md">{match?.deck?.name}</p>
+                      </div>
+                      <p className="text-sm">vs.</p>
+                    </>
                   )}
+                  <div className="flex flex-col gap-1 w-[200px]">
+                    <p className="text-md">{match?.oppArchetype?.name}</p>
+                    {match?.oppArchetypeNote && (
+                      <p className="text-xs text-default-500">{match?.oppArchetypeNote}</p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

@@ -13,6 +13,7 @@ export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
     Games: {
       ...gameExtension,
     },
+    deck: true,
     oppArchetype: true,
   },
 });

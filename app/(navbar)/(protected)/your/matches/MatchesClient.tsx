@@ -144,7 +144,7 @@ export default function MatchesClient({}: Props) {
   return (
     <div className="flex flex-col gap-4">
       {items.map(i => (
-        <MatchContent key={i.id} matchId={i.id} eventId={i.eventId} />
+        <MatchContent key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
       ))}
       {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
     </div>
