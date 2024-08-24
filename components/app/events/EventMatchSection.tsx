@@ -1,7 +1,7 @@
 'use client';
 
 import EventMatchCreationForm from '@/components/app/events/EventMatchCreationForm';
-import MatchContent from '@/components/app/events/MatchContent';
+import MatchContent from '@/components/app/matches/MatchContent';
 import { MatchResult } from '@prisma/client';
 
 interface EventMatchSectionProps {

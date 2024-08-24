@@ -7,12 +7,14 @@ import { parseDate, Stringify } from '@/app/api/parsers';
 import { queryClient } from '@/app/providers';
 import { MatchExtended } from '@/app/api/match/route';
 import { parseMatch } from '@/app/api/match/getMatches';
+import { Format } from '@prisma/client';
 
 export const parseEvent = (j: Stringify<EventExtended>): EventExtended =>
   ({
     ...j,
     date: parseDate(j.date),
     Matches: (j.Matches as unknown as Stringify<MatchExtended>[]).map(m => parseMatch(m)),
+    format: j.format,
   }) as unknown as EventExtended;
 
 export type GetEventsRequest = PrismaQueryApiParams<'Event'>;
@@ -25,8 +27,9 @@ export async function getEvents({ where, orderBy, skip, take }: GetEventsRequest
     parseEvent(j),
   ) as EventExtended[];
 
-  data.forEach(event => {
-    event.Matches.forEach(m => {
+  data.forEach(e => {
+    queryClient.setQueryData([QK.EVENT, e.id], e);
+    e.Matches.forEach(m => {
       queryClient.setQueryData([QK.MATCH, m.id], m);
       m.Games.forEach(g => {
         queryClient.setQueryData([QK.GAME, g.id], g);

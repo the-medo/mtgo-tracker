@@ -14,6 +14,8 @@ import useEventFilters from '@/app/(navbar)/(protected)/your/events/useEventFilt
 import DateDisplay from '@/components/typography/DateDisplay';
 import { EventExtended } from '@/app/api/event/route';
 import EventInfoModal from '@/app/(navbar)/(protected)/your/events/[id]/EventInfoModal';
+import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
+import EventBox from '@/components/app/events/EventBox';
 
 const TABLE_ID = 'EVENTS';
 
@@ -153,7 +155,7 @@ interface Props {}
 
 export default function EventsClient({}: Props) {
   const { filters, sortDescriptor, onSortChange } = useEventFilters();
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteEvents(filters);
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteEvents(filters);
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore: hasNextPage,
@@ -162,6 +164,16 @@ export default function EventsClient({}: Props) {
 
   const items = data?.pages?.flat() ?? [];
 
+  return (
+    <div className="flex flex-col gap-4">
+      {items.map(i => (
+        <EventBox key={i.id} eventId={i.id} />
+      ))}
+      {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
+    </div>
+  );
+
+  /*
   return (
     <div className="flex flex-col gap-4">
       <Table<As<EventExtended>>
@@ -206,5 +218,5 @@ export default function EventsClient({}: Props) {
         </TableBody>
       </Table>
     </div>
-  );
+  );*/
 }

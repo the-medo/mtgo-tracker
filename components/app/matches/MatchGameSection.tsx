@@ -1,7 +1,7 @@
 'use client';
 
-import MatchGameCreationForm from '@/components/app/events/MatchGameCreationForm';
-import GameContent from '@/components/app/events/GameContent';
+import MatchGameCreationForm from '@/components/app/matches/MatchGameCreationForm';
+import GameContent from '@/components/app/games/GameContent';
 
 interface MatchGameSectionProps {
   matchId: number;

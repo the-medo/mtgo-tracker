@@ -15,7 +15,7 @@ import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
 import { MatchExtended } from '@/app/api/match/route';
 import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
-import MatchContent from '@/components/app/events/MatchContent';
+import MatchContent from '@/components/app/matches/MatchContent';
 import { MatchResult } from '@prisma/client';
 
 const TABLE_ID = 'MATCHES';

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Spinner } from '@nextui-org/spinner';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
-import MatchGameSection from '@/components/app/events/MatchGameSection';
+import MatchGameSection from '@/components/app/matches/MatchGameSection';
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
@@ -13,9 +13,9 @@ import TableField from '@/components/form/table-form/TableField';
 import ResultSelector from '@/components/form/ResultSelector';
 import { TbEdit, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
-import GameResultChip from '@/components/app/events/GameResultChip';
+import GameResultChip from '@/components/app/games/GameResultChip';
 import useStore from '@/store/store';
-import MatchRowStart from '@/components/app/events/MatchRowStart';
+import MatchRowStart from '@/components/app/matches/MatchRowStart';
 import cn from 'classnames';
 
 type MatchGameDisplayInfo = {
@@ -27,6 +27,8 @@ type MatchGameDisplayInfo = {
 interface MatchContentProps {
   matchId: number;
   eventId: number | null;
+  compact?: boolean;
+  whiteBackground?: boolean;
   showDeckName?: boolean;
 }
 
@@ -35,7 +37,9 @@ export const matchContentIdentificator = `MatchContent`;
 export default function MatchContent({
   matchId,
   eventId,
-  showDeckName = false,
+  compact,
+  whiteBackground,
+  showDeckName,
 }: MatchContentProps) {
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId ?? 0, !eventId);
@@ -148,14 +152,29 @@ export default function MatchContent({
         matchId={matchId}
         itemsCenter={!matchEditMode}
         roundNumber={match?.round ?? undefined}
+        compact={compact}
       />
       <div
-        className={`flex flex-col w-full gap-2 ${matchEditMode ? 'bg-default-50 border-default-200 border-1' : 'bg-default-100'} rounded-tr-md rounded-br-md `}
+        className={cn(`flex flex-col w-full gap-2 rounded-tr-md rounded-br-md `, {
+          'bg-default-50 border-default-200 border-1': matchEditMode,
+          'bg-default-100': !matchEditMode && !whiteBackground,
+          'bg-white': whiteBackground,
+        })}
       >
         <div
-          className={`p-4 flex flex-row w-full gap-2 ${matchEditMode ? 'items-start' : 'items-center'} justify-between`}
+          className={cn(`flex flex-row w-full gap-2 justify-between`, {
+            'items-start': matchEditMode,
+            'items-center': !matchEditMode,
+            'p-4': !compact,
+            'p-2 px-4': compact,
+          })}
         >
-          <div className={`flex flex-row gap-2 ${matchEditMode ? 'items-start' : 'items-center'} `}>
+          <div
+            className={cn(`flex flex-row gap-2 `, {
+              'items-start': matchEditMode,
+              'items-center': !matchEditMode,
+            })}
+          >
             <div
               className={cn(`flex flex-row gap-4 items-center`, {
                 'w-[600px]': matchEditMode,
@@ -293,13 +312,15 @@ export default function MatchContent({
                 <i>{match?.oppName}</i>
               </>
             )}
-            <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
-              {matchEditMode ? <TbX /> : <TbEdit />}
-            </Button>
+            {!compact && (
+              <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
+                {matchEditMode ? <TbX /> : <TbEdit />}
+              </Button>
+            )}
           </div>
         </div>
 
-        {(matchEditMode || !match?.result) && (
+        {(matchEditMode || !match?.result) && !compact && (
           <div className={`p-4 flex flex-row w-full gap-4 items-center`}>
             {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
               <Spinner />

@@ -15,7 +15,7 @@ import { MatchExtended } from '@/app/api/match/route';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import { Button } from '@nextui-org/button';
 import { TbX } from 'react-icons/tb';
-import GameResultChip from '@/components/app/events/GameResultChip';
+import GameResultChip from '@/components/app/games/GameResultChip';
 import TableField from '@/components/form/table-form/TableField';
 import useStore from '@/store/store';
 

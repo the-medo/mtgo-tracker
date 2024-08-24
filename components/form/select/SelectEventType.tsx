@@ -7,7 +7,7 @@ import { TbTrophy } from 'react-icons/tb';
 
 type EventTypeOption = { id: EventType; label: string };
 
-const eventTypes: EventTypeOption[] = [
+export const eventTypes: EventTypeOption[] = [
   { id: EventType.LEAGUE, label: 'League' },
   { id: EventType.FRIENDLY_LEAGUE, label: 'Friendly League' },
   { id: EventType.CHALLENGE32, label: 'Challenge 32' },
