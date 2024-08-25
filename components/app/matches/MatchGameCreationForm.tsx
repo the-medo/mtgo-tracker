@@ -29,13 +29,13 @@ export default function MatchGameCreationForm({ matchId, gameNumber }: MatchGame
     const gameData = {
       matchId: matchId,
       gameNumber,
-      startingHand: 7,
-      oppStartingHand: 7,
+      startingHand,
+      oppStartingHand,
       isOnPlay,
     };
 
     createGame(gameData);
-  }, [createGame, data, matchId, gameNumber, isOnPlay]);
+  }, [data, matchId, gameNumber, startingHand, oppStartingHand, isOnPlay, createGame]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
     async e => {

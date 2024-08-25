@@ -309,7 +309,9 @@ export default function MatchContent({
                     editable={false}
                   />
                 </div>
-                <i>{match?.oppName}</i>
+                <div className="w-[150px]">
+                  <i>{match?.oppName}</i>
+                </div>
               </>
             )}
             {!compact && (
