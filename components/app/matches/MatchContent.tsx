@@ -8,7 +8,7 @@ import MatchGameSection from '@/components/app/matches/MatchGameSection';
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import useSimplePatch from '@/app/api/useSimplePatch';
 import { QK } from '@/app/api/queryHelpers';
-import { MatchResult } from '@prisma/client';
+import { DeckArchetype, Match, MatchResult } from '@prisma/client';
 import TableField from '@/components/form/table-form/TableField';
 import ResultSelector from '@/components/form/ResultSelector';
 import { TbEdit, TbX } from 'react-icons/tb';
@@ -17,6 +17,8 @@ import GameResultChip from '@/components/app/games/GameResultChip';
 import useStore from '@/store/store';
 import MatchRowStart from '@/components/app/matches/MatchRowStart';
 import cn from 'classnames';
+import { InfiniteData, QueryFilters } from '@tanstack/react-query';
+import { queryClient } from '@/app/providers';
 
 type MatchGameDisplayInfo = {
   gameId?: number;
@@ -132,6 +134,32 @@ export default function MatchContent({
 
     return result;
   }, [isLoading, gamesToFill, match]);
+
+  /*
+  when patching archetype, only property is patched, but oppArchetype object stays empty
+   */
+  useEffect(() => {
+    if (match?.oppArchetypeId) {
+      const filters: QueryFilters = {
+        type: 'all',
+        exact: false,
+        queryKey: [QK.DECK_ARCHETYPE],
+      };
+      const allQueries = queryClient.getQueriesData(filters);
+      allQueries.forEach(([_qk, d]) => {
+        const data = d as unknown as InfiniteData<DeckArchetype[]>;
+        if ('pages' in data && Array.isArray(data.pages)) {
+          const archetype = data.pages.flat().find(a => a.id === match?.oppArchetypeId);
+          if (archetype) {
+            queryClient.setQueryData([QK.MATCH, matchId], (o: Match) => ({
+              ...o,
+              oppArchetype: archetype,
+            }));
+          }
+        }
+      });
+    }
+  }, [match?.oppArchetypeId, matchId]);
 
   const editModeHandler = useCallback(() => {
     setMatchEditMode(p => {

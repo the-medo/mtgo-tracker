@@ -51,7 +51,9 @@ export default function EventMatchCreationForm({
 
   return (
     <form className="flex w-full gap-4 max-w-md align-middle items-center" onSubmit={submitHandler}>
-      <Title title={`Round ${eventRound}`} />
+      <div className="w-full flex flex-grow">
+        <Title title={`Round ${eventRound}`} />
+      </div>
       <Input
         type="text"
         label="Opponent name"

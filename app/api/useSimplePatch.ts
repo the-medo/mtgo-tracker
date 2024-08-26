@@ -1,7 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 import { useMemo } from 'react';
-import { tagArrayPropertyNameByQK } from '@/types/tags';
 
 export type SimplePatchRequest = {
   id: string | number;
