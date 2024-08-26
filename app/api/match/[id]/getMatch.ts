@@ -4,7 +4,6 @@ import { Stringify } from '@/app/api/parsers';
 import { MatchExtended } from '@/app/api/match/route';
 import { parseMatch } from '@/app/api/match/getMatches';
 import { queryClient } from '@/app/providers';
-import { EventExtended } from '@/app/api/event/route';
 
 export const addMatchToCache = (m: MatchExtended) => {
   queryClient.setQueryData([QK.MATCH, m.id], m);

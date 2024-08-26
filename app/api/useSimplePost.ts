@@ -1,6 +1,9 @@
 import { InfiniteData, QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 import { useMemo } from 'react';
+import { parseDate } from '@/app/api/parsers';
+
+const dateTimeProperties = ['validFrom', 'lastPlayedAt', 'createdAt', 'date', 'startTime'];
 
 export type SimplePostRequest = Record<
   string,
@@ -30,7 +33,13 @@ export default function useSimplePost<T extends QK>(qk: QK) {
         },
       });
 
-      return await res.json();
+      const resp = await res.json();
+
+      dateTimeProperties.forEach(p => {
+        if (p in resp) resp[p] = parseDate(resp[p]);
+      });
+
+      return resp;
     },
     onSuccess: data => {
       console.log('useSimplePost onSuccess callback', qk);

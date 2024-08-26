@@ -4,10 +4,9 @@ import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
 import { EventExtended } from '@/app/api/event/route';
 import { parseDate, Stringify } from '@/app/api/parsers';
-import { queryClient } from '@/app/providers';
 import { MatchExtended } from '@/app/api/match/route';
 import { parseMatch } from '@/app/api/match/getMatches';
-import { Format } from '@prisma/client';
+import { addEventToCache } from '@/app/api/event/[id]/getEvent';
 
 export const parseEvent = (j: Stringify<EventExtended>): EventExtended =>
   ({
@@ -27,15 +26,7 @@ export async function getEvents({ where, orderBy, skip, take }: GetEventsRequest
     parseEvent(j),
   ) as EventExtended[];
 
-  data.forEach(e => {
-    queryClient.setQueryData([QK.EVENT, e.id], e);
-    e.Matches.forEach(m => {
-      queryClient.setQueryData([QK.MATCH, m.id], m);
-      m.Games.forEach(g => {
-        queryClient.setQueryData([QK.GAME, g.id], g);
-      });
-    });
-  });
+  data.forEach(e => addEventToCache(e));
 
   return data;
 }
