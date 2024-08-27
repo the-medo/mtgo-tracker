@@ -68,7 +68,8 @@ export default function TableFieldString({
           endContent={isPending ? <FieldCircularProgress /> : endContent}
         />
       );
-    if (value === '' || !value) return <p className="text-xs italic">- empty -</p>;
+    if (value === '' || value === undefined || value === null)
+      return <p className="text-xs italic">- empty -</p>;
     return <p>{value}</p>;
   }, [
     isSelected,
