@@ -1,6 +1,5 @@
-import { create, StateCreator } from 'zustand';
+import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { underline } from 'next/dist/lib/picocolors';
 
 type SelectedIdMap = Record<number | string, boolean | undefined>;
 
