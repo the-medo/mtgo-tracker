@@ -1,22 +1,25 @@
-import { useDeck } from '@/app/api/deck/[id]/getDeck';
 import { QK } from '@/app/api/queryHelpers';
 import TableField from '@/components/form/table-form/TableField';
 import { Spinner } from '@nextui-org/spinner';
-import LabelledValue from '@/components/typography/LabelledValue';
-import DateDisplay from '@/components/typography/DateDisplay';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
 import { useCallback, useEffect } from 'react';
 import { useEvent } from '@/app/api/event/[id]/getEvent';
+import { TbTrash } from 'react-icons/tb';
+import ConfirmationModal from '@/components/app/ConfirmationModal';
+import useSimpleDelete from '@/app/api/useSimpleDelete';
+import { useRouter } from 'next/navigation';
 
-interface DeckInfoProps {
+interface EventInfoProps {
   eventId: number;
   isAlwaysEditMode?: boolean;
 }
 
 export const eventInfoIdentificator = `EventInfo`;
 
-export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInfoProps) {
+export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventInfoProps) {
+  const router = useRouter();
+  const { mutate: deleteEvent, isPending } = useSimpleDelete(QK.EVENT);
   const { data } = useEvent(eventId);
   const clearTableData = useStore(state => state.clearTableData);
   const isSelected = useStore(state => state.tables[eventInfoIdentificator]?.selectedIds[eventId]);
@@ -28,7 +31,18 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
 
   useEffect(() => {
     if (isAlwaysEditMode && !isSelected) setSelected();
-  }, [isAlwaysEditMode]);
+  }, [isAlwaysEditMode, isSelected, setSelected]);
+
+  const onDeleteEvent = useCallback(() => {
+    deleteEvent(
+      { id: eventId },
+      {
+        onSuccess: () => {
+          router.push('/your/events');
+        },
+      },
+    );
+  }, [deleteEvent, eventId, router]);
 
   if (!data) {
     return (
@@ -143,9 +157,23 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: DeckInf
             Close editing
           </Button>
         ) : (
-          <Button size="sm" onClick={setSelected}>
-            Edit
-          </Button>
+          <div className="flex flex-row gap-2 w-full">
+            <Button size="sm" onClick={setSelected} className="w-full">
+              Edit
+            </Button>
+
+            <ConfirmationModal
+              trigger={
+                <Button size="sm" isIconOnly color="danger" isLoading={isPending}>
+                  <TbTrash />
+                </Button>
+              }
+              title="Delete event"
+              content="All matches of this event will be unassigned."
+              onConfirm={onDeleteEvent}
+              confirmLoading={isPending}
+            />
+          </div>
         ))}
     </div>
   );

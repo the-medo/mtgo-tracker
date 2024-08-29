@@ -5,6 +5,7 @@ import {
   TbArticle,
   TbCards,
   TbGraph,
+  TbMenu2,
   TbTags,
   TbTower,
   TbTrophy,
@@ -13,6 +14,9 @@ import {
 } from 'react-icons/tb';
 import { usePathname } from 'next/navigation';
 import cn from 'classnames';
+import useStore from '@/store/store';
+import { UserDropdown } from '@/components/auth/UserDropdown';
+import { useState } from 'react';
 
 const dashboardIcon = <TbGraph size={24} />;
 const matchIcon = <TbArticle size={24} />;
@@ -30,6 +34,11 @@ interface Props {
 
 export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
   const pathname = usePathname();
+  const breakpoint = useStore(state => state.breakpoint);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const getActiveStyle = (href: string) => {
     return cn({
@@ -38,8 +47,57 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
     });
   };
 
+  if (breakpoint === 'xs') {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-red shadow-lg">
+        <div className="flex justify-between items-center p-4">
+          asd
+          <button
+            onClick={toggleMenu}
+            className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+            aria-label="Toggle menu"
+          >
+            <TbMenu2 className="w-6 h-6" />
+          </button>
+        </div>
+        <div
+          className={cn(
+            'absolute bottom-full left-0 right-0 bg-white shadow-lg transition-transform duration-300 ease-in-out',
+            isOpen ? 'translate-y-0' : 'translate-y-full',
+          )}
+        >
+          <nav className="p-4">
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="block p-2 hover:bg-gray-100 rounded">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#" className="block p-2 hover:bg-gray-100 rounded">
+                  Profile
+                </a>
+              </li>
+              <li>
+                <a href="#" className="block p-2 hover:bg-gray-100 rounded">
+                  Settings
+                </a>
+              </li>
+              <li>
+                <a href="#" className="block p-2 hover:bg-gray-100 rounded">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600">
+      {breakpoint}
       {isAuthenticated && (
         <Listbox variant="flat" aria-label="Side menu">
           <ListboxSection title="YOUR STUFF">
