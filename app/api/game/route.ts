@@ -22,10 +22,7 @@ export async function POST(req: Request) {
         oppStartingHand: parseNumber(data.oppStartingHand),
         notes: parseString(data.notes),
       },
-      include: {
-        GameTags: true,
-        match: true,
-      },
+      ...gameExtension,
     });
 
     return NextResponse.json(record);

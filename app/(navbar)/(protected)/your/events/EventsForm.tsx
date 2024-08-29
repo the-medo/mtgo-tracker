@@ -25,6 +25,7 @@ export default function EventsForm() {
   const [name, setName] = useState<string>();
   const [rounds, setRounds] = useState<number>(0);
   const [entry, setEntry] = useState<number>(0);
+  const [deckId, setDeckId] = useState<number>();
 
   const { isPending, data: formats } = useQuery({
     queryKey: [QK.FORMATS],
@@ -40,6 +41,7 @@ export default function EventsForm() {
         name: formData.get('name'),
         type: formData.get('type'),
         date: formData.get('date'),
+        deckId,
         rounds: formData.get('rounds') ? parseInt(formData.get('rounds') as string) : undefined,
         entry: formData.get('entry') ? parseInt(formData.get('entry') as string) : undefined,
         winnings: formData.get('winnings')
@@ -53,10 +55,12 @@ export default function EventsForm() {
       setRounds(0);
       setEntry(0);
       setFormatId(undefined);
+      setDeckId(undefined);
       setSelectedFormatVersion(undefined);
+
       mutate(data);
     },
-    [mutate],
+    [deckId, mutate],
   );
 
   const onFormatChange = useCallback(
@@ -76,6 +80,10 @@ export default function EventsForm() {
       setRounds(eventInfo.rounds);
       setEntry(eventInfo.entry);
     }
+  }, []);
+
+  const onDeckIdChange = useCallback((deckId: string | number | undefined) => {
+    setDeckId(deckId ? (deckId as number) : undefined);
   }, []);
 
   const onNameChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -113,7 +121,13 @@ export default function EventsForm() {
         value={name}
         onChange={onNameChange}
       />
-      <SelectDeck name="deckId" formatId={formatId} isFormatIdMandatory={true} />
+      <SelectDeck
+        name="deckId"
+        formatId={formatId}
+        isFormatIdMandatory={true}
+        value={deckId}
+        onChange={onDeckIdChange}
+      />
       <Input
         type="number"
         label="Rounds"

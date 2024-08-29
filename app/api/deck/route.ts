@@ -26,9 +26,6 @@ export async function POST(req: Request) {
         ...linkObject,
         userId: session.user?.id,
         name: parseString(data.name) ?? '',
-        // formatId: parseNumber(data.formatId)!,
-        // formatVersionId: parseNumber(data.formatVersionId)!,
-        // deckArchetypeId: parseNumber(data.deckArchetypeId)!,
         format: {
           connect: {
             id: parseNumber(data.formatId)!,
@@ -45,10 +42,7 @@ export async function POST(req: Request) {
           },
         },
       },
-      include: {
-        deckArchetype: true,
-        DeckTags: true,
-      },
+      ...deckExtension,
     });
 
     return NextResponse.json(record);

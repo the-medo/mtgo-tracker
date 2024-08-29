@@ -12,39 +12,6 @@ export async function POST(req: Request) {
   const data = await req.json();
 
   if (session?.user) {
-    console.log({
-      data: {
-        // userId: session.user.id!,
-        mtgoId: '',
-        name: parseString(data.name) ?? '',
-        type: data.type,
-        date: parseDatePickerToIso(data.date),
-        rounds: parseNumber(data.rounds) ?? 0,
-        entry: parseNumber(data.entry) ?? 0,
-        winnings: parseNumber(data.winnings) ?? 0,
-        // formatId: parseNumber(data.formatId)!,
-        // formatVersionId: parseNumber(data.formatVersionId)!,
-        user: {
-          connect: {
-            id: session.user.id!,
-          },
-        },
-        format: {
-          connect: {
-            id: parseNumber(data.formatId)!,
-          },
-        },
-        formatVersion: {
-          connect: {
-            id: parseNumber(data.formatVersionId)!,
-          },
-        },
-      },
-      include: {
-        EventTags: true,
-      },
-    });
-
     const record = await prisma.event.create({
       data: {
         mtgoId: '',
@@ -54,12 +21,14 @@ export async function POST(req: Request) {
         rounds: parseNumber(data.rounds) ?? 0,
         entry: parseNumber(data.entry) ?? 0,
         winnings: parseNumber(data.winnings) ?? 0,
-        // userId: session.user.id!,
-        // formatId: parseNumber(data.formatId)!,
-        // formatVersionId: parseNumber(data.formatVersionId)!,
         user: {
           connect: {
             id: session.user.id!,
+          },
+        },
+        deck: {
+          connect: {
+            id: parseNumber(data.deckId)!,
           },
         },
         format: {
@@ -73,9 +42,7 @@ export async function POST(req: Request) {
           },
         },
       },
-      include: {
-        EventTags: true,
-      },
+      ...eventExtension,
     });
 
     return NextResponse.json(record);
