@@ -32,7 +32,7 @@ export default function useCreateGame() {
             queryClient.setQueriesData(matchFilters, (old: unknown) => {
               console.log('OLD', old);
               // @ts-ignore
-              if ('pages' in old && Array.isArray(old.pages)) {
+              if (old && 'pages' in old && Array.isArray(old.pages)) {
                 const pgs = old.pages as MatchExtended[][];
 
                 const result = {

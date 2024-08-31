@@ -40,7 +40,7 @@ export default function useSimpleDelete<T extends QK>(qk: QK) {
 
         /* This is for infinite scroll hooks */
         // @ts-ignore
-        if ('pages' in old && 'pageParams' in old && Array.isArray(old.pages)) {
+        if (old && 'pages' in old && 'pageParams' in old && Array.isArray(old.pages)) {
           let fromPage: number | undefined = undefined;
           // @ts-ignore
           const result = {

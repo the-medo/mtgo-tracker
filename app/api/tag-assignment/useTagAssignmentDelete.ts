@@ -40,7 +40,7 @@ export default function useTagAssignmentDelete(tagType: TagType | undefined, qk:
 
       queryClient.setQueriesData(filters, (old: unknown) => {
         // @ts-ignore
-        if ('pages' in old && Array.isArray(old.pages)) {
+        if (old && 'pages' in old && Array.isArray(old.pages)) {
           if (propertyName in old.pages[0]?.[0]) {
             const result = {
               ...old,

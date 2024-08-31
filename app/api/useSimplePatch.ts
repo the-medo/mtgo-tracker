@@ -53,7 +53,7 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
 
         /* This is for infinite scroll hooks */
         // @ts-ignore
-        if ('pages' in old && Array.isArray(old.pages)) {
+        if (old && 'pages' in old && Array.isArray(old.pages)) {
           if (propertyName in old.pages[0]?.[0]) {
             const result = {
               ...old,
@@ -105,7 +105,7 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
 
         /* This is for infinite scroll hooks */
         // @ts-ignore
-        if ('pages' in old && Array.isArray(old.pages)) {
+        if (old && 'pages' in old && Array.isArray(old.pages)) {
           if (propertyName in old.pages[0]?.[0]) {
             const result = {
               ...old,

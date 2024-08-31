@@ -148,7 +148,7 @@ export default function MatchContent({
       const allQueries = queryClient.getQueriesData(filters);
       allQueries.forEach(([_qk, d]) => {
         const data = d as unknown as InfiniteData<DeckArchetype[]>;
-        if ('pages' in data && Array.isArray(data.pages)) {
+        if (data && 'pages' in data && Array.isArray(data.pages)) {
           const archetype = data.pages.flat().find(a => a.id === match?.oppArchetypeId);
           if (archetype) {
             queryClient.setQueryData([QK.MATCH, matchId], (o: Match) => ({

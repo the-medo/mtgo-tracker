@@ -1,7 +1,7 @@
 'use client';
 
 import { useEvent } from '@/app/api/event/[id]/getEvent';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import EventBoxStart from '@/components/app/events/EventBoxStart';
 import cn from 'classnames';
@@ -17,15 +17,20 @@ export const eventBoxIdentificator = `EventBox`;
 
 interface EventBoxProps {
   eventId: number;
+  openMatches?: boolean;
 }
 
-export default function EventBox({ eventId }: EventBoxProps) {
+export default function EventBox({ eventId, openMatches = false }: EventBoxProps) {
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId);
   const [eventEditMode, setEventEditMode] = useState(false);
   const [displayMatches, setDisplayMatches] = useState(false);
 
   const setSelectedId = useStore(state => state.setSelectedId);
   const unsetSelectedId = useStore(state => state.unsetSelectedId);
+
+  useEffect(() => {
+    setDisplayMatches(openMatches);
+  }, [openMatches]);
 
   const editModeHandler = useCallback(() => {
     setEventEditMode(p => {
