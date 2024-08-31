@@ -38,6 +38,8 @@ export const gameExtension = Prisma.validator<Prisma.GameDefaultArgs>()({
   },
 });
 
+export const gamePatchExtension = Prisma.validator<Prisma.GameDefaultArgs>()({});
+
 export type GameExtended = Prisma.GameGetPayload<typeof gameExtension>;
 
 export async function GET(req: Request) {

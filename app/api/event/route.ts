@@ -62,6 +62,13 @@ export const eventExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
   },
 });
 
+export const eventPatchExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
+  include: {
+    deck: true,
+    format: true,
+  },
+});
+
 export type EventExtended = Prisma.EventGetPayload<typeof eventExtension>;
 
 export async function GET(req: Request) {

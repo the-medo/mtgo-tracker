@@ -3,7 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
-import { MatchExtended, matchExtension } from '@/app/api/match/route';
+import { MatchExtended, matchExtension, matchPatchExtension } from '@/app/api/match/route';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -33,6 +33,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const record = await prisma.match.update({
       data: { ...body },
       where: { id },
+      ...matchPatchExtension,
     });
 
     return NextResponse.json(record);

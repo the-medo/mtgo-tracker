@@ -1,4 +1,4 @@
-import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { anyParser, QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
 import { useMemo } from 'react';
 
@@ -72,12 +72,11 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
           /* This is for single property fetch  */
         } else {
           // @ts-ignore
-          if (propertyName in old) {
+          if (propertyName in old && old.id === data.id) {
             const result = {
               // @ts-ignore
               ...old,
-              // @ts-ignore
-              [propertyName]: old.id === data.id ? valueParser(data.value) : old[propertyName],
+              [propertyName]: valueParser(data.value),
             };
 
             console.log('Single result: ', result);
@@ -95,6 +94,51 @@ export default function useSimplePatch<T extends QK>(qk: QK) {
       ]);
 
       return { previousData };
+    },
+    onSuccess: (responseData, input) => {
+      console.log('useSimplePatch onSuccess callback', qk);
+
+      const propertyName = input.field;
+
+      queryClient.setQueriesData(filters, (old: unknown) => {
+        console.log('OLD', old);
+
+        /* This is for infinite scroll hooks */
+        // @ts-ignore
+        if ('pages' in old && Array.isArray(old.pages)) {
+          if (propertyName in old.pages[0]?.[0]) {
+            const result = {
+              ...old,
+              pages: old.pages.map(o => {
+                // @ts-ignore
+                return o.map(x => (x.id === responseData.id ? { ...x, ...responseData } : x));
+              }),
+            };
+
+            console.log('Infinite result: ', result);
+            return result;
+          }
+          /* This is for single property fetch  */
+        } else {
+          // @ts-ignore
+          if (propertyName in old && old.id === responseData.id) {
+            const result = {
+              // @ts-ignore
+              ...old,
+              ...responseData,
+            };
+
+            console.log('Single result: ', result);
+            return result;
+          }
+        }
+
+        return old;
+      });
+
+      queryClient.setQueryData([qk], (old: QTypes[T]) => [
+        ...(old ?? []).map(o => (o.id === responseData.id ? { ...o, ...responseData } : o)),
+      ]);
     },
     onError: (err, newData, context) => {
       queryClient.setQueriesData(filters, context?.previousData);

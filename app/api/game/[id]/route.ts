@@ -3,7 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber, parseString } from '@/app/api/parsers';
-import { GameExtended, gameExtension } from '@/app/api/game/route';
+import { GameExtended, gameExtension, gamePatchExtension } from '@/app/api/game/route';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -29,6 +29,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const record = await prisma.game.update({
       data: { ...body },
       where: { id },
+      ...gamePatchExtension,
     });
 
     return NextResponse.json(record);

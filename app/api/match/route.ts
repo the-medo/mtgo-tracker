@@ -18,6 +18,13 @@ export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
   },
 });
 
+export const matchPatchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
+  include: {
+    deck: true,
+    oppArchetype: true,
+  },
+});
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   const data = await req.json();

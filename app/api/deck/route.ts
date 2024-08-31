@@ -58,6 +58,12 @@ export const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
   },
 });
 
+export const deckPatchExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
+  include: {
+    deckArchetype: true,
+  },
+});
+
 export type DeckExtended = Prisma.DeckGetPayload<typeof deckExtension>;
 
 export async function GET(req: Request) {

@@ -4,7 +4,7 @@ import { QK } from '@/app/api/queryHelpers';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import { parseNumber } from '@/app/api/parsers';
-import { TbCards, TbZeppelin } from 'react-icons/tb';
+import { TbCards } from 'react-icons/tb';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 import debounce from 'lodash.debounce';
 import { GetDecksRequest, useInfiniteDecks } from '@/app/api/deck/getDecks';
@@ -44,6 +44,8 @@ export default function SelectDeck({
   const [debouncedFilter, setDebouncedFilter] = useState<string>('');
   const [items, setItems] = useState<Deck[]>([]);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetFilter = useCallback(
     debounce(v => setDebouncedFilter(v), 250),
     [setDebouncedFilter],
@@ -91,7 +93,7 @@ export default function SelectDeck({
   );
 
   const onSelectionChangeHandler = useCallback(
-    (x: Key | undefined) => {
+    (x: Key | null) => {
       if (onChange) {
         let newValue = undefined;
         if (typeof x === 'string') newValue = parseInt(x);
@@ -137,7 +139,7 @@ export default function SelectDeck({
         clearButtonProps={{
           onClick: () => {
             setFilter('');
-            onSelectionChangeHandler(undefined);
+            onSelectionChangeHandler(null);
           },
         }}
         name={name}

@@ -34,7 +34,11 @@ export default function SelectFormat({
   name,
   onChange,
 }: SelectFormatProps) {
-  const { localValue, onChangeHandler, getSelection } = useSelect<Format>({ value, onChange });
+  const { localValue, onChangeHandler, getSelection } = useSelect<Format>({
+    value,
+    onChange,
+    isNumber: true,
+  });
 
   const { isPending, data } = useQuery({
     queryKey: [QK.FORMATS],

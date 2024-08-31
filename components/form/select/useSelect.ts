@@ -3,6 +3,7 @@ import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 export type UseSelectProps = {
   value?: string | number;
   onChange?: (x: string | number | undefined) => void;
+  isNumber?: boolean;
 };
 
 const parseValueToString = (v: string | number | undefined) => {
@@ -14,18 +15,24 @@ const parseValueToString = (v: string | number | undefined) => {
 export default function useSelect<T extends { id: string | number }>({
   value,
   onChange,
+  isNumber,
 }: UseSelectProps) {
   const [localValue, setLocalValue] = useState(parseValueToString(value));
 
   const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
     e => {
-      const newValue = e.target.value === '' ? undefined : e.target.value;
+      let newValue = e.target.value === '' ? undefined : e.target.value;
+
       setLocalValue(newValue);
       if (onChange) {
-        onChange(newValue);
+        if (isNumber && newValue) {
+          onChange(parseInt(newValue));
+        } else {
+          onChange(newValue);
+        }
       }
     },
-    [onChange],
+    [isNumber, onChange],
   );
 
   useEffect(() => {
