@@ -99,7 +99,7 @@ export default function SelectDeckArchetype({
   );
 
   const onSelectionChangeHandler = useCallback(
-    (x: Key | undefined) => {
+    (x: Key | null) => {
       if (onChange) {
         console.log('inside ', x);
         let newValue = undefined;
@@ -144,13 +144,13 @@ export default function SelectDeckArchetype({
         size="sm"
         label={customLabel !== undefined ? customLabel : getDeckArchetypeLabel()}
         className="max-w-xs"
-        inputValue={filter === '' ? selectedValue?.name ?? filter : filter}
+        inputValue={filter === '' ? (selectedValue?.name ?? filter) : filter}
         onInputChange={onInputChangeHandler}
         onSelectionChange={onSelectionChangeHandler}
         clearButtonProps={{
           onClick: () => {
             setFilter('');
-            onSelectionChangeHandler(undefined);
+            onSelectionChangeHandler(null);
           },
         }}
         name={name}

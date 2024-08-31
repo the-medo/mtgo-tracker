@@ -1,13 +1,14 @@
-import { getServerSession } from 'next-auth/next';
-import { prismaAdapter } from '@/lib/prisma';
+'use client';
+
 import { NavbarItem } from '@nextui-org/navbar';
 import { Button } from '@nextui-org/button';
 import { TbPlus } from 'react-icons/tb';
+import { useSession } from 'next-auth/react';
 
 const plusIcon = <TbPlus size={18} />;
 
-export default async function NavMenuTopActionButtons() {
-  const session = await getServerSession(prismaAdapter);
+export default function NavMenuTopActionButtons() {
+  const { data: session } = useSession();
 
   if (!session) {
     return null;

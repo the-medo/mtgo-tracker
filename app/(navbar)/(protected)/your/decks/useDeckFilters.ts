@@ -80,11 +80,13 @@ export default function useDeckFilters() {
   );
 
   const onFormatChange = useCallback(
-    (id: string | number) => setFilter('decks', 'formatId', parseNumber(id)),
+    (id: string | number | undefined) =>
+      setFilter('decks', 'formatId', id ? parseNumber(id) : undefined),
     [setFilter],
   );
   const onDeckArchetypeChange = useCallback(
-    (id: string | number) => setFilter('decks', 'deckArchetypeId', parseNumber(id)),
+    (id: string | number | undefined) =>
+      setFilter('decks', 'deckArchetypeId', id ? parseNumber(id) : undefined),
     [setFilter],
   );
   const onLastPlayedAtChange = useCallback(

@@ -1,9 +1,10 @@
-import { getServerSession } from 'next-auth/next';
-import NavMenuLeftClient from '@/components/nav/NavMenuLeft/NavMenuLeftClient';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+'use client';
 
-export default async function NavMenuLeft() {
-  const session = await getServerSession(authOptions);
+import NavMenuLeftClient from '@/components/nav/NavMenuLeft/NavMenuLeftClient';
+import { useSession } from 'next-auth/react';
+
+export default function NavMenuLeft() {
+  const { data: session } = useSession();
 
   const isAuthenticated = !!session;
   const isAdmin = session?.user.isAdmin;

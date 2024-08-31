@@ -1,14 +1,19 @@
+'use client';
+
 import ContentWFull from '@/components/layout/ContentWFull';
-import Events from '@/app/(navbar)/(protected)/your/events/Events';
 import EventsLeftNav from '@/app/(navbar)/(protected)/your/events/EventsLeftNav';
+import EventsClient from '@/app/(navbar)/(protected)/your/events/EventsClient';
+import Portal from '@/components/app/Portal';
 
 export default function YourEvents() {
   return (
     <div className="w-full flex flex-row">
-      <EventsLeftNav />
+      <Portal targetId="left-menu-portal-target">
+        <EventsLeftNav />
+      </Portal>
       <ContentWFull>
         <main className="flex flex-col gap-4">
-          <Events />
+          <EventsClient />
         </main>
       </ContentWFull>
     </div>

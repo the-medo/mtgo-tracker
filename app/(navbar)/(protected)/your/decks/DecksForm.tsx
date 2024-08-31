@@ -49,7 +49,7 @@ export default function DecksForm() {
 
   const onFormatChange = useCallback(
     (id: string | number | undefined) => {
-      const newFormat = formats?.find(f => f.id.toString() === id);
+      const newFormat = formats?.find(f => f.id === id);
       if (newFormat) {
         setFormatId(newFormat.id);
         setSelectedFormatVersion(newFormat.latestFormatVersionId?.toString());

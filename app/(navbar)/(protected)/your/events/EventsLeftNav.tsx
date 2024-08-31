@@ -1,17 +1,15 @@
 'use client';
 
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
-import DecksFilters from '@/app/(navbar)/(protected)/your/decks/DecksFilters';
-import DecksForm from '@/app/(navbar)/(protected)/your/decks/DecksForm';
 import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
-import DecksTags from '@/app/(navbar)/(protected)/your/decks/DecksTags';
 import EventsTags from '@/app/(navbar)/(protected)/your/events/EventsTags';
 import EventsForm from '@/app/(navbar)/(protected)/your/events/EventsForm';
 import EventsFilters from '@/app/(navbar)/(protected)/your/events/EventsFilters';
+import PageMenuWrapper from '@/components/app/PageMenuWrapper';
 
 export default function EventsLeftNav() {
   return (
-    <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
+    <PageMenuWrapper>
       <Accordion
         defaultSelectedKeys={['1']}
         disableIndicatorAnimation
@@ -38,6 +36,6 @@ export default function EventsLeftNav() {
           <EventsForm />
         </AccordionItem>
       </Accordion>
-    </div>
+    </PageMenuWrapper>
   );
 }

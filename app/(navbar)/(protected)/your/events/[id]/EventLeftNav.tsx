@@ -8,7 +8,7 @@ interface EventLeftNavProps {
 
 export default function EventLeftNav({ eventId }: EventLeftNavProps) {
   return (
-    <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
+    <div className="p-4 w-[250px] border-r-1 flex flex-col gap-4">
       <EventInfo eventId={eventId} />
     </div>
   );
