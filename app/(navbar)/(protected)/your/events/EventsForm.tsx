@@ -25,6 +25,7 @@ export default function EventsForm() {
   const [name, setName] = useState<string>();
   const [rounds, setRounds] = useState<number>(0);
   const [entry, setEntry] = useState<number>(0);
+  const [winnings, setWinnings] = useState<number>(0);
   const [deckId, setDeckId] = useState<number>();
 
   const { isPending, data: formats } = useQuery({
@@ -101,17 +102,17 @@ export default function EventsForm() {
     [],
   );
 
+  const onWinningsChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    e => setWinnings(parseInt(e.target.value)),
+    [],
+  );
+
   const defaultDate = useMemo(() => fromDate(new Date(), 'GMT'), []);
 
   return (
     <form ref={ref} action={createEvent} className="flex flex-col gap-2">
       <SelectFormat name="formatId" onChange={onFormatChange} />
-      <SelectFormatVersion
-        name="formatVersionId"
-        value={selectedFormatVersion}
-        description='Automatically changes to "latest" after format change'
-      />
-
+      <SelectFormatVersion name="formatVersionId" value={selectedFormatVersion} />
       <SelectEventType name="type" onChange={onEventTypeChange} />
       <Input
         type="text"
@@ -144,7 +145,14 @@ export default function EventsForm() {
         value={entry.toString()}
         onChange={onEntryChange}
       />
-      <Input type="number" label="Winnings" size="sm" name="winnings" />
+      <Input
+        type="number"
+        label="Winnings"
+        size="sm"
+        name="winnings"
+        value={winnings.toString()}
+        onChange={onWinningsChange}
+      />
       <DatePicker label="Date" size="sm" name="date" defaultValue={defaultDate} granularity="day" />
       <Button type="submit">Create</Button>
     </form>

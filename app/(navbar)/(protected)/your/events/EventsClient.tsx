@@ -157,11 +157,6 @@ export default function EventsClient({}: Props) {
   const { filters, sortDescriptor, onSortChange } = useEventFilters();
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteEvents(filters);
 
-  const [loaderRef, scrollerRef] = useInfiniteScroll({
-    hasMore: hasNextPage,
-    onLoadMore: fetchNextPage,
-  });
-
   const items = data?.pages?.flat() ?? [];
 
   return (
@@ -172,51 +167,4 @@ export default function EventsClient({}: Props) {
       {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
     </div>
   );
-
-  /*
-  return (
-    <div className="flex flex-col gap-4">
-      <Table<As<EventExtended>>
-        isHeaderSticky
-        aria-label="Table of events"
-        baseRef={scrollerRef}
-        bottomContent={
-          hasNextPage ? (
-            <div className="flex w-full justify-center">
-              <Spinner ref={loaderRef} />
-            </div>
-          ) : null
-        }
-        classNames={{
-          base: 'max-h-[520px]',
-        }}
-        sortDescriptor={sortDescriptor}
-        onSortChange={onSortChange}
-      >
-        <TableHeader columns={columns}>
-          {column => (
-            <TableColumn key={column.uid} width={column.maxWidth} allowsSorting={column.sortable}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          emptyContent="No events to display."
-          isLoading={isLoading}
-          loadingContent={<Spinner color="default" label="Loading..." />}
-          items={items}
-        >
-          {item => (
-            <TableRow
-              key={item.id}
-              className={`hover:bg-zinc-50 cursor-pointer ${item.id === -1 ? 'opacity-50' : ''}`}
-              href={`/your/events/${item.id}`}
-            >
-              {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );*/
 }

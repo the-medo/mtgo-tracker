@@ -55,22 +55,72 @@ export default function EventBox({ eventId }: EventBoxProps) {
       >
         <div className={cn(`p-4 flex flex-row w-full gap-2 justify-between`)}>
           <div className="flex flex-row gap-2 items-center">
-            <div className="flex flex-col gap-1 w-[300px]">
-              <p className="text-md">
-                <Link href={`/your/events/${eventId}`}>
-                  {event?.name ?? '- empty event name -'}
-                </Link>
-              </p>
-              <p className="text-sm flex flex-row gap-2">
-                <TbCards size={16} />
-                {event?.deck?.name}
-              </p>
-              <p className="text-xs text-default-500 flex flex-row gap-2">
-                <TbTower size={16} />
-                {event?.format?.name}
-                {event?.type ? ' - ' + eventTypes.find(et => et.id === event.type)?.label : ''}
-              </p>
-            </div>
+            {eventEditMode ? (
+              <>
+                <TableField
+                  qk={QK.EVENT}
+                  type="string"
+                  tableId={eventBoxIdentificator}
+                  id={eventId}
+                  fieldName="name"
+                  label="Event name"
+                  // @ts-ignore
+                  value={event?.name}
+                />
+                <TableField
+                  qk={QK.EVENT}
+                  type="select"
+                  selectType="EVENT_TYPE"
+                  tableId={eventBoxIdentificator}
+                  id={eventId}
+                  fieldName="type"
+                  label="Event type"
+                  // @ts-ignore
+                  value={event?.type}
+                />
+                <TableField
+                  qk={QK.EVENT}
+                  type="select"
+                  selectType={QK.FORMATS}
+                  tableId={eventBoxIdentificator}
+                  id={eventId}
+                  fieldName="formatId"
+                  label="Format"
+                  // @ts-ignore
+                  value={event?.formatId}
+                />
+                <TableField
+                  qk={QK.EVENT}
+                  type="select"
+                  selectType={QK.DECK}
+                  tableId={eventBoxIdentificator}
+                  id={eventId}
+                  fieldName="deckId"
+                  label="Deck"
+                  // @ts-ignore
+                  value={event?.deckId}
+                  formatId={event?.formatId}
+                  preselectedItem={event?.deck ?? undefined}
+                />
+              </>
+            ) : (
+              <div className="flex flex-col gap-1 w-[300px]">
+                <p className="text-md">
+                  <Link href={`/your/events/${eventId}`}>
+                    {event?.name ?? '- empty event name -'}
+                  </Link>
+                </p>
+                <p className="text-sm flex flex-row gap-2">
+                  <TbCards size={16} />
+                  {event?.deck?.name}
+                </p>
+                <p className="text-xs text-default-500 flex flex-row gap-2">
+                  <TbTower size={16} />
+                  {event?.format?.name}
+                  {event?.type ? ' - ' + eventTypes.find(et => et.id === event.type)?.label : ''}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-row gap-4 items-center w-[400px]">

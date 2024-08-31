@@ -3,7 +3,7 @@ import TableField from '@/components/form/table-form/TableField';
 import { Spinner } from '@nextui-org/spinner';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import { TbTrash } from 'react-icons/tb';
 import ConfirmationModal from '@/components/app/ConfirmationModal';
@@ -43,6 +43,15 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventIn
       },
     );
   }, [deleteEvent, eventId, router]);
+
+  const deleteButton = useMemo(
+    () => (
+      <Button size="sm" isIconOnly color="danger" isLoading={isPending}>
+        <TbTrash />
+      </Button>
+    ),
+    [isPending],
+  );
 
   if (!data) {
     return (
@@ -163,11 +172,7 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventIn
             </Button>
 
             <ConfirmationModal
-              trigger={
-                <Button size="sm" isIconOnly color="danger" isLoading={isPending}>
-                  <TbTrash />
-                </Button>
-              }
+              trigger={deleteButton}
               title="Delete event"
               content="All matches of this event will be unassigned."
               onConfirm={onDeleteEvent}
