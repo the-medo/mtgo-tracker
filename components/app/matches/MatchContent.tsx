@@ -11,7 +11,7 @@ import { QK } from '@/app/api/queryHelpers';
 import { DeckArchetype, Match, MatchResult } from '@prisma/client';
 import TableField from '@/components/form/table-form/TableField';
 import ResultSelector from '@/components/form/ResultSelector';
-import { TbEdit, TbX } from 'react-icons/tb';
+import { TbCards, TbEdit, TbVs, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import GameResultChip from '@/components/app/games/GameResultChip';
 import useStore from '@/store/store';
@@ -19,6 +19,7 @@ import MatchRowStart from '@/components/app/matches/MatchRowStart';
 import cn from 'classnames';
 import { InfiniteData, QueryFilters } from '@tanstack/react-query';
 import { queryClient } from '@/app/providers';
+import MatchResultChip from '@/components/app/matches/MatchResultChip';
 
 type MatchGameDisplayInfo = {
   gameId?: number;
@@ -43,6 +44,7 @@ export default function MatchContent({
   whiteBackground,
   showDeckName,
 }: MatchContentProps) {
+  const breakpoint = useStore(state => state.breakpoint);
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId ?? 0, !eventId);
 
@@ -66,6 +68,7 @@ export default function MatchContent({
   }, [isLoading, matchLoaded, match?.Games, match?.result, setSelectedId, matchId]);
 
   const matchResult = match?.result ?? undefined;
+  const matchTags = match?.MatchTags ?? [];
 
   const matchResultChangeHandler = useCallback(
     (value: MatchResult | undefined) => {
@@ -183,14 +186,15 @@ export default function MatchContent({
         compact={compact}
       />
       <div
-        className={cn(`flex flex-col w-full gap-2 rounded-tr-md rounded-br-md `, {
+        className={cn(`flex flex-col w-full gap-2 relative`, {
           'bg-default-50 border-default-200 border-1': matchEditMode,
           'bg-default-100': !matchEditMode && !whiteBackground,
           'bg-white': whiteBackground,
+          'rounded-tr-md rounded-br-md': compact,
         })}
       >
         <div
-          className={cn(`flex flex-row w-full gap-2 justify-between`, {
+          className={cn(`flex flex-row flex-wrap w-full gap-4`, {
             'items-start': matchEditMode,
             'items-center': !matchEditMode,
             'p-4': !compact,
@@ -198,21 +202,24 @@ export default function MatchContent({
           })}
         >
           <div
-            className={cn(`flex flex-row gap-2 `, {
+            className={cn(`flex flex-row flex-wrap gap-2 `, {
               'items-start': matchEditMode,
               'items-center': !matchEditMode,
             })}
           >
             <div
-              className={cn(`flex flex-row gap-4 items-center`, {
-                'w-[600px]': matchEditMode,
+              className={cn(
+                `flex flex-row gap-4 items-center w-[min(100%,500px)]` /*{
+                'w-[600px]': matchEditMode && breakpoint !== 'xs' && breakpoint !== 'sm',
+                'w-full': matchEditMode && (breakpoint === 'xs' || breakpoint === 'sm'),
                 'w-[200px]': !matchEditMode && !showDeckName,
                 'w-[450px]': !matchEditMode && showDeckName,
-              })}
+              }*/,
+              )}
             >
               {matchEditMode ? (
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-row gap-2">
+                  <div className="flex flex-row flex-wrap gap-2">
                     <TableField
                       qk={QK.MATCH}
                       selectType={QK.DECK_ARCHETYPE}
@@ -262,13 +269,18 @@ export default function MatchContent({
                   />
                 </div>
               ) : (
-                <div className="flex flex-row gap-2 items-center">
+                <div
+                  className={cn('flex gap-2 items-center p-2', {
+                    'flex-row flex-wrap': breakpoint !== 'xs' && breakpoint !== 'sm',
+                    'flex-col': breakpoint === 'xs' || breakpoint === 'sm',
+                  })}
+                >
                   {showDeckName && (
                     <>
                       <div className="flex flex-col gap-1 w-[200px]">
-                        <p className="text-md">{match?.deck?.name}</p>
+                        <p className="text-md text-primary-dark">{match?.deck?.name}</p>
                       </div>
-                      <p className="text-sm">vs.</p>
+                      <p className="text-xs text-default-500">vs.</p>
                     </>
                   )}
                   <div className="flex flex-col gap-1 w-[200px]">
@@ -280,17 +292,18 @@ export default function MatchContent({
                 </div>
               )}
             </div>
-            {!matchEditMode && (
-              <>
-                <div className="flex flex-row gap-2 items-center min-w-[220px]">
-                  {match?.Games.sort((a, b) => a.gameNumber - b.gameNumber).map(g => (
-                    <GameResultChip key={g.id} gameId={g.id} />
-                  ))}
-                </div>
-                {match?.notes && <div className="italic text-xs">{match.notes}</div>}
-              </>
-            )}
           </div>
+
+          {!matchEditMode && (
+            <>
+              <div className="flex flex-row flex-wrap gap-2 items-center min-w-[220px]">
+                {match?.Games.sort((a, b) => a.gameNumber - b.gameNumber).map(g => (
+                  <GameResultChip key={g.id} gameId={g.id} />
+                ))}
+              </div>
+              {match?.notes && <div className="italic text-xs min-w-[200px]">{match.notes}</div>}
+            </>
+          )}
 
           {matchEditMode && (
             <div className="flex flex-col gap-2 items-center">
@@ -314,44 +327,36 @@ export default function MatchContent({
                     label="Tags"
                     displaySelect={false}
                     // @ts-ignore
-                    values={match?.MatchTags ?? []}
+                    values={matchTags}
                   />
                 </div>
               </div>
             </div>
           )}
-          <div className="flex flex-row gap-4 items-center">
-            {matchEditMode ? null : (
-              <>
-                <div className="flex flex-row items-center max-w-[300px]">
-                  <TableField
-                    qk={QK.MATCH}
-                    type="tags"
-                    tableId={matchContentIdentificator}
-                    id={matchId}
-                    fieldName="tags"
-                    label="Tags"
-                    displaySelect={false}
-                    // @ts-ignore
-                    values={match?.MatchTags ?? []}
-                    editable={false}
-                  />
-                </div>
-                <div className="w-[150px]">
-                  <i>{match?.oppName}</i>
-                </div>
-              </>
-            )}
-            {!compact && (
-              <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
-                {matchEditMode ? <TbX /> : <TbEdit />}
-              </Button>
-            )}
-          </div>
+          {matchEditMode || matchTags.length === 0 ? null : (
+            <div className="flex flex-row items-center max-w-[300px]">
+              <TableField
+                qk={QK.MATCH}
+                type="tags"
+                tableId={matchContentIdentificator}
+                id={matchId}
+                fieldName="tags"
+                label="Tags"
+                displaySelect={false}
+                // @ts-ignore
+                values={matchTags}
+                editable={false}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="absolute top-1 right-2 text-default-500 text-xs">
+          <i>{match?.oppName}</i>
         </div>
 
         {(matchEditMode || !match?.result) && !compact && (
-          <div className={`p-4 flex flex-row w-full gap-4 items-center`}>
+          <div className={`p-4 flex flex-row flex-wrap w-full gap-4 items-start`}>
             {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
               <Spinner />
             ) : (
@@ -367,6 +372,18 @@ export default function MatchContent({
           </div>
         )}
       </div>
+
+      {!compact && (
+        <div
+          className={cn(
+            'p-2 rounded-tr-md rounded-br-md flex flex-col w-12 h-full bg-default-200 items-center',
+          )}
+        >
+          <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
+            {matchEditMode ? <TbX /> : <TbEdit />}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

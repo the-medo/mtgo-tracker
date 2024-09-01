@@ -22,7 +22,7 @@ export default function OnThePlaySelector({ value, onValueChange }: OnThePlaySel
   }, [value]);
 
   return (
-    <div className="flex flex-row gap-1">
+    <div className="flex flex-row flex-wrap gap-1 justify-center">
       <Button
         size="sm"
         onClick={() => valueChangeHandler(true)}

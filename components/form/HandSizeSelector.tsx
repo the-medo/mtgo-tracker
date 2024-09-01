@@ -20,6 +20,7 @@ export function HandSizeSelectorButton({
       size="sm"
       style={{ width: '15px !important' }}
       variant={isSelected ? 'solid' : 'bordered'}
+      isIconOnly
     >
       {n}
     </Button>
@@ -62,7 +63,7 @@ export default function HandSizeSelector({ value, onValueChange }: HandSizeSelec
           />
         ))}
         {!extendedView && (
-          <Button size="sm" onClick={() => setExtendedView(p => !p)}>
+          <Button size="sm" onClick={() => setExtendedView(p => !p)} isIconOnly>
             ...
           </Button>
         )}

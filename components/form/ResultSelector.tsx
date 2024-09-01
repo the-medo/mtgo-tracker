@@ -30,32 +30,40 @@ export default function ResultSelector({ value, onValueChange, isLoading }: Resu
         onClick={() => valueChangeHandler(MatchResult.WIN)}
         variant={localValue === MatchResult.WIN ? 'solid' : 'bordered'}
         color="success"
+        title="Win"
+        isIconOnly
       >
-        Win
+        W
       </Button>
       <Button
         size="sm"
         onClick={() => valueChangeHandler(MatchResult.LOSE)}
         variant={localValue === MatchResult.LOSE ? 'solid' : 'bordered'}
         color="danger"
+        title="Lose"
+        isIconOnly
       >
-        Lose
+        L
       </Button>
       <Button
         size="sm"
         onClick={() => valueChangeHandler(MatchResult.DRAW)}
         variant={localValue === MatchResult.DRAW ? 'solid' : 'bordered'}
         color="warning"
+        title="Draw"
+        isIconOnly
       >
-        Draw
+        D
       </Button>
       <Button
         size="sm"
         onClick={() => valueChangeHandler(undefined)}
         variant={localValue === undefined ? 'solid' : 'bordered'}
         color="default"
+        title="In progress"
+        isIconOnly
       >
-        In progress
+        P...
       </Button>
     </div>
   );

@@ -2,6 +2,8 @@
 
 import MatchGameCreationForm from '@/components/app/matches/MatchGameCreationForm';
 import GameContent from '@/components/app/games/GameContent';
+import cn from 'classnames';
+import useStore from '@/store/store';
 
 interface MatchGameSectionProps {
   matchId: number;
@@ -12,8 +14,10 @@ interface MatchGameSectionProps {
 export default function MatchGameSection({ matchId, gameNumber, gameId }: MatchGameSectionProps) {
   return (
     <div
-      className={`${gameId ? 'bg-zinc-100' : 'bg-white border-2 border-dashed'} p-4 flex flex-col gap-2`}
-      style={{ width: '400px' }}
+      className={cn(
+        gameId ? 'bg-zinc-100' : 'bg-white border-2 border-dashed',
+        ` p-4 flex flex-col gap-2 w-full md:w-[280px]`,
+      )}
     >
       {!gameId ? (
         <MatchGameCreationForm matchId={matchId} gameNumber={gameNumber} />

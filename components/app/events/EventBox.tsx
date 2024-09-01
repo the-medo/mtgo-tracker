@@ -1,7 +1,7 @@
 'use client';
 
 import { useEvent } from '@/app/api/event/[id]/getEvent';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import EventBoxStart from '@/components/app/events/EventBoxStart';
 import cn from 'classnames';
@@ -44,6 +44,7 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
   }, [eventId, setSelectedId, unsetSelectedId]);
 
   const displayMatchesToggle = useCallback(() => setDisplayMatches(p => !p), [setDisplayMatches]);
+  const eventTags = useMemo(() => event?.EventTags ?? [], [event?.EventTags]);
 
   return (
     <div className={`flex flex-row w-full`}>
@@ -58,8 +59,8 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
           'bg-default-100': !eventEditMode,
         })}
       >
-        <div className={cn(`p-4 flex flex-row w-full gap-2 justify-between`)}>
-          <div className="flex flex-row gap-2 items-center">
+        <div className={cn(`p-4 flex flex-row flex-wrap w-full gap-2 justify-between`)}>
+          <div className="flex flex-row flex-wrap gap-2 items-center">
             {eventEditMode ? (
               <>
                 <TableField
@@ -128,21 +129,23 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
             )}
           </div>
 
-          <div className="flex flex-row gap-4 items-center w-[400px]">
-            <div className="flex flex-row items-center w-[200px]">
-              <TableField
-                qk={QK.EVENT}
-                type="tags"
-                tableId={eventBoxIdentificator}
-                id={eventId}
-                fieldName="tags"
-                label="Tags"
-                displaySelect={false}
-                // @ts-ignore
-                values={event?.EventTags ?? []}
-                editable={false}
-              />
-            </div>
+          <div className="flex flex-row flex-wrap gap-4 items-center">
+            {eventTags.length > 0 || eventEditMode ? (
+              <div className="flex flex-row items-center w-[200px]">
+                <TableField
+                  qk={QK.EVENT}
+                  type="tags"
+                  tableId={eventBoxIdentificator}
+                  id={eventId}
+                  fieldName="tags"
+                  label="Tags"
+                  displaySelect={false}
+                  // @ts-ignore
+                  values={eventTags}
+                  editable={false}
+                />
+              </div>
+            ) : null}
             <div className="flex flex-row items-center w-[150px]">
               <TableField
                 qk={QK.EVENT}
