@@ -5,10 +5,11 @@ import DecksFilters from '@/app/(navbar)/(protected)/your/decks/DecksFilters';
 import DecksForm from '@/app/(navbar)/(protected)/your/decks/DecksForm';
 import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
 import DecksTags from '@/app/(navbar)/(protected)/your/decks/DecksTags';
+import PageMenuWrapper from '@/components/app/PageMenuWrapper';
 
 export default function DecksLeftNav() {
   return (
-    <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
+    <PageMenuWrapper>
       <Accordion
         defaultSelectedKeys={['1']}
         disableIndicatorAnimation
@@ -35,6 +36,6 @@ export default function DecksLeftNav() {
           <DecksForm />
         </AccordionItem>
       </Accordion>
-    </div>
+    </PageMenuWrapper>
   );
 }

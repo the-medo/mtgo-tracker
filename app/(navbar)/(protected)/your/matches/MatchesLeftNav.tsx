@@ -5,10 +5,11 @@ import MatchesFilters from '@/app/(navbar)/(protected)/your/matches/MatchesFilte
 import MatchesForm from '@/app/(navbar)/(protected)/your/matches/MatchesForm';
 import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
 import MatchesTags from '@/app/(navbar)/(protected)/your/matches/MatchesTags';
+import PageMenuWrapper from '@/components/app/PageMenuWrapper';
 
 export default function MatchesLeftNav() {
   return (
-    <div className="p-4 w-[330px] border-r-1 flex flex-col gap-4">
+    <PageMenuWrapper>
       <Accordion
         defaultSelectedKeys={['3']}
         disableIndicatorAnimation
@@ -35,6 +36,6 @@ export default function MatchesLeftNav() {
           <MatchesForm />
         </AccordionItem>
       </Accordion>
-    </div>
+    </PageMenuWrapper>
   );
 }
