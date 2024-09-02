@@ -2,15 +2,16 @@
 
 import { useMemo } from 'react';
 import { useMatch } from '@/app/api/match/[id]/getMatch';
-import { Chip } from '@nextui-org/chip';
+import { Chip, ChipProps } from '@nextui-org/chip';
 import { getChipColorBasedOnMatchResult } from '@/lib/helpers';
 import { MatchResult } from '@prisma/client';
 
 interface MatchResultChipProps {
   matchId: number;
+  size?: ChipProps['size'];
 }
 
-export default function MatchResultChip({ matchId }: MatchResultChipProps) {
+export default function MatchResultChip({ matchId, size = 'lg' }: MatchResultChipProps) {
   const { data: match, isLoading } = useMatch(matchId);
 
   const chipColor = useMemo(() => getChipColorBasedOnMatchResult(match?.result), [match?.result]);
@@ -35,7 +36,7 @@ export default function MatchResultChip({ matchId }: MatchResultChipProps) {
   }, [match?.Games]);
 
   return (
-    <Chip size="lg" radius="sm" variant="solid" color={chipColor}>
+    <Chip size={size} radius="sm" variant="solid" color={chipColor}>
       {gameResults.wins}-{gameResults.loses}
       {gameResults.draws ? `-${gameResults.draws}` : ''}
     </Chip>

@@ -33,6 +33,7 @@ interface MatchContentProps {
   compact?: boolean;
   whiteBackground?: boolean;
   showDeckName?: boolean;
+  insideAnotherBox?: boolean;
 }
 
 export const matchContentIdentificator = `MatchContent`;
@@ -43,6 +44,7 @@ export default function MatchContent({
   compact,
   whiteBackground,
   showDeckName,
+  insideAnotherBox,
 }: MatchContentProps) {
   const breakpoint = useStore(state => state.breakpoint);
   const { data: match, isLoading } = useMatch(matchId);
@@ -178,12 +180,17 @@ export default function MatchContent({
   // bg-${bgColor}
 
   return (
-    <div className={`flex flex-row w-full`}>
+    <div
+      className={cn(`flex flex-row w-[calc(100%+theme(spacing.20))]`, {
+        '-ml-20': insideAnotherBox,
+      })}
+    >
       <MatchRowStart
         matchId={matchId}
         itemsCenter={!matchEditMode}
         roundNumber={match?.round ?? undefined}
         compact={compact}
+        insideAnotherBox={insideAnotherBox}
       />
       <div
         className={cn(`flex flex-col w-full gap-2 relative`, {

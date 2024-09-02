@@ -172,8 +172,9 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
                 key={i.id}
                 matchId={i.id}
                 eventId={eventId}
-                compact={true}
-                whiteBackground={true}
+                compact
+                whiteBackground
+                insideAnotherBox
               />
             ))}
           </div>
