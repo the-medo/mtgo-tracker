@@ -177,12 +177,12 @@ export default function MatchContent({
     });
   }, [matchId, setSelectedId, unsetSelectedId]);
 
-  // bg-${bgColor}
-
   return (
     <div
-      className={cn(`flex flex-row w-[calc(100%+theme(spacing.20))]`, {
+      className={cn(`flex flex-row`, {
         '-ml-20': insideAnotherBox,
+        'w-[calc(100%+theme(spacing.28))]': breakpoint === 'xs' || breakpoint === 'sm',
+        'w-[calc(100%+theme(spacing.20))]': breakpoint !== 'xs' && breakpoint !== 'sm',
       })}
     >
       <MatchRowStart

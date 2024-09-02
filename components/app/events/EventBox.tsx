@@ -54,7 +54,7 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
         </Button>
       </EventBoxStart>
       <div
-        className={cn(`flex flex-col w-full gap-2 rounded-tr-md rounded-br-md `, {
+        className={cn(`flex flex-col w-full gap-2`, {
           'bg-default-50 border-default-200 border-1': eventEditMode,
           'bg-default-100': !eventEditMode,
         })}
@@ -110,7 +110,7 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
                 />
               </>
             ) : (
-              <div className="flex flex-col gap-1 w-[300px]">
+              <div className="flex flex-col gap-1 min-w-[calc(300px-theme(spacing.12))]">
                 <p className="text-md">
                   <Link href={`/your/events/${eventId}`}>
                     {event?.name ?? '- empty event name -'}
@@ -159,10 +159,6 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
                 editable={false}
               />
             </div>
-            {/*<DateDisplay date={event?.date} />*/}
-            <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
-              {eventEditMode ? <TbX /> : <TbEdit />}
-            </Button>
           </div>
         </div>
         {displayMatches && (
@@ -179,6 +175,15 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
             ))}
           </div>
         )}
+      </div>
+      <div
+        className={cn(
+          'p-2 rounded-tr-md rounded-br-md flex flex-col w-12 h-full bg-default-200 items-center grow-0 shrink-0',
+        )}
+      >
+        <Button size="sm" color="default" isIconOnly onPress={editModeHandler}>
+          {eventEditMode ? <TbX /> : <TbEdit />}
+        </Button>
       </div>
     </div>
   );
