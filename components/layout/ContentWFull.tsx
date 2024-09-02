@@ -1,9 +1,23 @@
 'use client';
 
+import useStore from '@/store/store';
+import cn from 'classnames';
+
 export default function ContentWFull({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="w-full flex flex-col p-4 overflow-y-auto">{children}</div>;
+  const breakpoint = useStore(state => state.breakpoint);
+
+  return (
+    <div
+      className={cn('w-full flex flex-col overflow-y-auto', {
+        'p-2': breakpoint === 'xs' || breakpoint === 'sm',
+        'p-4': breakpoint !== 'xs' && breakpoint !== 'sm',
+      })}
+    >
+      {children}
+    </div>
+  );
 }

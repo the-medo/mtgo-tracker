@@ -54,6 +54,8 @@ export async function POST(req: Request) {
 export const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
   include: {
     deckArchetype: true,
+    format: true,
+    formatVersion: true,
     DeckTags: true,
   },
 });

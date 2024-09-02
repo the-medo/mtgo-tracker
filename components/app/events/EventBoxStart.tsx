@@ -11,7 +11,7 @@ interface EventBoxStartProps extends PropsWithChildren {
 }
 
 const baseClassNames =
-  'p-4 pt-2 rounded-tl-md rounded-bl-md flex flex-col w-24 h-full gap-2 grow-0 shrink-0';
+  'p-4 pt-2 rounded-tl-md rounded-bl-md flex flex-col w-20 h-full gap-2 grow-0 shrink-0';
 
 export default function EventBoxStart({ eventId, itemsCenter, children }: EventBoxStartProps) {
   const color = getBgColorBasedOnMatchResult(undefined);

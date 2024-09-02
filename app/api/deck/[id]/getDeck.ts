@@ -16,5 +16,6 @@ export function useDeck(deckId: number, skipQuery?: boolean) {
   return useQuery({
     queryKey: [QK.DECK, deckId],
     queryFn: skipQuery ? skipToken : queryFn,
+    staleTime: Infinity,
   });
 }

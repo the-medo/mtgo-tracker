@@ -15,7 +15,7 @@ import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
 import { MatchExtended } from '@/app/api/match/route';
 import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
-import MatchContent from '@/components/app/matches/MatchContent';
+import MatchBox from '@/components/app/matches/MatchBox';
 import { MatchResult } from '@prisma/client';
 
 const TABLE_ID = 'MATCHES';
@@ -144,7 +144,7 @@ export default function MatchesClient({}: Props) {
   return (
     <div className="flex flex-col gap-4">
       {items.map(i => (
-        <MatchContent key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
+        <MatchBox key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
       ))}
       {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
     </div>

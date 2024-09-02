@@ -11,7 +11,7 @@ import { TbArrowDown, TbArrowRight, TbCards, TbEdit, TbTower, TbX } from 'react-
 import useStore from '@/store/store';
 import { eventTypes } from '@/components/form/select/SelectEventType';
 import { Link } from '@nextui-org/link';
-import MatchContent from '@/components/app/matches/MatchContent';
+import MatchBox from '@/components/app/matches/MatchBox';
 
 export const eventBoxIdentificator = `EventBox`;
 
@@ -110,7 +110,7 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
                 />
               </>
             ) : (
-              <div className="flex flex-col gap-1 min-w-[calc(300px-theme(spacing.12))]">
+              <div className="flex flex-col gap-1 min-w-[calc(300px-theme(spacing.24))]">
                 <p className="text-md">
                   <Link href={`/your/events/${eventId}`}>
                     {event?.name ?? '- empty event name -'}
@@ -164,7 +164,7 @@ export default function EventBox({ eventId, openMatches = false }: EventBoxProps
         {displayMatches && (
           <div className={`flex flex-col gap-2 p-4`}>
             {event?.Matches.sort((m1, m2) => (m1.round ?? 0) - (m2.round ?? 0)).map(i => (
-              <MatchContent
+              <MatchBox
                 key={i.id}
                 matchId={i.id}
                 eventId={eventId}

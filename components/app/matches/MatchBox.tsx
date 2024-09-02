@@ -19,7 +19,6 @@ import MatchRowStart from '@/components/app/matches/MatchRowStart';
 import cn from 'classnames';
 import { InfiniteData, QueryFilters } from '@tanstack/react-query';
 import { queryClient } from '@/app/providers';
-import MatchResultChip from '@/components/app/matches/MatchResultChip';
 
 type MatchGameDisplayInfo = {
   gameId?: number;
@@ -27,7 +26,7 @@ type MatchGameDisplayInfo = {
   key: string;
 };
 
-interface MatchContentProps {
+interface MatchBoxProps {
   matchId: number;
   eventId: number | null;
   compact?: boolean;
@@ -36,16 +35,16 @@ interface MatchContentProps {
   insideAnotherBox?: boolean;
 }
 
-export const matchContentIdentificator = `MatchContent`;
+export const matchBoxIdentificator = `MatchContent`;
 
-export default function MatchContent({
+export default function MatchBox({
   matchId,
   eventId,
   compact,
   whiteBackground,
   showDeckName,
   insideAnotherBox,
-}: MatchContentProps) {
+}: MatchBoxProps) {
   const breakpoint = useStore(state => state.breakpoint);
   const { data: match, isLoading } = useMatch(matchId);
   const { data: event, isLoading: isLoadingEvent } = useEvent(eventId ?? 0, !eventId);
@@ -64,7 +63,7 @@ export default function MatchContent({
       setMatchLoaded(true);
       setMatchEditMode(isEditMode);
       if (isEditMode) {
-        setSelectedId(matchContentIdentificator, matchId);
+        setSelectedId(matchBoxIdentificator, matchId);
       }
     }
   }, [isLoading, matchLoaded, match?.Games, match?.result, setSelectedId, matchId]);
@@ -169,9 +168,9 @@ export default function MatchContent({
   const editModeHandler = useCallback(() => {
     setMatchEditMode(p => {
       if (p) {
-        unsetSelectedId(matchContentIdentificator, matchId);
+        unsetSelectedId(matchBoxIdentificator, matchId);
       } else {
-        setSelectedId(matchContentIdentificator, matchId);
+        setSelectedId(matchBoxIdentificator, matchId);
       }
       return !p;
     });
@@ -181,8 +180,11 @@ export default function MatchContent({
     <div
       className={cn(`flex flex-row`, {
         '-ml-20': insideAnotherBox,
-        'w-[calc(100%+theme(spacing.28))]': breakpoint === 'xs' || breakpoint === 'sm',
-        'w-[calc(100%+theme(spacing.20))]': breakpoint !== 'xs' && breakpoint !== 'sm',
+        'w-full': !insideAnotherBox,
+        'w-[calc(100%+theme(spacing.28))]':
+          insideAnotherBox && (breakpoint === 'xs' || breakpoint === 'sm'),
+        'w-[calc(100%+theme(spacing.20))]':
+          insideAnotherBox && breakpoint !== 'xs' && breakpoint !== 'sm',
       })}
     >
       <MatchRowStart
@@ -214,16 +216,7 @@ export default function MatchContent({
               'items-center': !matchEditMode,
             })}
           >
-            <div
-              className={cn(
-                `flex flex-row gap-4 items-center w-[min(100%,500px)]` /*{
-                'w-[600px]': matchEditMode && breakpoint !== 'xs' && breakpoint !== 'sm',
-                'w-full': matchEditMode && (breakpoint === 'xs' || breakpoint === 'sm'),
-                'w-[200px]': !matchEditMode && !showDeckName,
-                'w-[450px]': !matchEditMode && showDeckName,
-              }*/,
-              )}
-            >
+            <div className={cn(`flex flex-row gap-4 items-center w-[min(100%,500px)]`)}>
               {matchEditMode ? (
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row flex-wrap gap-2">
@@ -232,7 +225,7 @@ export default function MatchContent({
                       selectType={QK.DECK_ARCHETYPE}
                       formatId={event?.formatId}
                       type="select"
-                      tableId={matchContentIdentificator}
+                      tableId={matchBoxIdentificator}
                       id={matchId}
                       fieldName="oppArchetypeId"
                       label="Opp. Archetype"
@@ -243,7 +236,7 @@ export default function MatchContent({
                     <TableField
                       qk={QK.MATCH}
                       type="string"
-                      tableId={matchContentIdentificator}
+                      tableId={matchBoxIdentificator}
                       id={matchId}
                       fieldName="oppArchetypeNote"
                       label="Opp. Archetype Note"
@@ -254,7 +247,7 @@ export default function MatchContent({
                     <TableField
                       qk={QK.MATCH}
                       type="string"
-                      tableId={matchContentIdentificator}
+                      tableId={matchBoxIdentificator}
                       id={matchId}
                       fieldName="oppName"
                       label="Opp. Name"
@@ -266,7 +259,7 @@ export default function MatchContent({
                   <TableField
                     qk={QK.MATCH}
                     type="textarea"
-                    tableId={matchContentIdentificator}
+                    tableId={matchBoxIdentificator}
                     id={matchId}
                     fieldName="notes"
                     label="Match Notes"
@@ -328,7 +321,7 @@ export default function MatchContent({
                   <TableField
                     qk={QK.MATCH}
                     type="tags"
-                    tableId={matchContentIdentificator}
+                    tableId={matchBoxIdentificator}
                     id={matchId}
                     fieldName="tags"
                     label="Tags"
@@ -345,7 +338,7 @@ export default function MatchContent({
               <TableField
                 qk={QK.MATCH}
                 type="tags"
-                tableId={matchContentIdentificator}
+                tableId={matchBoxIdentificator}
                 id={matchId}
                 fieldName="tags"
                 label="Tags"
