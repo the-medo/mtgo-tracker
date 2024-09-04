@@ -1,7 +1,7 @@
 import { DeckExtended } from '@/app/api/deck/route';
 import { MatchResult } from '@prisma/client';
 
-type DeckResultPart = Record<MatchResult | 'unknown' | 'total', number>;
+type DeckResultPart = Record<MatchResult | 'unknown' | 'total' | 'percentage', number>;
 
 const initialDeckResultPart: DeckResultPart = {
   [MatchResult.WIN]: 0,
@@ -9,6 +9,7 @@ const initialDeckResultPart: DeckResultPart = {
   [MatchResult.DRAW]: 0,
   unknown: 0,
   total: 0,
+  percentage: 0,
 };
 
 export type DeckResult = {
@@ -41,5 +42,20 @@ export const computeDeckResults = (
     });
   });
 
+  result.matches.percentage =
+    result.matches.total > 0
+      ? Math.round((result.matches[MatchResult.WIN] / result.matches.total) * 100)
+      : 0;
+
+  result.games.percentage =
+    result.games.total > 0
+      ? Math.round((result.games[MatchResult.WIN] / result.games.total) * 100)
+      : 0;
+
   return result;
 };
+
+export enum DeckBoxExpandType {
+  EVENTS = 'events',
+  MATCHES = 'matches',
+}
