@@ -57,6 +57,23 @@ export const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
     format: true,
     formatVersion: true,
     DeckTags: true,
+    _count: {
+      select: {
+        Events: true,
+      },
+    },
+    Matches: {
+      select: {
+        result: true,
+        Games: {
+          select: {
+            result: true,
+            startingHand: true,
+            oppStartingHand: true,
+          },
+        },
+      },
+    },
   },
 });
 

@@ -14,6 +14,9 @@ import { Link } from '@nextui-org/link';
 import MatchBox from '@/components/app/matches/MatchBox';
 import { useDeck } from '@/app/api/deck/[id]/getDeck';
 import { Tooltip } from '@nextui-org/tooltip';
+import { Chip } from '@nextui-org/chip';
+import { MatchResult } from '@prisma/client';
+import { computeDeckResults } from '@/components/app/decks/deckLib';
 
 export const deckBoxIdentificator = `DeckBox`;
 
@@ -42,6 +45,8 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
 
   const displayEventsToggle = useCallback(() => setDisplayEvents(p => !p), [setDisplayEvents]);
   const deckTags = useMemo(() => deck?.DeckTags ?? [], [deck?.DeckTags]);
+
+  const deckResults = useMemo(() => computeDeckResults(deck?.Matches), [deck?.Matches]);
 
   return (
     <div className={`flex flex-row w-full`}>
@@ -140,6 +145,32 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
                 />
               </div>
             ) : null}
+          </div>
+          <div className={`flex flex-row flex-wrap gap-2`}>
+            <div className="flex flex-col justify-between items-center text-sm rounded-md gap-1 px-2">
+              <span>Events</span>
+              <Chip size="sm" radius="sm" variant="solid" color="default">
+                {deck?._count.Events}
+              </Chip>
+            </div>
+            <div className="flex flex-col justify-between items-center text-sm rounded-md gap-1 px-2">
+              <span>Matches</span>
+              <Chip size="sm" radius="sm" variant="solid" color="default">
+                {deckResults.matches[MatchResult.WIN]}-{deckResults.matches[MatchResult.LOSE]}
+                {deckResults.matches[MatchResult.DRAW]
+                  ? `-${deckResults.matches[MatchResult.DRAW]}`
+                  : ''}
+              </Chip>
+            </div>
+            <div className="flex flex-col justify-between items-center text-sm rounded-md gap-1 px-2">
+              <span>Games</span>
+              <Chip size="sm" radius="sm" variant="solid" color="default">
+                {deckResults.games[MatchResult.WIN]}-{deckResults.games[MatchResult.LOSE]}
+                {deckResults.games[MatchResult.DRAW]
+                  ? `-${deckResults.games[MatchResult.DRAW]}`
+                  : ''}
+              </Chip>
+            </div>
           </div>
         </div>
         {displayEvents && (
