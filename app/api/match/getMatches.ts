@@ -24,6 +24,7 @@ export async function getMatches({ where, orderBy, skip, take }: GetMatchesReque
   const data = (await f.json()) as MatchExtended[];
 
   data.forEach(match => {
+    queryClient.setQueryData([QK.MATCH, match.id], match);
     match.Games.forEach(g => {
       queryClient.setQueryData([QK.GAME, g.id], g);
     });

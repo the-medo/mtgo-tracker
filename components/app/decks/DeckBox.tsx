@@ -14,6 +14,8 @@ import { Chip } from '@nextui-org/chip';
 import { MatchResult } from '@prisma/client';
 import { computeDeckResults, DeckBoxExpandType } from '@/components/app/decks/deckLib';
 import exp from 'node:constants';
+import DeckEvents from '@/components/app/decks/DeckEvents';
+import DeckMatches from '@/components/app/decks/DeckMatches';
 
 export const deckBoxIdentificator = `DeckBox`;
 
@@ -196,8 +198,8 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
         </div>
         {expandType && (
           <div className={`flex flex-col gap-2 p-4`}>
-            {expandType === DeckBoxExpandType.EVENTS && <span>Expanded events</span>}
-            {expandType === DeckBoxExpandType.MATCHES && <span>Expanded matches</span>}
+            {expandType === DeckBoxExpandType.EVENTS && <DeckEvents deckId={deckId} />}
+            {expandType === DeckBoxExpandType.MATCHES && <DeckMatches deckId={deckId} />}
           </div>
         )}
       </div>
