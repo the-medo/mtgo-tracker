@@ -1,12 +1,11 @@
-import { getServerSession } from 'next-auth/next';
-import { prismaAdapter } from '@/lib/prisma';
+import DashboardEvents from '@/app/(navbar)/(protected)/your/dashboard/DashboardEvents';
+import DashboardDecks from '@/app/(navbar)/(protected)/your/dashboard/DashboardDecks';
 
 export default async function YourDashboard() {
-  const sessionData = await getServerSession(prismaAdapter);
-
   return (
-    <main>
-      You are in your dashboard<div>{JSON.stringify(sessionData)}</div>
+    <main className="flex flex-row gap-4 p-4 flex-wrap w-full">
+      <DashboardEvents />
+      <DashboardDecks />
     </main>
   );
 }
