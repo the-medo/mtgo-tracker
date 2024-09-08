@@ -58,6 +58,7 @@ export const createQueryApiParams = <T extends Prisma.ModelName>({
 
 export const parseQueryApiParamsForPrisma = <T extends Prisma.ModelName>(
   url: string,
+  userId?: string,
 ): PrismaQueryApiParams<T> => {
   const u = new URL(url);
 
@@ -76,7 +77,7 @@ export const parseQueryApiParamsForPrisma = <T extends Prisma.ModelName>(
   const parsedSkip = skipFromUrl ? parseInt(skipFromUrl) : undefined;
 
   return {
-    where: whereClause,
+    where: userId ? { ...whereClause, userId: userId } : whereClause,
     orderBy: orderByClause,
     take: parsedTake,
     skip: parsedSkip,

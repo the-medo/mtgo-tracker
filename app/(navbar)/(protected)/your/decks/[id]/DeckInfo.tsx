@@ -6,7 +6,11 @@ import LabelledValue from '@/components/typography/LabelledValue';
 import DateDisplay from '@/components/typography/DateDisplay';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import useSimpleDelete from '@/app/api/useSimpleDelete';
+import { TbTrash } from 'react-icons/tb';
+import { useRouter } from 'next/navigation';
+import ConfirmationModal from '@/components/app/ConfirmationModal';
 
 interface DeckInfoProps {
   deckId: number;
@@ -16,7 +20,9 @@ interface DeckInfoProps {
 export const deckInfoIdentificator = `DeckInfo`;
 
 export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoProps) {
+  const router = useRouter();
   const { data } = useDeck(deckId);
+  const { mutate: deleteDeck, isPending } = useSimpleDelete(QK.DECK);
   const clearTableData = useStore(state => state.clearTableData);
   const isSelected = useStore(state => state.tables[deckInfoIdentificator]?.selectedIds[deckId]);
   const setSelectedId = useStore(state => state.setSelectedId);
@@ -28,6 +34,26 @@ export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoP
   useEffect(() => {
     if (isAlwaysEditMode && !isSelected) setSelected();
   }, [isAlwaysEditMode]);
+
+  const onDeleteDeck = useCallback(() => {
+    deleteDeck(
+      { id: deckId },
+      {
+        onSuccess: () => {
+          router.push('/your/decks');
+        },
+      },
+    );
+  }, [deleteDeck, deckId, router]);
+
+  const deleteButton = useMemo(
+    () => (
+      <Button size="sm" isIconOnly color="danger" isLoading={isPending}>
+        <TbTrash />
+      </Button>
+    ),
+    [isPending],
+  );
 
   if (!data) {
     return (
@@ -111,9 +137,19 @@ export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoP
             Close editing
           </Button>
         ) : (
-          <Button size="sm" onClick={setSelected}>
-            Edit
-          </Button>
+          <div className="flex flex-row gap-2 w-full">
+            <Button size="sm" onClick={setSelected}>
+              Edit
+            </Button>
+
+            <ConfirmationModal
+              trigger={deleteButton}
+              title="Delete deck"
+              content="All matches of this event will be deleted and deck will be unassigned from events."
+              onConfirm={onDeleteDeck}
+              confirmLoading={isPending}
+            />
+          </div>
         ))}
     </div>
   );

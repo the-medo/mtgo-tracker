@@ -59,7 +59,11 @@ export async function POST(req: Request) {
 export type MatchExtended = Prisma.MatchGetPayload<typeof matchExtension>;
 
 export async function GET(req: Request) {
-  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Match'>(req.url);
+  const session = await getServerSession(authOptions);
+  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Match'>(
+    req.url,
+    session?.user?.id,
+  );
 
   console.log('where', where, 'orderBy', orderBy);
 

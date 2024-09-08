@@ -43,7 +43,11 @@ export const gamePatchExtension = Prisma.validator<Prisma.GameDefaultArgs>()({})
 export type GameExtended = Prisma.GameGetPayload<typeof gameExtension>;
 
 export async function GET(req: Request) {
-  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Game'>(req.url);
+  const session = await getServerSession(authOptions);
+  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Game'>(
+    req.url,
+    session?.user?.id,
+  );
 
   const data: GameExtended[] = await prisma.game.findMany({
     where,

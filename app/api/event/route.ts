@@ -72,7 +72,11 @@ export const eventPatchExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
 export type EventExtended = Prisma.EventGetPayload<typeof eventExtension>;
 
 export async function GET(req: Request) {
-  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Event'>(req.url);
+  const session = await getServerSession(authOptions);
+  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Event'>(
+    req.url,
+    session?.user?.id,
+  );
 
   console.log('where', where, 'orderBy', orderBy);
 

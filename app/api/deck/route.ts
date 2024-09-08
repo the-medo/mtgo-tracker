@@ -86,7 +86,11 @@ export const deckPatchExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
 export type DeckExtended = Prisma.DeckGetPayload<typeof deckExtension>;
 
 export async function GET(req: Request) {
-  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Deck'>(req.url);
+  const session = await getServerSession(authOptions);
+  const { where, orderBy, skip, take } = parseQueryApiParamsForPrisma<'Deck'>(
+    req.url,
+    session?.user?.id,
+  );
 
   console.log('where', where, 'orderBy', orderBy);
 
