@@ -17,6 +17,7 @@ export enum QK {
   DECK_ARCHETYPE = 'deck-archetype',
   DECK = 'deck',
   EVENT = 'event',
+  EVENT_AGGREGATE = 'event-aggregate',
   MATCH = 'match',
   GAME = 'game',
   TAG = 'tag',
