@@ -18,6 +18,7 @@ export enum QK {
   DECK = 'deck',
   EVENT = 'event',
   EVENT_AGGREGATE = 'event-aggregate',
+  DASHBOARD_DAILY_MATCHES = 'dashboard-daily-matches',
   MATCH = 'match',
   GAME = 'game',
   TAG = 'tag',
