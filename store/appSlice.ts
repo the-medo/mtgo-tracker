@@ -5,6 +5,7 @@ import { Breakpoint } from '@/lib/hooks/useBreakpoint';
 export type AppState = {
   breakpoint: Breakpoint;
   isMenuOpen: boolean;
+  isStatModalOpen: boolean;
 };
 
 type AppStateType = keyof AppState;
@@ -12,6 +13,7 @@ type AppStateType = keyof AppState;
 export type AppActions = {
   setBreakpoint: (value: Breakpoint) => void;
   toggleIsMenuOpen: () => void;
+  toggleIsStatModalOpen: () => void;
 };
 
 export type AppSlice = AppState & AppActions;
@@ -19,6 +21,7 @@ export type AppSlice = AppState & AppActions;
 export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = set => ({
   breakpoint: 'md',
   isMenuOpen: false,
+  isStatModalOpen: false,
   setBreakpoint: (value: Breakpoint) => {
     set(state => ({
       ...state,
@@ -29,6 +32,12 @@ export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = set => 
     set(state => ({
       ...state,
       isMenuOpen: !state.isMenuOpen,
+    }));
+  },
+  toggleIsStatModalOpen: () => {
+    set(state => ({
+      ...state,
+      isStatModalOpen: !state.isStatModalOpen,
     }));
   },
 });

@@ -5,6 +5,7 @@ import EventBox from '@/components/app/events/EventBox';
 import Title from '@/components/typography/Title';
 import DashedBox from '@/components/layout/DashedBox';
 import { Spinner } from '@nextui-org/spinner';
+import { Link } from '@nextui-org/link';
 
 interface DashboardEventsProps {}
 
@@ -22,7 +23,12 @@ export default function DashboardEvents({}: DashboardEventsProps) {
 
   return (
     <div className="flex flex-col gap-4 w-1/3 min-w-[450px] grow">
-      <Title title="Recent events" />
+      <div className="flex flex-row gap-4 items-center">
+        <Title title="Recent events" />
+        <Link href="/your/events" size="sm">
+          view all
+        </Link>
+      </div>
       {items.length > 0 ? (
         items.map(i => <EventBox key={i.id} eventId={i.id} />)
       ) : isFetching ? (
