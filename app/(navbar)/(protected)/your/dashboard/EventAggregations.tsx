@@ -10,7 +10,7 @@ export default function EventAggregations({}: EventAggregationsProps) {
   const { data: aggregates } = useEventAggregates();
 
   return (
-    <div className={cn(`flex flex-col min-w-[300px] h-[200px] p-4 w-1/3 gap-2`)}>
+    <div className={cn(`flex flex-col min-w-[300px] h-[200px] w-1/3 gap-2`)}>
       <Title title="Event statistics" />
       <div className={cn(`flex flex-col p-4 w-full gap-2 rounded-md bg-default-100`)}>
         <div className="flex flex-row gap-4">

@@ -1,9 +1,14 @@
 'use client';
 
 import cn from 'classnames';
-import { useDailyMatches } from '@/app/api/dashboard/daily/matches/useDailyMatches';
-import { ResponsiveCalendar } from '@nivo/calendar';
-import { useMemo, useState } from 'react';
+import { DailyMatch, useDailyMatches } from '@/app/api/dashboard/daily/matches/useDailyMatches';
+import { CalendarDatum, CalendarTooltipProps, ResponsiveCalendar } from '@nivo/calendar';
+import { useCallback, useMemo, useState } from 'react';
+import DailyMatchCalendarTooltip from '@/app/(navbar)/(protected)/your/dashboard/DailyMatchCalendarTooltip';
+import Title from '@/components/typography/Title';
+import { Chip } from '@nextui-org/chip';
+
+export type DailyMatchCalendarData = CalendarDatum & DailyMatch;
 
 interface DailyMatchCalendarProps {}
 
@@ -12,7 +17,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
   const today = new Date();
   const [startDate, setStartDate] = useState<string>(`${today.getFullYear()}-01-01`);
 
-  const data = useMemo(
+  const data: DailyMatchCalendarData[] = useMemo(
     () =>
       (dailyMatches ?? []).map(d => ({
         ...d,
@@ -22,11 +27,36 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
     [dailyMatches],
   );
 
-  console.log({ data });
+  const total = useMemo(
+    () =>
+      (dailyMatches ?? []).reduce(
+        (pv, cv) => ({
+          wins: pv.wins + cv.matchWins,
+          loses: pv.loses + cv.matchLoses,
+          draws: pv.draws + cv.matchDraws,
+        }),
+        { wins: 0, loses: 0, draws: 0 },
+      ),
+    [dailyMatches],
+  );
+
+  const tooltip = useCallback(
+    (n: CalendarTooltipProps & { data?: DailyMatchCalendarData }) =>
+      n.data ? <DailyMatchCalendarTooltip data={n.data as DailyMatchCalendarData} /> : null,
+    [],
+  );
 
   return (
     <>
-      <div className={cn(`flex flex-col h-[200px] p-4 w-1/2 min-w-[400px] gap-2`)}>
+      <div className={cn(`flex flex-col h-[200px] w-1/2 min-w-[400px] gap-2`)}>
+        <div className="flex flex-row justify-between">
+          <Title title="Matches - 2024" />
+          {dailyMatches ? (
+            <Chip variant="solid" color="default">
+              Total: {total.wins}W {total.loses}L{total.draws > 0 ? ` ${total.draws}D` : ''}
+            </Chip>
+          ) : null}
+        </div>
         <ResponsiveCalendar
           from={startDate}
           to={today}
@@ -36,7 +66,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
           yearSpacing={40}
           monthBorderColor="#ffffff"
           dayBorderWidth={2}
-          tooltip={n => JSON.stringify(n)}
+          tooltip={tooltip}
           dayBorderColor="#ffffff"
         />
       </div>
