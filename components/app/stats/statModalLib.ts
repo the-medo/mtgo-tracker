@@ -2,6 +2,11 @@ import { DeckArchetype, MatchResult } from '@prisma/client';
 import { MatchExtended } from '@/app/api/match/route';
 import { GameExtended } from '@/app/api/game/route';
 
+export enum StatGrouping {
+  MATCH = 'match',
+  GAME = 'game',
+}
+
 export type ArchetypeMap = Record<
   number,
   | (DeckArchetype & { totalMatches: number; totalGames: number; matches: MatchExtended[] })

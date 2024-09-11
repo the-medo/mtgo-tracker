@@ -15,6 +15,7 @@ import {
   StatData,
 } from '@/components/app/stats/statModalLib';
 import StatBarChart from '@/components/app/stats/StatBarChart';
+import StatSettings from '@/components/app/stats/StatSettings';
 
 interface StatModalProps {
   matchData: MatchExtended[];
@@ -97,11 +98,18 @@ export default function StatModal({ matchData }: StatModalProps) {
           {onClose => (
             <>
               <ModalBody>
-                <div className="flex flex-row flex-wrap gap-4">
-                  <div className="h-[400px] min-w-[400px] w-1/2">
-                    <StatBarChart statData={statData} />
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-row gap-4 w-full">
+                    <StatSettings />
                   </div>
-                  <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">Matches...</div>
+                  <div className="flex flex-row flex-wrap gap-4">
+                    <div className="h-[400px] min-w-[400px] w-1/2">
+                      <StatBarChart statData={statData} />
+                    </div>
+                    <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">
+                      Matches...
+                    </div>
+                  </div>
                 </div>
               </ModalBody>
               <ModalFooter>
