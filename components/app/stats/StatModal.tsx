@@ -4,28 +4,31 @@ import { Button } from '@nextui-org/button';
 import { TbChartBar } from 'react-icons/tb';
 import { MatchExtended } from '@/app/api/match/route';
 import { useMemo } from 'react';
-import { DeckArchetype, MatchResult } from '@prisma/client';
-import { ResponsiveBar } from '@nivo/bar';
-import { BarDatum } from '@nivo/bar/dist/types/types';
-import { GameExtended } from '@/app/api/game/route';
 import {
+  addMatchToDistributions,
   ArchetypeMap,
+  GameDistribution,
+  getEmptyGameDistribution,
   getEmptyMatchDistribution,
+  getEmptyStatData,
   MatchDistribution,
+  StatData,
 } from '@/components/app/stats/statModalLib';
+import StatBarChart from '@/components/app/stats/StatBarChart';
 
 interface StatModalProps {
-  data: MatchExtended[];
+  matchData: MatchExtended[];
 }
 
-export default function StatModal({ data }: StatModalProps) {
+export default function StatModal({ matchData }: StatModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const { archetypeMap, archetypeList } = useMemo(() => {
+  const statData = useMemo(() => {
+    const r: StatData = getEmptyStatData();
     const amap: ArchetypeMap = {};
     const alist: number[] = [];
 
-    data.forEach(m => {
+    matchData.forEach(m => {
       if (m.oppArchetype) {
         const oaid = m.oppArchetype.id;
 
@@ -40,53 +43,42 @@ export default function StatModal({ data }: StatModalProps) {
       }
     });
 
-    return { archetypeMap: amap, archetypeList: alist };
-  }, [data]);
-
-  const chartData = useMemo(() => {
-    const result: BarDatum[] = [];
-
-    const sortedArchetypes = archetypeList.toSorted(
-      (a1, a2) => (archetypeMap[a2]?.totalMatches ?? 0) - (archetypeMap[a1]?.totalMatches ?? 0),
+    const sortedArchetypes = alist.toSorted(
+      (a1, a2) => (amap[a2]?.totalMatches ?? 0) - (amap[a1]?.totalMatches ?? 0),
     );
 
-    sortedArchetypes.forEach(a => {
-      const arch = archetypeMap[a];
+    r.archetypeMap = amap;
+    r.archetypeList = sortedArchetypes;
+
+    const matchDistribution: MatchDistribution = getEmptyMatchDistribution();
+    const gameDistribution: GameDistribution = getEmptyGameDistribution();
+
+    r.archetypeList.forEach(a => {
+      const arch = r.archetypeMap[a];
       if (arch) {
-        const matchDistribution: MatchDistribution = getEmptyMatchDistribution();
-        const matchesOnTheDraw = [];
+        if (!r.byArchetype[a]) {
+          r.byArchetype[a] = {
+            matchDistribution: getEmptyMatchDistribution(),
+            gameDistribution: getEmptyGameDistribution(),
+          };
+        }
 
         arch.matches.forEach(m => {
-          if (!m.result) return;
-          matchDistribution.matchMap[m.id] = m;
-          const firstGame = m.Games.find(g => g.gameNumber === 1);
-          if (firstGame) {
-            if (firstGame.isOnPlay) {
-              matchDistribution.onThePlay.matchList.push(m.id);
-              matchDistribution.onThePlay[m.result].push(m.id);
-            } else {
-              matchDistribution.onTheDraw.matchList.push(m.id);
-              matchDistribution.onTheDraw[m.result].push(m.id);
-            }
-          }
-        });
-
-        result.push({
-          archetype: arch.name,
-          'Win [on the play]': matchDistribution.onThePlay[MatchResult.WIN].length,
-          'Win [on the draw]': matchDistribution.onTheDraw[MatchResult.WIN].length,
-          'Draw [on the play]': matchDistribution.onThePlay[MatchResult.DRAW].length,
-          'Draw [on the draw]': matchDistribution.onTheDraw[MatchResult.DRAW].length,
-          'Lose [on the play]': matchDistribution.onThePlay[MatchResult.LOSE].length,
-          'Lose [on the draw]': matchDistribution.onTheDraw[MatchResult.LOSE].length,
+          addMatchToDistributions(matchDistribution, gameDistribution, m);
+          addMatchToDistributions(
+            r.byArchetype[a]!.matchDistribution,
+            r.byArchetype[a]!.gameDistribution,
+            m,
+          );
         });
       }
     });
 
-    return result;
-  }, [archetypeList, archetypeMap]);
+    r.matchDistribution = matchDistribution;
+    r.gameDistribution = gameDistribution;
 
-  console.log({ chartData });
+    return r;
+  }, [matchData]);
 
   return (
     <>
@@ -100,43 +92,16 @@ export default function StatModal({ data }: StatModalProps) {
       >
         <TbChartBar size={28} />
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
-        <ModalContent className="p-2 pt-6">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="full">
+        <ModalContent className="p-2 pt-6 overflow-x-hidden">
           {onClose => (
             <>
               <ModalBody>
-                <div className="h-[400px] w-full">
-                  <ResponsiveBar
-                    data={chartData}
-                    indexBy="archetype"
-                    keys={[
-                      'Win [on the play]',
-                      'Win [on the draw]',
-                      'Draw [on the play]',
-                      'Draw [on the draw]',
-                      'Lose [on the play]',
-                      'Lose [on the draw]',
-                    ]}
-                    padding={0.3}
-                    valueScale={{ type: 'linear' }}
-                    indexScale={{ type: 'band', round: true }}
-                    margin={{ top: 50, bottom: 100, left: 50 }}
-                    colors={{ scheme: 'nivo' }}
-                    axisTop={null}
-                    axisRight={null}
-                    axisBottom={{
-                      tickSize: 5,
-                      tickPadding: 5,
-                      tickRotation: 45,
-                      truncateTickAt: 0,
-                    }}
-                    axisLeft={{
-                      tickSize: 1,
-                      tickPadding: 5,
-                      tickRotation: 0,
-                      truncateTickAt: 0,
-                    }}
-                  />
+                <div className="flex flex-row flex-wrap gap-4">
+                  <div className="h-[400px] min-w-[400px] w-1/2">
+                    <StatBarChart statData={statData} />
+                  </div>
+                  <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">Matches...</div>
                 </div>
               </ModalBody>
               <ModalFooter>

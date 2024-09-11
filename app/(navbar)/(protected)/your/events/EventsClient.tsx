@@ -34,7 +34,7 @@ export default function EventsClient({}: Props) {
         ))}
         {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
       </div>
-      <StatModal data={statData} />
+      <StatModal matchData={statData} />
     </>
   );
 }

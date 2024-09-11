@@ -34,9 +34,9 @@ export const getEmptyMatchDistribution = (): MatchDistribution => ({
 
 // ---------- Games
 
-type OpeningHandSize = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type OpeningHandSize = 4 | 5 | 6 | 7;
 
-type OpeningSizeGames = GameList & Record<OpeningHandSize, number[]>;
+type OpeningSizeGames = GameList & Record<OpeningHandSize, Record<MatchResult, number[]>>;
 type GameList = { gameList: number[] };
 type GameDistributionResult = GameList & Record<OpeningHandSize, OpeningSizeGames>;
 
@@ -45,31 +45,30 @@ export type GameDistribution = {
   onThePlay: GameDistributionResult;
   onTheDraw: GameDistributionResult;
 };
+
+const getEmptyOpeningSizeGamePart = (): Record<MatchResult, number[]> => ({
+  [MatchResult.WIN]: [],
+  [MatchResult.DRAW]: [],
+  [MatchResult.LOSE]: [],
+});
+
 const getEmptyOpeningSizeGames = (): OpeningSizeGames => ({
   gameList: [],
-  0: [],
-  1: [],
-  2: [],
-  3: [],
-  4: [],
-  5: [],
-  6: [],
-  7: [],
+  4: getEmptyOpeningSizeGamePart(),
+  5: getEmptyOpeningSizeGamePart(),
+  6: getEmptyOpeningSizeGamePart(),
+  7: getEmptyOpeningSizeGamePart(),
 });
 
 const getEmptyGameDistributionResult = (): GameDistributionResult => ({
   gameList: [],
-  0: getEmptyOpeningSizeGames(),
-  1: getEmptyOpeningSizeGames(),
-  2: getEmptyOpeningSizeGames(),
-  3: getEmptyOpeningSizeGames(),
   4: getEmptyOpeningSizeGames(),
   5: getEmptyOpeningSizeGames(),
   6: getEmptyOpeningSizeGames(),
   7: getEmptyOpeningSizeGames(),
 });
 
-const getEmptyGameDistribution = (): GameDistribution => ({
+export const getEmptyGameDistribution = (): GameDistribution => ({
   gameMap: {},
   onThePlay: getEmptyGameDistributionResult(),
   onTheDraw: getEmptyGameDistributionResult(),
@@ -79,12 +78,63 @@ const getEmptyGameDistribution = (): GameDistribution => ({
 
 export type StatData = {
   archetypeMap: ArchetypeMap;
+  archetypeList: number[];
   matchDistribution: MatchDistribution;
   gameDistribution: GameDistribution;
+  byArchetype: Record<
+    number,
+    | {
+        matchDistribution: MatchDistribution;
+        gameDistribution: GameDistribution;
+      }
+    | undefined
+  >;
 };
 
-const getEmptyStatData = (): StatData => ({
+export const getEmptyStatData = (): StatData => ({
   archetypeMap: {},
+  archetypeList: [],
   matchDistribution: getEmptyMatchDistribution(),
   gameDistribution: getEmptyGameDistribution(),
+  byArchetype: {},
 });
+
+// ===============
+
+export const addMatchToDistributions = (
+  matchDistribution: MatchDistribution,
+  gameDistribution: GameDistribution,
+  m: MatchExtended,
+) => {
+  if (!m.result) return;
+
+  matchDistribution.matchMap[m.id] = m;
+  const firstGame = m.Games.find(g => g.gameNumber === 1);
+  if (firstGame) {
+    if (firstGame.isOnPlay) {
+      matchDistribution.onThePlay.matchList.push(m.id);
+      matchDistribution.onThePlay[m.result].push(m.id);
+    } else {
+      matchDistribution.onTheDraw.matchList.push(m.id);
+      matchDistribution.onTheDraw[m.result].push(m.id);
+    }
+  }
+
+  m.Games.forEach(g => {
+    if (!g.result || !g.startingHand || !g.oppStartingHand) return;
+    gameDistribution.gameMap[g.id] = g;
+
+    const playerHandSize = (g.startingHand < 4 ? 4 : g.startingHand) as OpeningHandSize;
+    const oppHandSize = (g.oppStartingHand < 4 ? 4 : g.oppStartingHand) as OpeningHandSize;
+
+    if (g.isOnPlay) {
+      gameDistribution.onThePlay.gameList.push(g.id);
+      gameDistribution.onThePlay[playerHandSize].gameList.push(g.id);
+      gameDistribution.onThePlay[playerHandSize][oppHandSize][g.result].push(g.id);
+    } else {
+      gameDistribution.onTheDraw.gameList.push(g.id);
+      gameDistribution.onTheDraw[playerHandSize].gameList.push(g.id);
+      gameDistribution.onTheDraw[playerHandSize][oppHandSize][g.result].push(g.id);
+    }
+  });
+};
