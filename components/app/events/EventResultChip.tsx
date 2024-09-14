@@ -19,7 +19,7 @@ export default function EventResultChip({ eventId }: EventResultChipProps) {
   const matchResults = useMemo(() => {
     const results = {
       wins: 0,
-      loses: 0,
+      losses: 0,
       draws: 0,
     };
 
@@ -27,7 +27,7 @@ export default function EventResultChip({ eventId }: EventResultChipProps) {
       if (m.result === MatchResult.WIN) {
         results.wins++;
       } else if (m.result === MatchResult.LOSE) {
-        results.loses++;
+        results.losses++;
       } else if (m.result === MatchResult.DRAW) {
         results.draws++;
       }
@@ -38,7 +38,7 @@ export default function EventResultChip({ eventId }: EventResultChipProps) {
 
   return (
     <Chip size="lg" radius="sm" variant="solid" color={chipColor}>
-      {matchResults.wins}-{matchResults.loses}
+      {matchResults.wins}-{matchResults.losses}
       {matchResults.draws ? `-${matchResults.draws}` : ''}
     </Chip>
   );

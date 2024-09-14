@@ -160,7 +160,7 @@ export default function StatBarChart({}: StatBarChartProps) {
 
   const axisBottom = useMemo(
     () => ({
-      tickSize: 5,
+      tickSize: 0,
       tickPadding: 5,
       tickRotation: 60,
       truncateTickAt: 0,

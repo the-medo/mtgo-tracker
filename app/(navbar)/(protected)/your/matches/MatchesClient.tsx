@@ -17,6 +17,7 @@ import { MatchExtended } from '@/app/api/match/route';
 import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
 import MatchBox from '@/components/app/matches/MatchBox';
 import { MatchResult } from '@prisma/client';
+import StatModal from '@/components/app/stats/StatModal';
 
 const TABLE_ID = 'MATCHES';
 
@@ -147,6 +148,7 @@ export default function MatchesClient({}: Props) {
         <MatchBox key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
       ))}
       {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
+      <StatModal matchData={items} />
     </div>
   );
 }

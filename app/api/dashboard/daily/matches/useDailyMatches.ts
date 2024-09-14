@@ -6,7 +6,7 @@ import { QK } from '@/app/api/queryHelpers';
 export type DailyMatch = {
   matchDate: string;
   matchWins: number;
-  matchLoses: number;
+  matchLosses: number;
   matchDraws: number;
 };
 

@@ -55,23 +55,7 @@ export default function NavMenuLeftContent({ isAuthenticated, isAdmin }: NavMenu
                   href="/your/dashboard"
                   className={getActiveStyle('/your/dashboard')}
                 >
-                  Your dashboard
-                </ListboxItem>
-                <ListboxItem
-                  key="your-matches"
-                  startContent={matchIcon}
-                  href="/your/matches"
-                  className={getActiveStyle('/your/matches')}
-                >
-                  Your matches
-                </ListboxItem>
-                <ListboxItem
-                  key="your-events"
-                  startContent={eventIcon}
-                  href="/your/events"
-                  className={getActiveStyle('/your/events')}
-                >
-                  Your events
+                  Dashboard
                 </ListboxItem>
                 <ListboxItem
                   key="your-decks"
@@ -79,7 +63,23 @@ export default function NavMenuLeftContent({ isAuthenticated, isAdmin }: NavMenu
                   href="/your/decks"
                   className={getActiveStyle('/your/decks')}
                 >
-                  Your decks
+                  Decks
+                </ListboxItem>
+                <ListboxItem
+                  key="your-events"
+                  startContent={eventIcon}
+                  href="/your/events"
+                  className={getActiveStyle('/your/events')}
+                >
+                  Events
+                </ListboxItem>
+                <ListboxItem
+                  key="your-matches"
+                  startContent={matchIcon}
+                  href="/your/matches"
+                  className={getActiveStyle('/your/matches')}
+                >
+                  Matches
                 </ListboxItem>
               </ListboxSection>
               <ListboxSection title="SETTINGS">

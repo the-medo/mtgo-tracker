@@ -11,7 +11,7 @@ interface DashboardDecksProps {}
 
 export default function DashboardDecks({}: DashboardDecksProps) {
   const filters: GetDecksRequest = {
-    take: 3,
+    take: 5,
     orderBy: {
       id: 'desc',
     },

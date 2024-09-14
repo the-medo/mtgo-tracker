@@ -22,8 +22,6 @@ export default function EventsClient({}: Props) {
   const items = useMemo(() => data?.pages?.flat() ?? [], [data?.pages]);
   const statData = useMemo(() => items.map(i => i.Matches).flat(), [items]);
 
-  console.log({ statData });
-
   return (
     <>
       <div className="flex flex-col gap-4">

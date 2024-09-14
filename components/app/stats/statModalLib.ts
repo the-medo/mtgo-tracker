@@ -198,17 +198,17 @@ export const statKeyInfo: StatKeyInfo = {
   },
   l: {
     color: '#dda3a0',
-    label: 'Loses',
+    label: 'Losses',
     matchResult: MatchResult.LOSE,
   },
   ld: {
     color: '#dda3a0',
-    label: 'Loses (on the draw)',
+    label: 'Losses (on the draw)',
     matchResult: MatchResult.LOSE,
   },
   lp: {
     color: '#cd746b',
-    label: 'Loses (on the play)',
+    label: 'Losses (on the play)',
     matchResult: MatchResult.LOSE,
   },
 };

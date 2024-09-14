@@ -11,7 +11,7 @@ interface DashboardEventsProps {}
 
 export default function DashboardEvents({}: DashboardEventsProps) {
   const filters: GetEventsRequest = {
-    take: 3,
+    take: 4,
     orderBy: {
       id: 'desc',
     },

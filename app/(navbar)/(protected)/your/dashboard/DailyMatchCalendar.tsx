@@ -21,7 +21,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
     () =>
       (dailyMatches ?? []).map(d => ({
         ...d,
-        value: d.matchDraws + d.matchWins - d.matchLoses,
+        value: d.matchDraws + d.matchWins - d.matchLosses,
         day: d.matchDate.slice(0, 10),
       })),
     [dailyMatches],
@@ -32,10 +32,10 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
       (dailyMatches ?? []).reduce(
         (pv, cv) => ({
           wins: pv.wins + cv.matchWins,
-          loses: pv.loses + cv.matchLoses,
+          losses: pv.losses + cv.matchLosses,
           draws: pv.draws + cv.matchDraws,
         }),
-        { wins: 0, loses: 0, draws: 0 },
+        { wins: 0, losses: 0, draws: 0 },
       ),
     [dailyMatches],
   );
@@ -53,7 +53,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
           <Title title="Matches - 2024" />
           {dailyMatches ? (
             <Chip variant="solid" color="default">
-              Total: {total.wins}W {total.loses}L{total.draws > 0 ? ` ${total.draws}D` : ''}
+              Total: {total.wins}W {total.losses}L{total.draws > 0 ? ` ${total.draws}D` : ''}
             </Chip>
           ) : null}
         </div>

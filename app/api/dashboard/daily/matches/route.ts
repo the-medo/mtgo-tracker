@@ -19,7 +19,7 @@ export async function GET(req: Request, { params }: { params: {} }) {
     SELECT 
       DATE("public"."Match"."startTime") as "matchDate", 
       SUM(CASE WHEN "public"."Match"."result" = 'WIN' THEN 1 ELSE 0 END) as "matchWins",
-      SUM(CASE WHEN "public"."Match"."result" = 'LOSE' THEN 1 ELSE 0 END) as "matchLoses",
+      SUM(CASE WHEN "public"."Match"."result" = 'LOSE' THEN 1 ELSE 0 END) as "matchLosses",
       SUM(CASE WHEN "public"."Match"."result" = 'DRAW' THEN 1 ELSE 0 END) as "matchDraws"
     FROM "public"."Match"
     WHERE 
@@ -31,7 +31,7 @@ export async function GET(req: Request, { params }: { params: {} }) {
   const processedData = (data as DailyMatch[]).map(row => ({
     matchDate: row.matchDate,
     matchWins: Number(row.matchWins),
-    matchLoses: Number(row.matchLoses),
+    matchLosses: Number(row.matchLosses),
     matchDraws: Number(row.matchDraws),
   }));
 

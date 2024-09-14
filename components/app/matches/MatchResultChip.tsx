@@ -19,14 +19,14 @@ export default function MatchResultChip({ matchId, size = 'lg' }: MatchResultChi
   const gameResults = useMemo(() => {
     const results = {
       wins: 0,
-      loses: 0,
+      losses: 0,
       draws: 0,
     };
     match?.Games.forEach(g => {
       if (g.result === MatchResult.WIN) {
         results.wins++;
       } else if (g.result === MatchResult.LOSE) {
-        results.loses++;
+        results.losses++;
       } else if (g.result === MatchResult.DRAW) {
         results.draws++;
       }
@@ -37,7 +37,7 @@ export default function MatchResultChip({ matchId, size = 'lg' }: MatchResultChi
 
   return (
     <Chip size={size} radius="sm" variant="solid" color={chipColor}>
-      {gameResults.wins}-{gameResults.loses}
+      {gameResults.wins}-{gameResults.losses}
       {gameResults.draws ? `-${gameResults.draws}` : ''}
     </Chip>
   );
