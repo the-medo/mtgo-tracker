@@ -18,6 +18,7 @@ export async function getMatch(matchId: number) {
 
   const parsedMatch = parseMatch(data);
 
+  queryClient.setQueryData([QK.MATCH, matchId], parsedMatch);
   parsedMatch.Games.forEach(g => {
     queryClient.setQueryData([QK.GAME, g.id], g);
   });

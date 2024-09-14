@@ -17,6 +17,7 @@ import {
 import StatBarChart from '@/components/app/stats/StatBarChart';
 import StatSettings from '@/components/app/stats/StatSettings';
 import useStore from '@/store/store';
+import StatArchetypeMatches from '@/components/app/stats/StatArchetypeMatches';
 
 interface StatModalProps {
   matchData: MatchExtended[];
@@ -108,8 +109,10 @@ export default function StatModal({ matchData }: StatModalProps) {
                         <StatBarChart />
                       </div>
                     </div>
-                    <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">
-                      Matches...
+                    <div className="flex flex-row grow min-w-[400px] w-1/3 h-[calc(100vh-100px)]">
+                      <div className="flex flex-col w-full gap-2 overflow-y-auto">
+                        <StatArchetypeMatches />
+                      </div>
                     </div>
                   </div>
                 </div>

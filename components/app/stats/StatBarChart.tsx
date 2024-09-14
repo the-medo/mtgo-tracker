@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { BarDatum } from '@nivo/bar/dist/types/types';
+import { BarDatum, ComputedDatum } from '@nivo/bar/dist/types/types';
 import { MatchResult } from '@prisma/client';
 import {
   openingHandSizeArray,
   startingPlayerKeyArray,
+  StatBarChartData,
   statBaseKeys,
-  StatData,
   StatGrouping,
   statKeyInfo,
 } from '@/components/app/stats/statModalLib';
@@ -17,6 +17,7 @@ interface StatBarChartProps {}
 
 export default function StatBarChart({}: StatBarChartProps) {
   const statGrouping = useStore(state => state.statGrouping);
+  const setStatSelectedArchetypeId = useStore(state => state.setStatSelectedArchetypeId);
   const isStatDiverging = useStore(state => state.isStatDiverging);
   const isByStartingPlayer = useStore(state => state.isStatByStartingPlayer);
   const isByOpeningHand = useStore(state => state.isStatByOpeningHand);
@@ -24,13 +25,13 @@ export default function StatBarChart({}: StatBarChartProps) {
 
   const chartData = useMemo(() => {
     const dvgMultiplicator = isStatDiverging ? -1 : 1;
-    const result: BarDatum[] = [];
+    const result: StatBarChartData[] = [];
 
     archetypeList.forEach(a => {
       const arch = archetypeMap[a];
       const adist = byArchetype[a];
       if (arch && adist) {
-        const x: BarDatum = {
+        const x: StatBarChartData = {
           archetype: arch.id,
         };
 
@@ -152,14 +153,10 @@ export default function StatBarChart({}: StatBarChartProps) {
     };
   }, []);
 
-  console.log({ barKeys, barColors });
-
   const tooltip = useCallback(
     (n: { data?: BarDatum }) => (n.data ? <StatBarChartTooltip data={n.data as BarDatum} /> : null),
     [],
   );
-
-  //archetypeMap
 
   const axisBottom = useMemo(
     () => ({
@@ -172,8 +169,15 @@ export default function StatBarChart({}: StatBarChartProps) {
     [archetypeMap],
   );
 
+  const onClickHandler = useCallback(
+    (datum: ComputedDatum<StatBarChartData>) => {
+      setStatSelectedArchetypeId(datum.data.archetype);
+    },
+    [setStatSelectedArchetypeId],
+  );
+
   return (
-    <ResponsiveBar
+    <ResponsiveBar<StatBarChartData>
       data={chartData}
       indexBy="archetype"
       colorBy="id"
@@ -192,7 +196,7 @@ export default function StatBarChart({}: StatBarChartProps) {
         tickRotation: 0,
         truncateTickAt: 0,
       }}
-      onClick={e => console.log(e)}
+      onClick={onClickHandler}
       tooltip={tooltip}
     />
   );

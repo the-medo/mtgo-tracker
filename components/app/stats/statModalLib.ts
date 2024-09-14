@@ -2,6 +2,7 @@ import { DeckArchetype, MatchResult } from '@prisma/client';
 import { MatchExtended } from '@/app/api/match/route';
 import { GameExtended } from '@/app/api/game/route';
 import { CSSProperties } from 'react';
+import { BarDatum } from '@nivo/bar/dist/types/types';
 
 export enum StatGrouping {
   MATCH = 'match',
@@ -154,6 +155,7 @@ export const addMatchToDistributions = (
 };
 
 //================ bar chart keys and colors
+export type StatBarChartData = BarDatum & { archetype: number };
 type StatKeyInfo = Record<
   string,
   {
