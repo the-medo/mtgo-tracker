@@ -1,8 +1,9 @@
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { StatGrouping } from '@/components/app/stats/statModalLib';
+import { getEmptyStatData, StatData, StatGrouping } from '@/components/app/stats/statModalLib';
 
 export type StatState = {
+  statData: StatData;
   statGrouping: StatGrouping;
   isStatDiverging: boolean;
   isStatByStartingPlayer: boolean;
@@ -12,6 +13,7 @@ export type StatState = {
 type StatStateType = keyof StatState;
 
 export type StatActions = {
+  setStatData: (value: StatData) => void;
   setStatGrouping: (value: StatGrouping) => void;
   toggleIsStatDiverging: () => void;
   toggleIsStatByStartingPlayer: () => void;
@@ -21,10 +23,17 @@ export type StatActions = {
 export type StatSlice = StatState & StatActions;
 
 export const createStatSlice: StateCreator<AllSlices, [], [], StatSlice> = set => ({
+  statData: getEmptyStatData(),
   statGrouping: StatGrouping.MATCH,
   isStatDiverging: true,
   isStatByStartingPlayer: true,
   isStatByOpeningHand: false,
+  setStatData: (value: StatData) => {
+    set(state => ({
+      ...state,
+      statData: value,
+    }));
+  },
   setStatGrouping: (value: StatGrouping) => {
     set(state => ({
       ...state,

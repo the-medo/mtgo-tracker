@@ -3,7 +3,7 @@ import { Modal, ModalBody, ModalContent, ModalFooter } from '@nextui-org/modal';
 import { Button } from '@nextui-org/button';
 import { TbChartBar } from 'react-icons/tb';
 import { MatchExtended } from '@/app/api/match/route';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   addMatchToDistributions,
   ArchetypeMap,
@@ -16,15 +16,17 @@ import {
 } from '@/components/app/stats/statModalLib';
 import StatBarChart from '@/components/app/stats/StatBarChart';
 import StatSettings from '@/components/app/stats/StatSettings';
+import useStore from '@/store/store';
 
 interface StatModalProps {
   matchData: MatchExtended[];
 }
 
 export default function StatModal({ matchData }: StatModalProps) {
+  const setStatData = useStore(state => state.setStatData);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const statData = useMemo(() => {
+  useEffect(() => {
     const r: StatData = getEmptyStatData();
     const amap: ArchetypeMap = {};
     const alist: number[] = [];
@@ -78,7 +80,7 @@ export default function StatModal({ matchData }: StatModalProps) {
     r.matchDistribution = matchDistribution;
     r.gameDistribution = gameDistribution;
 
-    return r;
+    setStatData(r);
   }, [matchData]);
 
   return (
@@ -103,7 +105,7 @@ export default function StatModal({ matchData }: StatModalProps) {
                     <div className="flex flex-col gap-4 w-1/2">
                       <StatSettings />
                       <div className="h-[400px] min-w-[400px]">
-                        <StatBarChart statData={statData} />
+                        <StatBarChart />
                       </div>
                     </div>
                     <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">

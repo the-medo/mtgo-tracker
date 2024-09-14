@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { BarDatum } from '@nivo/bar/dist/types/types';
 import { MatchResult } from '@prisma/client';
 import {
-  getOpeningHandSizeMatrixInArray,
   openingHandSizeArray,
-  StartingPlayerKey,
   startingPlayerKeyArray,
   statBaseKeys,
   StatData,
@@ -13,18 +11,16 @@ import {
 } from '@/components/app/stats/statModalLib';
 import { ResponsiveBar } from '@nivo/bar';
 import useStore from '@/store/store';
+import StatBarChartTooltip from '@/components/app/stats/StatBarChartTooltip';
 
-interface StatBarChartProps {
-  statData: StatData;
-}
+interface StatBarChartProps {}
 
-export default function StatBarChart({ statData }: StatBarChartProps) {
+export default function StatBarChart({}: StatBarChartProps) {
   const statGrouping = useStore(state => state.statGrouping);
   const isStatDiverging = useStore(state => state.isStatDiverging);
   const isByStartingPlayer = useStore(state => state.isStatByStartingPlayer);
   const isByOpeningHand = useStore(state => state.isStatByOpeningHand);
-
-  const { archetypeList, archetypeMap, byArchetype } = statData;
+  const { archetypeList, archetypeMap, byArchetype } = useStore(state => state.statData);
 
   const chartData = useMemo(() => {
     const dvgMultiplicator = isStatDiverging ? -1 : 1;
@@ -35,7 +31,7 @@ export default function StatBarChart({ statData }: StatBarChartProps) {
       const adist = byArchetype[a];
       if (arch && adist) {
         const x: BarDatum = {
-          archetype: arch.name,
+          archetype: arch.id,
         };
 
         if (statGrouping === StatGrouping.MATCH) {
@@ -158,6 +154,24 @@ export default function StatBarChart({ statData }: StatBarChartProps) {
 
   console.log({ barKeys, barColors });
 
+  const tooltip = useCallback(
+    (n: { data?: BarDatum }) => (n.data ? <StatBarChartTooltip data={n.data as BarDatum} /> : null),
+    [],
+  );
+
+  //archetypeMap
+
+  const axisBottom = useMemo(
+    () => ({
+      tickSize: 5,
+      tickPadding: 5,
+      tickRotation: 60,
+      truncateTickAt: 0,
+      format: (x: number) => archetypeMap[x]?.name ?? '- unknown archetype -',
+    }),
+    [archetypeMap],
+  );
+
   return (
     <ResponsiveBar
       data={chartData}
@@ -168,22 +182,18 @@ export default function StatBarChart({ statData }: StatBarChartProps) {
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
-      margin={{ top: 50, bottom: 100, left: 50 }}
-      // colors={{ scheme: 'nivo' }}
+      margin={{ top: 50, bottom: 100, left: 50, right: 50 }}
       axisTop={null}
       axisRight={null}
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 45,
-        truncateTickAt: 0,
-      }}
+      axisBottom={axisBottom}
       axisLeft={{
         tickSize: 1,
         tickPadding: 5,
         tickRotation: 0,
         truncateTickAt: 0,
       }}
+      onClick={e => console.log(e)}
+      tooltip={tooltip}
     />
   );
 }
