@@ -2,7 +2,7 @@ import { Tab, Tabs } from '@nextui-org/tabs';
 import { StatGrouping } from '@/components/app/stats/statModalLib';
 import Title from '@/components/typography/Title';
 import useStore from '@/store/store';
-import { Key, useCallback } from 'react';
+import { Key, useCallback, useMemo } from 'react';
 
 export default function StatSettings() {
   const statGrouping = useStore(state => state.statGrouping);
@@ -18,6 +18,11 @@ export default function StatSettings() {
   const handleGroupingChange = useCallback(
     (k: Key) => setGrouping(k as StatGrouping),
     [setGrouping],
+  );
+
+  const openingHandDisabledKeys = useMemo(
+    () => (statGrouping === StatGrouping.MATCH ? ['true', 'false'] : undefined),
+    [statGrouping],
   );
 
   return (
@@ -59,6 +64,7 @@ export default function StatSettings() {
             aria-label="Options"
             selectedKey={isByOpeningHand ? 'true' : 'false'}
             onSelectionChange={toggleIsByOpeningHand}
+            disabledKeys={openingHandDisabledKeys}
           >
             <Tab key="true" title="Opening hand size" />
             <Tab key="false" title="No" />

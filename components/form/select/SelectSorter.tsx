@@ -83,6 +83,8 @@ export default function SelectSorter<T extends Prisma.ModelName>({
     [onChange, finalData],
   );
 
+  console.log({ finalData });
+
   return (
     <Select
       size="sm"

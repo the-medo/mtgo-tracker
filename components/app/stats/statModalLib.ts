@@ -1,6 +1,7 @@
 import { DeckArchetype, MatchResult } from '@prisma/client';
 import { MatchExtended } from '@/app/api/match/route';
 import { GameExtended } from '@/app/api/game/route';
+import { CSSProperties } from 'react';
 
 export enum StatGrouping {
   MATCH = 'match',
@@ -17,6 +18,14 @@ export type ArchetypeMap = Record<
 
 type MatchList = { matchList: number[] };
 type MatchDistributionResult = MatchList & Record<MatchResult, number[]>;
+
+export type StartingPlayerKey = 'onThePlay' | 'onTheDraw';
+export const startingPlayerKeyArray: StartingPlayerKey[] = ['onThePlay', 'onTheDraw'];
+export const MatchResultArray: MatchResult[] = [
+  MatchResult.WIN,
+  MatchResult.DRAW,
+  MatchResult.LOSE,
+];
 
 export type MatchDistribution = {
   matchMap: Record<number, MatchExtended>;
@@ -142,4 +151,118 @@ export const addMatchToDistributions = (
       gameDistribution.onTheDraw[playerHandSize][oppHandSize][g.result].push(g.id);
     }
   });
+};
+
+//================ bar chart keys and colors
+type StatKeyInfo = Record<
+  string,
+  {
+    color: CSSProperties['color'];
+    label: string;
+    matchResult: MatchResult;
+  }
+>;
+
+export const statKeyInfo: StatKeyInfo = {
+  w: {
+    color: '#1aa122',
+    label: 'Wins',
+    matchResult: MatchResult.WIN,
+  },
+  wp: {
+    color: '#1aa122',
+    label: 'Wins (on the play)',
+    matchResult: MatchResult.WIN,
+  },
+  wd: {
+    color: '#75d178',
+    label: 'Wins (on the draw)',
+    matchResult: MatchResult.WIN,
+  },
+  d: {
+    color: '#dcad14',
+    label: 'Draws',
+    matchResult: MatchResult.DRAW,
+  },
+  dp: {
+    color: '#dcad14',
+    label: 'Draws (on the play)',
+    matchResult: MatchResult.DRAW,
+  },
+  dd: {
+    color: '#dcd214',
+    label: 'Draws (on the draw)',
+    matchResult: MatchResult.DRAW,
+  },
+  l: {
+    color: '#dda3a0',
+    label: 'Loses',
+    matchResult: MatchResult.LOSE,
+  },
+  ld: {
+    color: '#dda3a0',
+    label: 'Loses (on the draw)',
+    matchResult: MatchResult.LOSE,
+  },
+  lp: {
+    color: '#cd746b',
+    label: 'Loses (on the play)',
+    matchResult: MatchResult.LOSE,
+  },
+};
+
+export const statBaseKeys: Record<StartingPlayerKey | 'none', string[]> = {
+  none: ['w', 'd', 'l'],
+  onThePlay: ['wp', 'dp', 'lp'],
+  onTheDraw: ['wd', 'dd', 'ld'],
+};
+
+export const openingHandSizeArray: OpeningHandSize[] = [7, 6, 5, 4];
+
+const fillStatKeyInfo = () => {
+  const baseKeys = Object.keys(statKeyInfo);
+
+  const hexSuffixes = [
+    '60',
+    '68',
+    '70',
+    '78',
+    '80',
+    '88',
+    '90',
+    '98',
+    'a0',
+    'a8',
+    'b0',
+    'b8',
+    'c0',
+    'c8',
+    'd0',
+    'e0',
+  ];
+
+  openingHandSizeArray.forEach(o1 => {
+    openingHandSizeArray.forEach(o2 => {
+      const k = `${o1}v${o2}`;
+      baseKeys.forEach(baseKey => {
+        statKeyInfo[`${baseKey}_${k}`] = {
+          ...statKeyInfo[baseKey],
+          color: statKeyInfo[baseKey].color + hexSuffixes[(o1 - 4) * 4 + (o2 - 4)],
+          label: statKeyInfo[baseKey].label + '(' + k + ')',
+        };
+      });
+    });
+  });
+};
+
+fillStatKeyInfo();
+
+export const getOpeningHandSizeMatrixInArray = () => {
+  const result: string[] = [];
+  openingHandSizeArray.forEach(o1 => {
+    openingHandSizeArray.forEach(o2 => {
+      result.push(`${o1}v${o2}`);
+    });
+  });
+  return result;
 };

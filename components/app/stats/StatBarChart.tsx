@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 import { BarDatum } from '@nivo/bar/dist/types/types';
 import { MatchResult } from '@prisma/client';
-import { StatData } from '@/components/app/stats/statModalLib';
+import {
+  getOpeningHandSizeMatrixInArray,
+  openingHandSizeArray,
+  StartingPlayerKey,
+  startingPlayerKeyArray,
+  statBaseKeys,
+  StatData,
+  StatGrouping,
+  statKeyInfo,
+} from '@/components/app/stats/statModalLib';
 import { ResponsiveBar } from '@nivo/bar';
 import useStore from '@/store/store';
 
@@ -23,35 +32,139 @@ export default function StatBarChart({ statData }: StatBarChartProps) {
 
     archetypeList.forEach(a => {
       const arch = archetypeMap[a];
-      const archDistributions = byArchetype[a];
-      if (arch && archDistributions) {
-        result.push({
+      const adist = byArchetype[a];
+      if (arch && adist) {
+        const x: BarDatum = {
           archetype: arch.name,
-          wp: archDistributions.matchDistribution.onThePlay[MatchResult.WIN].length,
-          wd: archDistributions.matchDistribution.onTheDraw[MatchResult.WIN].length,
-          dp: archDistributions.matchDistribution.onThePlay[MatchResult.DRAW].length,
-          dd: archDistributions.matchDistribution.onTheDraw[MatchResult.DRAW].length,
-          lp:
-            archDistributions.matchDistribution.onThePlay[MatchResult.LOSE].length *
-            dvgMultiplicator,
-          lpColor: 'hsl(208,61%,40%)',
-          ld:
-            archDistributions.matchDistribution.onTheDraw[MatchResult.LOSE].length *
-            dvgMultiplicator,
-        });
+        };
+
+        if (statGrouping === StatGrouping.MATCH) {
+          const dist = adist.matchDistribution;
+          if (isByStartingPlayer) {
+            const wp = dist.onThePlay[MatchResult.WIN].length;
+            const wd = dist.onTheDraw[MatchResult.WIN].length;
+            const dp = dist.onThePlay[MatchResult.DRAW].length;
+            const dd = dist.onTheDraw[MatchResult.DRAW].length;
+            const lp = dist.onThePlay[MatchResult.LOSE].length;
+            const ld = dist.onTheDraw[MatchResult.LOSE].length;
+            if (wp) x.wp = wp;
+            if (wd) x.wd = wd;
+            if (dp) x.dp = dp;
+            if (dd) x.dd = dd;
+            if (lp) x.lp = lp * dvgMultiplicator;
+            if (ld) x.ld = ld * dvgMultiplicator;
+          } else {
+            const w =
+              dist.onThePlay[MatchResult.WIN].length + dist.onTheDraw[MatchResult.WIN].length;
+            const d =
+              dist.onThePlay[MatchResult.DRAW].length + dist.onTheDraw[MatchResult.DRAW].length;
+            const l =
+              dist.onThePlay[MatchResult.LOSE].length + dist.onTheDraw[MatchResult.LOSE].length;
+            if (w) x.w = w;
+            if (d) x.d = d;
+            if (l) x.l = l * dvgMultiplicator;
+          }
+        } else if (statGrouping === StatGrouping.GAME) {
+          const dist = adist.gameDistribution;
+
+          if (isByOpeningHand) {
+            openingHandSizeArray.forEach(o1 => {
+              openingHandSizeArray.forEach(o2 => {
+                const k = `${o1}v${o2}`;
+                if (isByStartingPlayer) {
+                  startingPlayerKeyArray.forEach(sp => {
+                    statBaseKeys[sp].forEach(bk => {
+                      const appliedMultiplicator =
+                        statKeyInfo[bk].matchResult === MatchResult.LOSE ? dvgMultiplicator : 1;
+                      const sum =
+                        dist[sp][o1][o2][statKeyInfo[bk].matchResult].length * appliedMultiplicator;
+                      if (sum !== 0) x[`${bk}_${k}`] = sum;
+                    });
+                  });
+                } else {
+                  statBaseKeys['none'].forEach(bk => {
+                    const appliedMultiplicator =
+                      statKeyInfo[bk].matchResult === MatchResult.LOSE ? dvgMultiplicator : 1;
+                    const sum =
+                      dist.onThePlay[o1][o2][statKeyInfo[bk].matchResult].length *
+                        appliedMultiplicator +
+                      dist.onTheDraw[o1][o2][statKeyInfo[bk].matchResult].length *
+                        appliedMultiplicator;
+                    if (sum !== 0) x[`${bk}_${k}`] = sum;
+                  });
+                }
+              });
+            });
+          } else {
+            if (isByStartingPlayer) {
+              startingPlayerKeyArray.forEach(sp => {
+                statBaseKeys[sp].forEach(bk => {
+                  const appliedMultiplicator =
+                    statKeyInfo[bk].matchResult === MatchResult.LOSE ? dvgMultiplicator : 1;
+                  let sum = 0;
+                  openingHandSizeArray.forEach(o1 => {
+                    openingHandSizeArray.forEach(o2 => {
+                      sum += dist[sp][o1][o2][statKeyInfo[bk].matchResult].length;
+                    });
+                  });
+                  if (sum > 0) {
+                    x[bk] = sum * appliedMultiplicator;
+                  }
+                });
+              });
+            } else {
+              statBaseKeys['none'].forEach(bk => {
+                const appliedMultiplicator =
+                  statKeyInfo[bk].matchResult === MatchResult.LOSE ? dvgMultiplicator : 1;
+                let sum = 0;
+                openingHandSizeArray.forEach(o1 => {
+                  openingHandSizeArray.forEach(o2 => {
+                    sum +=
+                      dist.onThePlay[o1][o2][statKeyInfo[bk].matchResult].length +
+                      dist.onTheDraw[o1][o2][statKeyInfo[bk].matchResult].length;
+                  });
+                });
+                if (sum > 0) {
+                  x[bk] = sum * appliedMultiplicator;
+                }
+              });
+            }
+          }
+        }
+
+        result.push(x);
       }
     });
 
     return result;
-  }, [isStatDiverging, archetypeList, archetypeMap, byArchetype]);
+  }, [
+    isStatDiverging,
+    archetypeList,
+    archetypeMap,
+    byArchetype,
+    statGrouping,
+    isByStartingPlayer,
+    isByOpeningHand,
+  ]);
+
+  const { barKeys, barColors } = useMemo(() => {
+    const keys = Object.keys(statKeyInfo);
+    const colors = keys.map(k => statKeyInfo[k].color!);
+    return {
+      barKeys: keys,
+      barColors: colors,
+    };
+  }, []);
+
+  console.log({ barKeys, barColors });
 
   return (
     <ResponsiveBar
       data={chartData}
       indexBy="archetype"
       colorBy="id"
-      keys={['wp', 'wd', 'dp', 'dd', 'ld', 'lp']}
-      colors={['#1aa122', '#75d178', '#dcad14', '#dcd214', '#dda3a0', '#cd746b']}
+      keys={barKeys}
+      colors={barColors}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}

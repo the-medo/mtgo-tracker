@@ -99,12 +99,12 @@ export default function StatModal({ matchData }: StatModalProps) {
             <>
               <ModalBody>
                 <div className="flex flex-col gap-4">
-                  <div className="flex flex-row gap-4 w-full">
-                    <StatSettings />
-                  </div>
                   <div className="flex flex-row flex-wrap gap-4">
-                    <div className="h-[400px] min-w-[400px] w-1/2">
-                      <StatBarChart statData={statData} />
+                    <div className="flex flex-col gap-4 w-1/2">
+                      <StatSettings />
+                      <div className="h-[400px] min-w-[400px]">
+                        <StatBarChart statData={statData} />
+                      </div>
                     </div>
                     <div className="flex flex-col grow h-[400px] min-w-[400px] w-1/3">
                       Matches...
