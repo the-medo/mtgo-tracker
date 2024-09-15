@@ -18,12 +18,14 @@ import StatBarChart from '@/components/app/stats/StatBarChart';
 import StatSettings from '@/components/app/stats/StatSettings';
 import useStore from '@/store/store';
 import StatArchetypeMatches from '@/components/app/stats/StatArchetypeMatches';
+import cn from 'classnames';
 
 interface StatModalProps {
   matchData: MatchExtended[];
 }
 
 export default function StatModal({ matchData }: StatModalProps) {
+  const breakpoint = useStore(state => state.breakpoint);
   const setStatData = useStore(state => state.setStatData);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -97,19 +99,29 @@ export default function StatModal({ matchData }: StatModalProps) {
         <TbChartBar size={28} />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="full">
-        <ModalContent className="p-2 pt-6 overflow-x-hidden">
+        <ModalContent className="p-2 pt-6 overflow-x-hidden overflow-y-auto">
           {onClose => (
             <>
               <ModalBody>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row flex-wrap gap-4">
-                    <div className="flex flex-col gap-4 w-1/2">
+                    <div
+                      className={cn('flex flex-col gap-4', {
+                        'w-1/2': breakpoint !== 'sm' && breakpoint !== 'xs',
+                        'w-full': breakpoint === 'sm' || breakpoint === 'xs',
+                      })}
+                    >
                       <StatSettings />
                       <div className="h-[400px] min-w-[400px]">
                         <StatBarChart />
                       </div>
                     </div>
-                    <div className="flex flex-row grow min-w-[400px] w-1/3 h-[calc(100vh-100px)]">
+                    <div
+                      className={cn('flex flex-row grow min-w-[400px] h-[calc(100vh-100px)]', {
+                        'w-1/3': breakpoint !== 'sm' && breakpoint !== 'xs',
+                        'w-full': breakpoint === 'sm' || breakpoint === 'xs',
+                      })}
+                    >
                       <div className="flex flex-col w-full gap-2 overflow-y-auto">
                         <StatArchetypeMatches />
                       </div>

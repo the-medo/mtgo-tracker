@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <main className="w-full h-full bg-red-50 bg-cover bg-center opacity-100 bg-[url('https://imagedelivery.net/zchNIWFramhipgMjPiGPQQ/72b180ff-ae0a-4f1e-5225-2de7c6f82700/original')]">
-        <div className="flex flex-col h-full w-[400px] p-5 gap-5 items-center bg-opacity-85 bg-zinc-100">
+        <div className="flex flex-col h-full md:w-[400px] w-full p-5 gap-5 items-center bg-opacity-85 bg-zinc-100">
           <Image src={LOGO_URL} alt="logo" width="150" height="150" />
           <div className="flex flex-col justify-center items-center">
             <p className={`font-bold text-8xl text-inherit ${displayFont.className} text-zinc-800`}>
