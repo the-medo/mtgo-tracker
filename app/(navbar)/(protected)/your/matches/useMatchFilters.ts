@@ -10,7 +10,7 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
-import { MatchType } from '@prisma/client';
+import { MatchResult, MatchType } from '@prisma/client';
 import { GetMatchesRequest } from '@/app/api/match/getMatches';
 
 export const matchSorterOptions: SorterOption<'Match'>[] = [
@@ -29,13 +29,6 @@ export const matchSorterOptions: SorterOption<'Match'>[] = [
     }),
   },
   {
-    field: 'matchType',
-    label: 'Match type',
-    orderBy: m => ({
-      matchType: m,
-    }),
-  },
-  {
     field: 'eventId',
     label: 'Event ID',
     orderBy: m => ({
@@ -47,13 +40,6 @@ export const matchSorterOptions: SorterOption<'Match'>[] = [
     label: 'Deck ID',
     orderBy: m => ({
       deckId: m,
-    }),
-  },
-  {
-    field: 'isWin',
-    label: 'Win',
-    orderBy: m => ({
-      isWin: m,
     }),
   },
   {
@@ -72,14 +58,14 @@ const defaultSortDescriptor: SortDescriptor = {
 
 export default function useMatchFilters() {
   const oppName = useStore(state => state.matches.oppName);
+  const deckName = useStore(state => state.matches.deckName);
   const [localOppName, setLocalOppName] = useState(oppName ?? '');
+  const [localDeckName, setLocalDeckName] = useState(deckName ?? '');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(defaultSortDescriptor);
 
-  const type = useStore(state => state.matches.type);
-  const round = useStore(state => state.matches.round);
-  const eventId = useStore(state => state.matches.eventId);
+  const matchType = useStore(state => state.matches.matchType);
   const deckId = useStore(state => state.matches.deckId);
-  const isWin = useStore(state => state.matches.isWin);
+  const result = useStore(state => state.matches.result);
   const startTime = useStore(state => state.matches.startTime);
   const tagIds = useStore(state => state.matches.tagIds);
   const orderBy = useStore(state => state.matches.orderBy);
@@ -100,25 +86,30 @@ export default function useMatchFilters() {
     [onOppNameChangeDebounced],
   );
 
-  const onTypeChange = useCallback(
-    (id: string | number) =>
-      setFilter('matches', 'type', id === '' ? undefined : (id as MatchType)),
+  const onDeckNameChangeDebounced: ChangeEventHandler<HTMLInputElement> = useCallback(
+    debounce(e => setFilter('matches', 'deckName', e.target.value), 1000),
     [setFilter],
   );
-  const onRoundChange = useCallback(
-    (v: number | undefined) => setFilter('matches', 'round', v),
+
+  const onDeckNameChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    e => {
+      setLocalDeckName(e.target.value);
+      onDeckNameChangeDebounced(e);
+    },
+    [onDeckNameChangeDebounced],
+  );
+
+  const onMatchTypeChange = useCallback(
+    (id: string | number | undefined) =>
+      setFilter('matches', 'matchType', id === '' ? undefined : (id as MatchType)),
     [setFilter],
   );
-  const onEventChange = useCallback(
-    (v: number | undefined) => setFilter('matches', 'eventId', v),
-    [setFilter],
-  );
-  const onDeckChange = useCallback(
+  const onDeckIdChange = useCallback(
     (v: number | undefined) => setFilter('matches', 'deckId', v),
     [setFilter],
   );
-  const onWinChange = useCallback(
-    (v: boolean | undefined) => setFilter('matches', 'isWin', v),
+  const onResultChange = useCallback(
+    (v: MatchResult | undefined | null) => setFilter('matches', 'result', v),
     [setFilter],
   );
   const onStartTimeChange = useCallback(
@@ -140,6 +131,7 @@ export default function useMatchFilters() {
 
   const onClear = useCallback(() => {
     setLocalOppName('');
+    setLocalDeckName('');
     clearFilter('matches');
     setSortDescriptor(defaultSortDescriptor);
   }, [clearFilter]);
@@ -175,36 +167,33 @@ export default function useMatchFilters() {
     () => ({
       where: {
         oppName: parseStringToContainsCondition(oppName),
-        type,
-        round,
-        eventId,
+        deck: deckName ? { name: parseStringToContainsCondition(deckName) } : undefined,
+        matchType,
         deckId,
-        isWin,
+        result,
         startTime: parseDateOrRangeValueToCondition(startTime),
         ...tagIdsFilter,
       },
       orderBy,
     }),
-    [oppName, type, round, eventId, deckId, isWin, startTime, tagIdsFilter, orderBy],
+    [oppName, deckName, matchType, deckId, result, startTime, tagIdsFilter, orderBy],
   );
 
   return {
     filters,
     oppName: localOppName,
-    type,
-    round,
-    eventId,
+    matchType,
     deckId,
-    isWin,
+    deckName: localDeckName,
+    result,
     startTime,
     tagIds,
     orderBy,
     onOppNameChange,
-    onTypeChange,
-    onRoundChange,
-    onEventChange,
-    onDeckChange,
-    onWinChange,
+    onMatchTypeChange,
+    onDeckIdChange,
+    onDeckNameChange,
+    onResultChange,
     onStartTimeChange,
     onPublicChange,
     onTagIdsChange,

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { TagType } from '@prisma/client';
 import { useTags } from '@/app/api/tag/getTags';
 import { Chip } from '@nextui-org/chip';
+import { Spinner } from '@nextui-org/spinner';
 
 type TagFilterProps = {
   type: TagType;
@@ -12,7 +13,7 @@ type TagFilterProps = {
 };
 
 export default function TagFilter({ type, values, setValues }: TagFilterProps) {
-  const { data } = useTags(type);
+  const { data, isFetching } = useTags(type);
 
   const selectTag = useCallback(
     (id: number) => {
@@ -27,6 +28,10 @@ export default function TagFilter({ type, values, setValues }: TagFilterProps) {
 
   return (
     <div className="flex gap-2 flex-wrap">
+      {isFetching ? <Spinner /> : null}
+      {!isFetching && (data ?? []).length === 0 ? (
+        <p className="text-xs italic">No tags to choose from</p>
+      ) : null}
       {(data ?? []).map((tag, index) => {
         const isSelected = values.find(v => v === tag.id);
         return (

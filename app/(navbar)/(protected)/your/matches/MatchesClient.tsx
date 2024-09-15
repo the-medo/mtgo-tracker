@@ -144,6 +144,7 @@ export default function MatchesClient({}: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      {isFetching && <Spinner />}
       {items.map(i => (
         <MatchBox key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
       ))}

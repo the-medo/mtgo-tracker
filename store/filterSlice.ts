@@ -2,7 +2,7 @@ import { OrderByInput } from '@/types/api-params';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { EventType, MatchType } from '@prisma/client';
+import { EventType, MatchResult, MatchType } from '@prisma/client';
 
 export type FilterState = {
   decks: {
@@ -28,11 +28,10 @@ export type FilterState = {
   };
   matches: {
     oppName?: string;
-    type?: MatchType;
-    round?: number;
-    eventId?: number;
+    matchType?: MatchType;
     deckId?: number;
-    isWin?: boolean;
+    deckName?: string;
+    result?: MatchResult | null;
     startTime?: DateOrRangeValue;
     public?: boolean;
     tagIds?: number[];

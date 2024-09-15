@@ -1,18 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { MatchResult } from '@prisma/client';
+import { TbX } from 'react-icons/tb';
 
 interface ResultSelectorProps {
-  value?: MatchResult;
-  onValueChange: (x: MatchResult | undefined) => void;
+  value?: MatchResult | null;
+  onValueChange: (x: MatchResult | undefined | null) => void;
+  includeClearOption?: boolean;
   isLoading?: boolean;
 }
 
-export default function ResultSelector({ value, onValueChange, isLoading }: ResultSelectorProps) {
+export default function ResultSelector({
+  value,
+  onValueChange,
+  isLoading,
+  includeClearOption = false,
+}: ResultSelectorProps) {
   const [localValue, setLocalValue] = useState(value);
 
   const valueChangeHandler = useCallback(
-    (x: MatchResult | undefined) => {
+    (x: MatchResult | undefined | null) => {
       onValueChange(x);
       setLocalValue(x);
     },
@@ -57,14 +64,26 @@ export default function ResultSelector({ value, onValueChange, isLoading }: Resu
       </Button>
       <Button
         size="sm"
-        onClick={() => valueChangeHandler(undefined)}
-        variant={localValue === undefined ? 'solid' : 'bordered'}
+        onClick={() => valueChangeHandler(includeClearOption ? null : undefined)}
+        variant={localValue === (includeClearOption ? null : undefined) ? 'solid' : 'bordered'}
         color="default"
         title="In progress"
         isIconOnly
       >
         P...
       </Button>
+      {includeClearOption ? (
+        <Button
+          size="sm"
+          onClick={() => valueChangeHandler(undefined)}
+          variant={localValue === undefined ? 'solid' : 'bordered'}
+          color="default"
+          title="Clear value"
+          isIconOnly
+        >
+          <TbX />
+        </Button>
+      ) : null}
     </div>
   );
 }

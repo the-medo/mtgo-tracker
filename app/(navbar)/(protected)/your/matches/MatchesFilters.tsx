@@ -1,9 +1,8 @@
 'use client';
 
 import { Input } from '@nextui-org/input';
-import { parseNumber } from '@/app/api/parsers';
 import DateOrRangePicker from '@/components/form/DateOrRangePicker';
-import { TbSearch } from 'react-icons/tb';
+import { TbCards, TbSearch } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import SelectSorter from '@/components/form/select/SelectSorter';
 import useMatchFilters, {
@@ -12,11 +11,20 @@ import useMatchFilters, {
 import SelectMatchType from '@/components/form/select/SelectMatchType';
 import TagFilter from '@/components/tags/TagFilter';
 import { TagType } from '@prisma/client';
+import SelectDeck from '@/components/form/select/SelectDeck';
+import { parseNumber } from '@/app/api/parsers';
+import ResultSelector from '@/components/form/ResultSelector';
 
-const label = (
+const labelOppName = (
   <div className="flex flex-row gap-2 items-center">
     <TbSearch size={20} />
     Opponent name...
+  </div>
+);
+const labelDeckName = (
+  <div className="flex flex-row gap-2 items-center">
+    <TbCards size={20} />
+    Deck name...
   </div>
 );
 
@@ -24,20 +32,18 @@ export default function MatchesFilters() {
   const {
     oppName,
     onOppNameChange,
-    onTypeChange,
-    onRoundChange,
-    onEventChange,
-    onDeckChange,
-    onWinChange,
+    onMatchTypeChange,
+    onDeckIdChange,
+    onDeckNameChange,
+    onResultChange,
     onStartTimeChange,
     onTagIdsChange,
     onOrderByChange,
     onClear,
-    type,
-    round,
-    eventId,
+    matchType,
     deckId,
-    isWin,
+    deckName,
+    result,
     startTime,
     tagIds,
     orderBy,
@@ -46,37 +52,16 @@ export default function MatchesFilters() {
   return (
     <div className="flex flex-col gap-4 pb-4">
       <span className="pl-1 text-tiny text-foreground-500">FILTERS</span>
-      <Input size="sm" label={label} value={oppName ?? ''} onChange={onOppNameChange} />
-      <SelectMatchType value={type} onChange={onTypeChange} />
-      <Input
-        type="number"
-        size="sm"
-        label="Round"
-        value={round?.toString() ?? ''}
-        onChange={e => onRoundChange(parseNumber(e.target.value))}
-      />
-      <Input
-        type="number"
-        size="sm"
-        label="Event"
-        value={eventId?.toString() ?? ''}
-        onChange={e => onEventChange(parseNumber(e.target.value))}
-      />
-      <Input
-        type="number"
-        size="sm"
-        label="Deck"
-        value={deckId?.toString() ?? ''}
-        onChange={e => onDeckChange(parseNumber(e.target.value))}
-      />
-      <Input
-        type="checkbox"
-        size="sm"
-        label="Win"
-        checked={isWin ?? false}
-        onChange={e => onWinChange(e.target.checked)}
+      <Input size="sm" label={labelOppName} value={oppName ?? ''} onChange={onOppNameChange} />
+      <Input size="sm" label={labelDeckName} value={deckName ?? ''} onChange={onDeckNameChange} />
+
+      <SelectDeck
+        value={deckId}
+        onChange={e => (typeof e === 'number' ? onDeckIdChange(e) : onDeckIdChange(parseNumber(e)))}
       />
       <DateOrRangePicker label="Start Time" value={startTime} onChange={onStartTimeChange} />
+      <ResultSelector onValueChange={onResultChange} includeClearOption value={result} />
+      <SelectMatchType value={matchType} onChange={onMatchTypeChange} />
       <span className="pl-1 text-tiny text-foreground-500">TAGS</span>
       <TagFilter type={TagType.MATCH} values={tagIds ?? []} setValues={onTagIdsChange} />
       <span className="pl-1 text-tiny text-foreground-500">SORT</span>
