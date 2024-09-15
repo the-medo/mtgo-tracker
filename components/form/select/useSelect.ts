@@ -1,8 +1,10 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 
+export type SelectOnChangeFunction = (x: string | number | undefined) => void;
+
 export type UseSelectProps = {
   value?: string | number;
-  onChange?: (x: string | number | undefined) => void;
+  onChange?: SelectOnChangeFunction;
   isNumber?: boolean;
 };
 

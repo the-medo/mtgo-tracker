@@ -10,9 +10,10 @@ import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import debounce from 'lodash.debounce';
 import { SortDescriptor } from '@react-types/shared/src/collections';
-import { EventType } from '@prisma/client';
+import { EventType, Prisma } from '@prisma/client';
 import { GetEventsRequest } from '@/app/api/event/getEvents';
 import { parseNumber } from '@/app/api/parsers';
+import IntFilter = Prisma.IntFilter;
 
 export const eventSorterOptions: SorterOption<'Event'>[] = [
   {
@@ -82,6 +83,7 @@ export default function useEventFilters() {
   const setFilter = useStore(state => state.setFilter);
   const clearFilter = useStore(state => state.clearFilter);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onEventNameChangeDebounced: ChangeEventHandler<HTMLInputElement> = useCallback(
     debounce(e => setFilter('events', 'eventName', e.target.value), 1000),
     [setFilter],
@@ -109,15 +111,15 @@ export default function useEventFilters() {
     [setFilter],
   );
   const onRoundsChange = useCallback(
-    (v: number | undefined) => setFilter('events', 'rounds', v),
+    (v: IntFilter | undefined) => setFilter('events', 'rounds', v),
     [setFilter],
   );
   const onEntryChange = useCallback(
-    (v: number | undefined) => setFilter('events', 'entry', v),
+    (v: IntFilter | undefined) => setFilter('events', 'entry', v),
     [setFilter],
   );
   const onWinningsChange = useCallback(
-    (v: number | undefined) => setFilter('events', 'winnings', v),
+    (v: IntFilter | undefined) => setFilter('events', 'winnings', v),
     [setFilter],
   );
   const onDateChange = useCallback(
@@ -139,17 +141,20 @@ export default function useEventFilters() {
     setSortDescriptor(defaultSortDescriptor);
   }, [clearFilter]);
 
-  const onSortChange = useCallback(({ column, direction }: SortDescriptor) => {
-    console.log('Sort change: ', column, direction);
-    setSortDescriptor({ column, direction });
-    setFilter(
-      'events',
-      'orderBy',
-      eventSorterOptions
-        .find(o => o.field === column)
-        ?.orderBy(transformTableSorterDirection(direction)),
-    );
-  }, []);
+  const onSortChange = useCallback(
+    ({ column, direction }: SortDescriptor) => {
+      console.log('Sort change: ', column, direction);
+      setSortDescriptor({ column, direction });
+      setFilter(
+        'events',
+        'orderBy',
+        eventSorterOptions
+          .find(o => o.field === column)
+          ?.orderBy(transformTableSorterDirection(direction)),
+      );
+    },
+    [setFilter],
+  );
 
   const tagIdsFilter: GetEventsRequest['where'] = useMemo(() => {
     if (!tagIds || tagIds.length === 0) return {};

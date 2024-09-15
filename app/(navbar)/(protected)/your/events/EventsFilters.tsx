@@ -14,6 +14,7 @@ import TagFilter from '@/components/tags/TagFilter';
 import { TagType } from '@prisma/client';
 import SelectDeck from '@/components/form/select/SelectDeck';
 import SelectFormat from '@/components/form/select/SelectFormat';
+import NumberFilterInput from '@/components/form/table-form/NumberFilterInput';
 
 const label = (
   <div className="flex flex-row gap-2 items-center">
@@ -54,26 +55,26 @@ export default function EventsFilters() {
       <SelectEventType value={type} onChange={onTypeChange} />
       <SelectFormat value={formatId} onChange={onFormatIdChange} />
       <SelectDeck value={deckId} onChange={onDeckIdChange} formatId={formatId} />
-      <Input
+      <NumberFilterInput
         type="number"
         size="sm"
         label="Rounds"
-        value={rounds?.toString() ?? ''}
-        onChange={e => onRoundsChange(parseNumber(e.target.value))}
+        filterValue={rounds}
+        onChangeFilter={onRoundsChange}
       />
-      <Input
+      <NumberFilterInput
         type="number"
         size="sm"
         label="Entry"
-        value={entry?.toString() ?? ''}
-        onChange={e => onEntryChange(parseNumber(e.target.value))}
+        filterValue={entry}
+        onChangeFilter={onEntryChange}
       />
-      <Input
+      <NumberFilterInput
         type="number"
         size="sm"
         label="Winnings"
-        value={winnings?.toString() ?? ''}
-        onChange={e => onWinningsChange(parseNumber(e.target.value))}
+        filterValue={winnings}
+        onChangeFilter={onWinningsChange}
       />
       <DateOrRangePicker label="Date" value={date} onChange={onDateChange} />
       <span className="pl-1 text-tiny text-foreground-500">TAGS</span>

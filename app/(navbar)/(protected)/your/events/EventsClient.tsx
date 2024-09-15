@@ -7,6 +7,8 @@ import useEventFilters from '@/app/(navbar)/(protected)/your/events/useEventFilt
 import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
 import EventBox from '@/components/app/events/EventBox';
 import StatModal from '@/components/app/stats/StatModal';
+import { Spinner } from '@nextui-org/spinner';
+import Title from '@/components/typography/Title';
 
 interface Props {}
 
@@ -27,6 +29,8 @@ export default function EventsClient({}: Props) {
       <div className="flex flex-col gap-4">
         <Checkbox onValueChange={changeHandler}>Open event matches</Checkbox>
         <hr />
+        {isFetching && <Spinner />}
+        {!isFetching && items.length === 0 ? <Title title="No events found" /> : null}
         {items.map(i => (
           <EventBox key={i.id} eventId={i.id} openMatches={openMatches} />
         ))}

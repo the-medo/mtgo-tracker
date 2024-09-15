@@ -2,7 +2,8 @@ import { OrderByInput } from '@/types/api-params';
 import { DateOrRangeValue } from '@/components/form/DateOrRangePicker';
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { EventType, MatchResult, MatchType } from '@prisma/client';
+import { EventType, MatchResult, MatchType, Prisma } from '@prisma/client';
+import IntFilter = Prisma.IntFilter;
 
 export type FilterState = {
   decks: {
@@ -19,9 +20,9 @@ export type FilterState = {
     type?: EventType;
     formatId?: number;
     deckId?: number;
-    rounds?: number;
-    entry?: number;
-    winnings?: number;
+    rounds?: IntFilter;
+    entry?: IntFilter;
+    winnings?: IntFilter;
     date?: DateOrRangeValue;
     tagIds?: number[];
     orderBy?: OrderByInput<'Event'>;

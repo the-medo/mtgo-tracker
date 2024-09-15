@@ -18,6 +18,7 @@ import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
 import MatchBox from '@/components/app/matches/MatchBox';
 import { MatchResult } from '@prisma/client';
 import StatModal from '@/components/app/stats/StatModal';
+import Title from '@/components/typography/Title';
 
 const TABLE_ID = 'MATCHES';
 
@@ -145,6 +146,7 @@ export default function MatchesClient({}: Props) {
   return (
     <div className="flex flex-col gap-4">
       {isFetching && <Spinner />}
+      {!isFetching && items.length === 0 ? <Title title="No matches found" /> : null}
       {items.map(i => (
         <MatchBox key={i.id} matchId={i.id} eventId={i.eventId} showDeckName={true} />
       ))}
