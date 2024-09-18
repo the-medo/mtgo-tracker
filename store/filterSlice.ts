@@ -25,6 +25,7 @@ export type FilterState = {
     winnings?: IntFilter;
     date?: DateOrRangeValue;
     tagIds?: number[];
+    deckTagIds?: number[];
     orderBy?: OrderByInput<'Event'>;
   };
   matches: {

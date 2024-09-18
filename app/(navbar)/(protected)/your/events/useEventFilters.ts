@@ -78,6 +78,7 @@ export default function useEventFilters() {
   const winnings = useStore(state => state.events.winnings);
   const date = useStore(state => state.events.date);
   const tagIds = useStore(state => state.events.tagIds);
+  const deckTagIds = useStore(state => state.events.deckTagIds);
   const orderBy = useStore(state => state.events.orderBy);
 
   const setFilter = useStore(state => state.setFilter);
@@ -130,6 +131,10 @@ export default function useEventFilters() {
     (v: number[]) => setFilter('events', 'tagIds', v),
     [setFilter],
   );
+  const onDeckTagIdsChange = useCallback(
+    (v: number[]) => setFilter('events', 'deckTagIds', v),
+    [setFilter],
+  );
   const onOrderByChange = useCallback(
     (v: OrderByInput<'Event'>) => setFilter('events', 'orderBy', v),
     [setFilter],
@@ -171,6 +176,23 @@ export default function useEventFilters() {
     };
   }, [tagIds]);
 
+  const deckTagIdsFilter: GetEventsRequest['where'] = useMemo(() => {
+    if (!deckTagIds || deckTagIds.length === 0) return {};
+    return {
+      AND: [
+        ...deckTagIds.map(tid => ({
+          deck: {
+            DeckTags: {
+              some: {
+                tagId: tid,
+              },
+            },
+          },
+        })),
+      ],
+    };
+  }, [deckTagIds]);
+
   const filters: GetEventsRequest = useMemo(
     () => ({
       where: {
@@ -183,11 +205,26 @@ export default function useEventFilters() {
         winnings,
         date: parseDateOrRangeValueToCondition(date),
         ...tagIdsFilter,
+        ...deckTagIdsFilter,
       },
       orderBy,
     }),
-    [eventName, type, rounds, entry, winnings, date, tagIdsFilter, orderBy, formatId, deckId],
+    [
+      eventName,
+      type,
+      rounds,
+      entry,
+      winnings,
+      date,
+      tagIdsFilter,
+      deckTagIdsFilter,
+      orderBy,
+      formatId,
+      deckId,
+    ],
   );
+
+  console.log({ filters });
 
   return {
     filters,
@@ -200,6 +237,7 @@ export default function useEventFilters() {
     winnings,
     date,
     tagIds,
+    deckTagIds,
     orderBy,
     onFormatIdChange,
     onDeckIdChange,
@@ -210,6 +248,7 @@ export default function useEventFilters() {
     onWinningsChange,
     onDateChange,
     onTagIdsChange,
+    onDeckTagIdsChange,
     onOrderByChange,
     onClear,
     sortDescriptor,

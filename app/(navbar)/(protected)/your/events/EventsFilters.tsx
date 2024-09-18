@@ -35,6 +35,7 @@ export default function EventsFilters() {
     onWinningsChange,
     onDateChange,
     onTagIdsChange,
+    onDeckTagIdsChange,
     onOrderByChange,
     onClear,
     formatId,
@@ -45,6 +46,7 @@ export default function EventsFilters() {
     winnings,
     date,
     tagIds,
+    deckTagIds,
     orderBy,
   } = useEventFilters();
 
@@ -77,8 +79,10 @@ export default function EventsFilters() {
         onChangeFilter={onWinningsChange}
       />
       <DateOrRangePicker label="Date" value={date} onChange={onDateChange} />
-      <span className="pl-1 text-tiny text-foreground-500">TAGS</span>
+      <span className="pl-1 text-tiny text-foreground-500">EVENT TAGS</span>
       <TagFilter type={TagType.EVENT} values={tagIds ?? []} setValues={onTagIdsChange} />
+      <span className="pl-1 text-tiny text-foreground-500">DECK TAGS</span>
+      <TagFilter type={TagType.DECK} values={deckTagIds ?? []} setValues={onDeckTagIdsChange} />
       <span className="pl-1 text-tiny text-foreground-500">SORT</span>
       <SelectSorter data={eventSorterOptions} value={orderBy} onChange={onOrderByChange} />
       <Button onClick={onClear} size="sm">
