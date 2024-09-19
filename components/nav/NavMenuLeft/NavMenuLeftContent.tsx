@@ -3,6 +3,8 @@
 import { Listbox, ListboxItem, ListboxSection } from '@nextui-org/listbox';
 import {
   TbArticle,
+  TbBrandDiscord,
+  TbBrandGithub,
   TbCards,
   TbGraph,
   TbLogout,
@@ -16,6 +18,8 @@ import { usePathname } from 'next/navigation';
 import cn from 'classnames';
 import useStore from '@/store/store';
 import { signOut } from 'next-auth/react';
+import { Link } from '@nextui-org/link';
+import Links from '@/components/nav/Links';
 
 const dashboardIcon = <TbGraph size={24} />;
 const matchIcon = <TbArticle size={24} />;
@@ -140,6 +144,7 @@ export default function NavMenuLeftContent({ isAuthenticated, isAdmin }: NavMenu
           </Listbox>
         )}
       </div>
+      <Links variant="sm" />
     </>
   );
 }

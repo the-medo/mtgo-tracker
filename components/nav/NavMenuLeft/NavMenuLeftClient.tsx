@@ -55,7 +55,7 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
   }
 
   return (
-    <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600">
+    <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600 overflow-y-auto">
       <NavMenuLeftContent isAuthenticated={isAuthenticated} isAdmin={isAdmin} />
     </div>
   );

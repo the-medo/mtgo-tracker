@@ -3,17 +3,26 @@
 import { signIn, useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/button';
 import { redirect } from 'next/navigation';
+import { Spinner } from '@nextui-org/spinner';
 
-export function SignInProviders() {
+interface SignInProvidersProps {
+  redirectToDashboard?: boolean;
+}
+
+export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
   const { status } = useSession();
-  if (status === 'loading') return <>...</>;
+  if (status === 'loading') return <Spinner />;
 
   if (status === 'authenticated') {
-    redirect('/your/dashboard');
+    if (redirectToDashboard) {
+      redirect('/your/dashboard');
+    }
+
+    return null;
   }
 
   return (
-    <>
+    <div className="flex flex-col p-10 gap-5 justify-center items-center">
       <Button
         variant="shadow"
         size="lg"
@@ -46,6 +55,6 @@ export function SignInProviders() {
       >
         Continue with GitHub
       </Button>
-    </>
+    </div>
   );
 }
