@@ -11,7 +11,7 @@ export default function DecksLeftNav() {
   return (
     <PageMenuWrapper>
       <Accordion
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={['3']}
         disableIndicatorAnimation
         keepContentMounted
         disallowEmptySelection
