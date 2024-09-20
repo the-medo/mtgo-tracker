@@ -27,7 +27,10 @@ export default function Links({ variant }: LinksProps) {
             <span className="text-xs">About</span>
           </Link>
           <Link href="/privacy-policy">
-            <span className="text-xs">Priv. policy</span>
+            <span className="text-xs">PP</span>
+          </Link>
+          <Link href="/terms-of-service">
+            <span className="text-xs">ToS</span>
           </Link>
         </div>
         <span className="text-xs">Version: {process.env.NEXT_PUBLIC_VERSION}</span>
@@ -53,6 +56,10 @@ export default function Links({ variant }: LinksProps) {
           <Link href="/privacy-policy" className="text-zinc-800 flex gap-2">
             <TbArrowRight />
             <span className="text-xl">Privacy policy</span>
+          </Link>
+          <Link href="/terms-of-service" className="text-zinc-800 flex gap-2">
+            <TbArrowRight />
+            <span className="text-xl">Terms of Service</span>
           </Link>
         </div>
         <div className="flex gap-2">
