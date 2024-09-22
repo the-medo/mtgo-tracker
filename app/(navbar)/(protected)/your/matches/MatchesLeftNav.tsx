@@ -6,12 +6,13 @@ import MatchesForm from '@/app/(navbar)/(protected)/your/matches/MatchesForm';
 import { TbFilter, TbPlus, TbTag } from 'react-icons/tb';
 import MatchesTags from '@/app/(navbar)/(protected)/your/matches/MatchesTags';
 import PageMenuWrapper from '@/components/app/PageMenuWrapper';
+import Notice from '@/components/app/Notice';
 
 export default function MatchesLeftNav() {
   return (
     <PageMenuWrapper>
       <Accordion
-        defaultSelectedKeys={['3']}
+        defaultSelectedKeys={['1']}
         disableIndicatorAnimation
         keepContentMounted
         disallowEmptySelection
@@ -33,7 +34,15 @@ export default function MatchesLeftNav() {
           aria-label="Create match"
           title="Create"
         >
-          <MatchesForm />
+          <Notice variant="warning">
+            <span>Creating matches is supported only from event detail.</span>
+            <span>Recommended approach:</span>
+            <ol className="list-decimal pl-4 text-xs">
+              <li>Create deck</li>
+              <li>Create event with the deck</li>
+              <li>Create matches from the event</li>
+            </ol>
+          </Notice>
         </AccordionItem>
       </Accordion>
     </PageMenuWrapper>

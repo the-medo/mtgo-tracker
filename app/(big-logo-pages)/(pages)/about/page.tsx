@@ -11,8 +11,8 @@ export default function About() {
         About
       </p>
       <p>
-        Fetchbook is a simple tool for tracking your MtG stats, designed primarily for MTGO and
-        in-person play. With Fetchbook, you can keep track of your decks, matches and events, but it
+        FetchBook is a simple tool for tracking your MtG stats, designed primarily for MTGO and
+        in-person play. With FetchBook, you can keep track of your decks, matches and events, but it
         is not anything special - your excel spreadsheet can be better already. It is also open
         source - all code is public, and if you have the skills, you can improve it!
       </p>

@@ -2,10 +2,11 @@
 
 import { NavbarItem } from '@nextui-org/navbar';
 import { Button } from '@nextui-org/button';
-import { TbPlus } from 'react-icons/tb';
+import { TbCards, TbTrophy } from 'react-icons/tb';
 import { useSession } from 'next-auth/react';
 
-const plusIcon = <TbPlus size={18} />;
+const trophyIcon = <TbTrophy size={18} />;
+const cardsIcon = <TbCards size={18} />;
 
 export default function NavMenuTopActionButtons() {
   const { data: session } = useSession();
@@ -17,18 +18,13 @@ export default function NavMenuTopActionButtons() {
   return (
     <>
       <NavbarItem>
-        <Button startContent={plusIcon} className="text-default-700">
-          match
+        <Button startContent={trophyIcon} className="text-default-700">
+          New event
         </Button>
       </NavbarItem>
       <NavbarItem>
-        <Button startContent={plusIcon} className="text-default-700">
-          event
-        </Button>
-      </NavbarItem>
-      <NavbarItem>
-        <Button startContent={plusIcon} className="text-default-700">
-          deck
+        <Button startContent={cardsIcon} className="text-default-700">
+          New deck
         </Button>
       </NavbarItem>
     </>

@@ -29,7 +29,7 @@ export default function TermsOfService() {
           2. User Responsibilities
         </div>
         When using FetchBook, you agree to:
-        <ul>
+        <ul className="list-disc ml-6">
           <li>Provide accurate information when creating decks, events, and matches.</li>
           <li>Avoid uploading or linking to harmful, misleading, or inappropriate content.</li>
           <li>Refrain from using FetchBook for any illegal or unauthorized purposes.</li>
@@ -57,7 +57,7 @@ export default function TermsOfService() {
           5. Prohibited Conduct
         </div>
         You agree not to:
-        <ul>
+        <ul className="list-disc ml-6">
           <li>Disrupt or interfere with the functioning of FetchBook.</li>
           <li>Attempt to gain unauthorized access to any part of the site.</li>
           <li>Use the service to harass or harm others.</li>
