@@ -1,6 +1,8 @@
 import useStore from '@/store/store';
 import Title from '@/components/typography/Title';
 import MatchBox from '@/components/app/matches/MatchBox';
+import Notice from '@/components/app/Notice';
+import { TbInfoCircle } from 'react-icons/tb';
 
 interface StatArchetypeMatchesProps {}
 
@@ -9,8 +11,14 @@ export default function StatArchetypeMatches({}: StatArchetypeMatchesProps) {
   const { archetypeMap } = useStore(state => state.statData);
 
   const archetypeData = archetypeMap[archetypeId ?? 0];
-
-  if (!archetypeData) return null;
+  if (!archetypeData)
+    return (
+      <Notice variant="info">
+        <span className="flex gap-2">
+          <TbInfoCircle size={18} /> Click on bar chart to display matches of that archetype.
+        </span>
+      </Notice>
+    );
 
   const archetypeName = archetypeData.name ?? '-';
 
