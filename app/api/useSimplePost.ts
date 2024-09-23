@@ -1,5 +1,5 @@
 import { InfiniteData, QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
-import { QK, qkRedirect, QTypeParsers, QTypes } from '@/app/api/queryHelpers';
+import { qkRedirect, QTypes } from '@/app/api/queryHelpers';
 import { useMemo } from 'react';
 import { parseDate } from '@/app/api/parsers';
 
@@ -10,7 +10,7 @@ export type SimplePostRequest = Record<
   FormDataEntryValue | number | null | boolean | undefined
 >;
 
-export default function useSimplePost<T extends QK>(qk: QK) {
+export default function useSimplePost<T extends keyof QTypes>(qk: keyof QTypes) {
   const queryClient = useQueryClient();
 
   const filters: QueryFilters = useMemo(

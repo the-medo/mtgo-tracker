@@ -11,7 +11,7 @@ import { QK } from '@/app/api/queryHelpers';
 import { DeckArchetype, Match, MatchResult } from '@prisma/client';
 import TableField from '@/components/form/table-form/TableField';
 import ResultSelector from '@/components/form/ResultSelector';
-import { TbCards, TbEdit, TbVs, TbX } from 'react-icons/tb';
+import { TbEdit, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import GameResultChip from '@/components/app/games/GameResultChip';
 import useStore from '@/store/store';
@@ -72,8 +72,7 @@ export default function MatchBox({
   const matchTags = match?.MatchTags ?? [];
 
   const matchResultChangeHandler = useCallback(
-    (value: MatchResult | undefined) => {
-      console.log('HM!', value, matchId);
+    (value: MatchResult | undefined | null) => {
       patchMatch({
         id: matchId,
         field: 'result',

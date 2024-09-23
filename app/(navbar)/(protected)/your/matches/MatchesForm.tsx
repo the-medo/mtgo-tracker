@@ -16,8 +16,8 @@ import { DatePicker } from '@nextui-org/date-picker';
 import { fromDate } from '@internationalized/date';
 import BooleanField from '@/components/form/table-form/BooleanField';
 import SelectEvent from '@/components/form/select/SelectEvent';
-import { EventExtended } from '@/app/api/event/route';
 import SelectDeck from '@/components/form/select/SelectDeck';
+import { EventExtended } from '@/app/api/event/getEvents';
 
 export default function MatchesForm() {
   const ref = useRef<HTMLFormElement>(null);

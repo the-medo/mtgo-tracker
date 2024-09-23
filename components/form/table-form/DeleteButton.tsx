@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { TbTrash } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
 import useSimpleDelete from '@/app/api/useSimpleDelete';
-import { QK } from '@/app/api/queryHelpers';
+import { QTypes } from '@/app/api/queryHelpers';
 
 interface Props {
   id: number | string;
-  qk: QK;
+  qk: keyof QTypes;
 }
 
 export default function DeleteButton({ id, qk }: Props) {

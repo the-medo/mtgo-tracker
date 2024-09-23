@@ -8,7 +8,7 @@ export type SimplePatchRequest = {
   value: string | number | boolean | null;
 };
 
-export default function useSimplePatch<T extends QK>(qk: QK) {
+export default function useSimplePatch<T extends keyof QTypes>(qk: keyof QTypes) {
   const queryClient = useQueryClient();
 
   const filters: QueryFilters = useMemo(

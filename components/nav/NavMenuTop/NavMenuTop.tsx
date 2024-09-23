@@ -12,6 +12,7 @@ import { Button } from '@nextui-org/button';
 
 const displayFont = Bebas_Neue({
   weight: '400',
+  subsets: ['latin'],
 });
 
 export default function NavMenuTop() {

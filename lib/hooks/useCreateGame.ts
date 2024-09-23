@@ -2,7 +2,9 @@ import { QueryFilters, useQueryClient } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import useSimplePost, { SimplePostRequest } from '@/app/api/useSimplePost';
 import { useCallback, useMemo } from 'react';
-import { MatchExtended } from '@/app/api/match/route';
+
+import { GameExtended } from '@/app/api/game/getGames';
+import { MatchExtended } from '@/app/api/match/getMatches';
 
 export default function useCreateGame() {
   const queryClient = useQueryClient();
@@ -22,15 +24,14 @@ export default function useCreateGame() {
     () => ({
       mutate: async (gameData: SimplePostRequest) => {
         createGame(gameData, {
-          onSuccess: newGame => {
-            console.log('useCreateGame onSuccess callback');
-            console.log('NEW GAME: ', newGame);
+          onSuccess: ng => {
+            const newGame = ng as GameExtended;
+
             //add to "game" cache
             queryClient.setQueryData([QK.GAME, newGame.id], () => newGame);
 
             //add to "matches"
             queryClient.setQueriesData(matchFilters, (old: unknown) => {
-              console.log('OLD', old);
               // @ts-ignore
               if (old && 'pages' in old && Array.isArray(old.pages)) {
                 const pgs = old.pages as MatchExtended[][];
@@ -46,8 +47,6 @@ export default function useCreateGame() {
                     }));
                   }),
                 };
-
-                console.log('Infinite result: ', result);
                 return result;
               } else {
                 // @ts-ignore
@@ -69,6 +68,6 @@ export default function useCreateGame() {
       },
       isPending,
     }),
-    [isPending],
+    [createGame, isPending, matchFilters, queryClient],
   );
 }

@@ -32,7 +32,7 @@ export default function DeckContent({ deckId }: DeckContentProps) {
     return () => {
       window.removeEventListener('message', moxfieldOnMessage);
     };
-  }, []);
+  }, [moxfieldOnMessage]);
 
   if (!data?.serviceDeckId) return null;
 

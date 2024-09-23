@@ -134,10 +134,10 @@ export default function DateOrRangePicker({ label, value, onChange }: DateOrRang
       <div className="flex flex-col max-w-[500px] p-4 gap-2 items-center">
         <Divider />
         <span className="text-xs">
-          "Date from" always take time period from selected date till today.
+          &quot;Date from&quot; always take time period from selected date till today.
         </span>
         <span className="text-xs">
-          If you wish to change this behaviour, switch to "Date range" instead.
+          If you wish to change this behaviour, switch to &quot;Date range&quot; instead.
         </span>
         <div className="flex flex-row gap-4">
           <Button color="primary" size="sm" className="italic text-xs" onClick={toggleType}>

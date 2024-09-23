@@ -2,7 +2,6 @@ import { useDisclosure } from '@nextui-org/react';
 import { Modal, ModalBody, ModalContent, ModalFooter } from '@nextui-org/modal';
 import { Button } from '@nextui-org/button';
 import { TbChartBar } from 'react-icons/tb';
-import { MatchExtended } from '@/app/api/match/route';
 import { useEffect } from 'react';
 import {
   addMatchToDistributions,
@@ -19,6 +18,7 @@ import StatSettings from '@/components/app/stats/StatSettings';
 import useStore from '@/store/store';
 import StatArchetypeMatches from '@/components/app/stats/StatArchetypeMatches';
 import cn from 'classnames';
+import { MatchExtended } from '@/app/api/match/getMatches';
 
 interface StatModalProps {
   matchData: MatchExtended[];
@@ -84,7 +84,7 @@ export default function StatModal({ matchData }: StatModalProps) {
     r.gameDistribution = gameDistribution;
 
     setStatData(r);
-  }, [matchData]);
+  }, [matchData, setStatData]);
 
   return (
     <>

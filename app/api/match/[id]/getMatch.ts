@@ -1,8 +1,7 @@
 import { useQuery, QueryKey, QueryFunction, skipToken } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import { Stringify } from '@/app/api/parsers';
-import { MatchExtended } from '@/app/api/match/route';
-import { parseMatch } from '@/app/api/match/getMatches';
+import { MatchExtended, parseMatch } from '@/app/api/match/getMatches';
 import { queryClient } from '@/app/providers';
 
 export const addMatchToCache = (m: MatchExtended) => {

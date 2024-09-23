@@ -1,29 +1,10 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
-import { Prisma } from '@prisma/client';
-import { gameExtension } from '@/app/api/game/route';
-
-export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
-  include: {
-    MatchTags: true,
-    Games: {
-      ...gameExtension,
-    },
-    deck: true,
-    oppArchetype: true,
-  },
-});
-
-export const matchPatchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
-  include: {
-    deck: true,
-    oppArchetype: true,
-  },
-});
+import { MatchExtended, matchExtension } from '@/app/api/match/getMatches';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -55,8 +36,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Only logged user can add new match!' }, { status: 403 });
   }
 }
-
-export type MatchExtended = Prisma.MatchGetPayload<typeof matchExtension>;
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);

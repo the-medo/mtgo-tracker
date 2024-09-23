@@ -9,7 +9,7 @@ interface TagAdminBoxProps extends PropsWithChildren {
   title?: string;
 }
 
-export default async function TagAdminBox({ title, children }: TagAdminBoxProps) {
+export default function TagAdminBox({ title, children }: TagAdminBoxProps) {
   return (
     <Card className="flex-wrap p-4 min-w-[300px] max-w-[500px] flex-grow">
       {title && (

@@ -1,15 +1,14 @@
 import { QueryFilters, useQueryClient } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import useSimplePost, { SimplePostRequest } from '@/app/api/useSimplePost';
-import { useCallback, useMemo } from 'react';
-import useCreateGame from '@/lib/hooks/useCreateGame';
-import { EventExtended } from '@/app/api/event/route';
+import { useMemo } from 'react';
+
+import { EventExtended } from '@/app/api/event/getEvents';
 
 export default function useCreateMatch() {
   const queryClient = useQueryClient();
 
   const { mutate: createMatch, isPending } = useSimplePost(QK.MATCH);
-  const { mutate: createGame, isPending: isPendingGame } = useCreateGame();
 
   const eventFilters: QueryFilters = useMemo(
     () => ({
@@ -25,12 +24,8 @@ export default function useCreateMatch() {
       mutate: async (matchData: SimplePostRequest) => {
         createMatch(matchData, {
           onSuccess: async newMatch => {
-            console.log('useCreateMatch onSuccess callback');
-            console.log('NEW MATCH: ', newMatch);
-
             //add to "matches"
             queryClient.setQueriesData(eventFilters, (old: unknown) => {
-              console.log('OLD', old);
               // @ts-ignore
               if (old && 'pages' in old && Array.isArray(old.pages)) {
                 const pgs = old.pages as EventExtended[][];
@@ -69,6 +64,6 @@ export default function useCreateMatch() {
       },
       isPending,
     }),
-    [createGame, isPending],
+    [createMatch, eventFilters, isPending, queryClient],
   );
 }

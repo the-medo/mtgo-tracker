@@ -29,6 +29,7 @@ export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
         className="w-[300px] bg-zinc-400 text-zinc-800"
         onClick={() => signIn('google')}
         startContent={
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             height={24}
             width={24}
@@ -45,6 +46,7 @@ export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
         className="w-[300px] bg-zinc-400 text-zinc-800"
         onClick={() => signIn('github')}
         startContent={
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             height={24}
             width={24}

@@ -1,5 +1,5 @@
-import { DeckExtended } from '@/app/api/deck/route';
 import { MatchResult } from '@prisma/client';
+import { DeckExtended } from '@/app/api/deck/getDecks';
 
 type DeckResultPart = Record<MatchResult | 'unknown' | 'total' | 'percentage', number>;
 

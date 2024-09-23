@@ -11,13 +11,13 @@ import { MatchResult } from '@prisma/client';
 import { useGame } from '@/app/api/game/[id]/getGame';
 import ResultSelector from '@/components/form/ResultSelector';
 import { useQueryClient } from '@tanstack/react-query';
-import { MatchExtended } from '@/app/api/match/route';
 import { maxGameCountBasedOnMatchType } from '@/lib/constants';
 import { Button } from '@nextui-org/button';
 import { TbX } from 'react-icons/tb';
 import GameResultChip from '@/components/app/games/GameResultChip';
 import TableField from '@/components/form/table-form/TableField';
 import useStore from '@/store/store';
+import { MatchExtended } from '@/app/api/match/getMatches';
 
 export const gameContentIdentificator = `GameContent`;
 
@@ -76,7 +76,7 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
   );
 
   const resultChangeHandler = useCallback(
-    (value: MatchResult | undefined) => {
+    (value: MatchResult | undefined | null) => {
       patchGame(
         {
           id: gameId,

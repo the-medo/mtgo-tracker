@@ -7,8 +7,10 @@ import {
   Game,
   Tag,
 } from '@prisma/client';
-import { MatchExtended } from '@/app/api/match/route';
-import { EventExtended } from '@/app/api/event/route';
+
+import { EventExtended } from '@/app/api/event/getEvents';
+import { MatchExtended } from '@/app/api/match/getMatches';
+import { EventAggregation } from '@/app/api/event/aggregate/useEventAggregates';
 
 export enum QK {
   FORMAT_VERSIONS = 'format-version',

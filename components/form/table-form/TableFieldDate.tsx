@@ -46,6 +46,7 @@ export default function TableFieldDate({
     [onChange, id, fieldName],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedChangeHandler = useCallback(debounce(changeHandler, 1000), [changeHandler]);
 
   const content = useMemo(() => {
@@ -73,7 +74,7 @@ export default function TableFieldDate({
         aria-label={label}
       />
     );
-  }, [isSelected, label, fieldName, debouncedChangeHandler, val, isPending, endContent]);
+  }, [isSelected, label, fieldName, val, debouncedChangeHandler, isPending, endContent, value]);
 
   const selectRow = useCallback(() => {
     if (editable && !isSelected) {

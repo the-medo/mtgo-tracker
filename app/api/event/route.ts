@@ -1,11 +1,10 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDatePickerToIso, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
-import { Prisma } from '@prisma/client';
-import { matchExtension } from '@/app/api/match/route';
+import { EventExtended, eventExtension } from '@/app/api/event/getEvents';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -50,26 +49,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Only logged user can add new event!' }, { status: 403 });
   }
 }
-
-export const eventExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
-  include: {
-    deck: true,
-    EventTags: true,
-    format: true,
-    Matches: {
-      ...matchExtension,
-    },
-  },
-});
-
-export const eventPatchExtension = Prisma.validator<Prisma.EventDefaultArgs>()({
-  include: {
-    deck: true,
-    format: true,
-  },
-});
-
-export type EventExtended = Prisma.EventGetPayload<typeof eventExtension>;
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);

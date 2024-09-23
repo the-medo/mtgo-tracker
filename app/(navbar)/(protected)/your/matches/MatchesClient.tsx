@@ -1,19 +1,14 @@
 'use client';
 
-import { As, Table } from '@nextui-org/react';
-import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
 import { Key } from 'react';
 import TableField from '@/components/form/table-form/TableField';
 import DeleteButton from '@/components/form/table-form/DeleteButton';
-
 import { QK } from '@/app/api/queryHelpers';
-import { useInfiniteMatches } from '@/app/api/match/getMatches';
+import { MatchExtended, useInfiniteMatches } from '@/app/api/match/getMatches';
 import { Spinner } from '@nextui-org/spinner';
-import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll';
 import useMatchFilters from '@/app/(navbar)/(protected)/your/matches/useMatchFilters';
 import DateDisplay from '@/components/typography/DateDisplay';
 import EditButton from '@/components/form/table-form/EditButton';
-import { MatchExtended } from '@/app/api/match/route';
 import InfiniteScrollObserver from '@/components/app/InfiniteScrollObserver';
 import MatchBox from '@/components/app/matches/MatchBox';
 import { MatchResult } from '@prisma/client';

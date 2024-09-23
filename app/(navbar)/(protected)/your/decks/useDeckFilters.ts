@@ -66,6 +66,7 @@ export default function useDeckFilters() {
   const setFilter = useStore(state => state.setFilter);
   const clearFilter = useStore(state => state.clearFilter);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onDeckNameChangeDebounced: ChangeEventHandler<HTMLInputElement> = useCallback(
     debounce(e => setFilter('decks', 'deckName', e.target.value), 1000),
     [setFilter],
@@ -109,17 +110,20 @@ export default function useDeckFilters() {
     setSortDescriptor(defaultSortDescriptor);
   }, [clearFilter]);
 
-  const onSortChange = useCallback(({ column, direction }: SortDescriptor) => {
-    console.log('Sort change: ', column, direction);
-    setSortDescriptor({ column, direction });
-    setFilter(
-      'decks',
-      'orderBy',
-      deckSorterOptions
-        .find(o => o.field === column)
-        ?.orderBy(transformTableSorterDirection(direction)),
-    );
-  }, []);
+  const onSortChange = useCallback(
+    ({ column, direction }: SortDescriptor) => {
+      console.log('Sort change: ', column, direction);
+      setSortDescriptor({ column, direction });
+      setFilter(
+        'decks',
+        'orderBy',
+        deckSorterOptions
+          .find(o => o.field === column)
+          ?.orderBy(transformTableSorterDirection(direction)),
+      );
+    },
+    [setFilter],
+  );
 
   const tagIdsFilter: GetDecksRequest['where'] = useMemo(() => {
     if (!tagIds || tagIds.length === 0) return {};

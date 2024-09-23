@@ -1,8 +1,7 @@
 import { useQuery, QueryKey, QueryFunction, skipToken } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
 import { Stringify } from '@/app/api/parsers';
-import { GameExtended } from '@/app/api/game/route';
-import { parseGame } from '@/app/api/game/getGames';
+import { GameExtended, parseGame } from '@/app/api/game/getGames';
 
 export async function getGame(gameId: number) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/game/${gameId}`);

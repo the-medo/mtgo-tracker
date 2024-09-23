@@ -1,10 +1,10 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDeckLink, parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
-import { Prisma } from '@prisma/client';
+import { DeckExtended, deckExtension } from '@/app/api/deck/getDecks';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -50,40 +50,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Only logged user can add new deck!' }, { status: 403 });
   }
 }
-
-export const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
-  include: {
-    deckArchetype: true,
-    format: true,
-    formatVersion: true,
-    DeckTags: true,
-    _count: {
-      select: {
-        Events: true,
-      },
-    },
-    Matches: {
-      select: {
-        result: true,
-        Games: {
-          select: {
-            result: true,
-            startingHand: true,
-            oppStartingHand: true,
-          },
-        },
-      },
-    },
-  },
-});
-
-export const deckPatchExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
-  include: {
-    deckArchetype: true,
-  },
-});
-
-export type DeckExtended = Prisma.DeckGetPayload<typeof deckExtension>;
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);

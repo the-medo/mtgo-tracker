@@ -1,14 +1,12 @@
-import { Link } from '@nextui-org/link';
-import { TbBrandDiscord, TbBrandGithub } from 'react-icons/tb';
 import Image from 'next/image';
 import { LOGO_URL } from '@/lib/constants';
 import { SignInProviders } from '@/components/auth/SignInProviders';
 import Links from '@/components/nav/Links';
 import { Bebas_Neue } from 'next/font/google';
-import { PropsWithChildren } from 'react';
 
 const displayFont = Bebas_Neue({
   weight: '400',
+  subsets: ['latin'],
 });
 
 interface NavInfoLeftProps {

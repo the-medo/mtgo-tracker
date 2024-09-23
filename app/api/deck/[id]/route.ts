@@ -1,9 +1,9 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber } from '@/app/api/parsers';
-import { DeckExtended, deckExtension, deckPatchExtension } from '@/app/api/deck/route';
+import { DeckExtended, deckExtension, deckPatchExtension } from '@/app/api/deck/getDecks';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);

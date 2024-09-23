@@ -37,7 +37,7 @@ export default function TableFieldString({
 
   const changeHandler = useCallback(
     (e: { target: { value?: string } }) => {
-      const val = type === 'number' ? parseInt(e.target.value ?? '') : e.target.value ?? '';
+      const val = type === 'number' ? parseInt(e.target.value ?? '') : (e.target.value ?? '');
       if (value !== val) {
         if (onChange) onChange(id, fieldName, val);
       }
@@ -45,6 +45,7 @@ export default function TableFieldString({
     [onChange, id, fieldName, value, type],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedChangeHandler: ChangeEventHandler<HTMLInputElement> = useCallback(
     debounce(changeHandler, 1000),
     [changeHandler],
@@ -73,14 +74,15 @@ export default function TableFieldString({
     return <p>{value}</p>;
   }, [
     isSelected,
+    type,
     label,
     fieldName,
-    value,
+    stringValue,
     debouncedChangeHandler,
     changeHandler,
     isPending,
     endContent,
-    type,
+    value,
   ]);
 
   const selectRow = useCallback(() => {

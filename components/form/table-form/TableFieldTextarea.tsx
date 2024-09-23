@@ -17,7 +17,6 @@ export type TableFieldTextareaProps = {
 } & TableFieldProps;
 
 export default function TableFieldTextarea({
-  type,
   tableId,
   id,
   fieldName,
@@ -42,9 +41,10 @@ export default function TableFieldTextarea({
         if (onChange) onChange(id, fieldName, val);
       }
     },
-    [onChange, id, fieldName, value, type],
+    [onChange, id, fieldName, value],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedChangeHandler: ChangeEventHandler<HTMLInputElement> = useCallback(
     debounce(changeHandler, 1000),
     [changeHandler],
@@ -75,7 +75,6 @@ export default function TableFieldTextarea({
     changeHandler,
     isPending,
     endContent,
-    type,
   ]);
 
   const selectRow = useCallback(() => {

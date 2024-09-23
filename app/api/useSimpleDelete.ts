@@ -1,14 +1,13 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QK, qkRedirect, QTypes } from '@/app/api/queryHelpers';
 import { useMemo } from 'react';
-import { isNumber } from 'node:util';
 import { isNumeric } from '@nextui-org/shared-utils';
 
 export type SimpleDeleteRequest = {
   id: string | number;
 };
 
-export default function useSimpleDelete<T extends QK>(qk: QK) {
+export default function useSimpleDelete<T extends keyof QTypes>(qk: keyof QTypes) {
   const queryClient = useQueryClient();
 
   const filters: QueryFilters = useMemo(

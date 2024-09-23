@@ -1,10 +1,10 @@
 import { Tag, TagType } from '@prisma/client';
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
 import { QueryFunction, QueryKey, skipToken, useQuery } from '@tanstack/react-query';
-import { QK } from '@/app/api/queryHelpers';
+import { QK, QTypes } from '@/app/api/queryHelpers';
 import { useCallback, useMemo } from 'react';
 
-export const tagTypeToQK: Record<TagType, QK> = {
+export const tagTypeToQK: Record<TagType, keyof QTypes> = {
   [TagType.DECK]: QK.TAG_DECK,
   [TagType.EVENT]: QK.TAG_EVENT,
   [TagType.MATCH]: QK.TAG_MATCH,

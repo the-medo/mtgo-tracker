@@ -6,8 +6,7 @@ import { parseNumber } from '@/app/api/parsers';
 import { TbCards } from 'react-icons/tb';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 import debounce from 'lodash.debounce';
-import { EventExtended } from '@/app/api/event/route';
-import { GetEventsRequest, useInfiniteEvents } from '@/app/api/event/getEvents';
+import { EventExtended, GetEventsRequest, useInfiniteEvents } from '@/app/api/event/getEvents';
 
 export function textValueEvent(f: EventExtended | undefined): string {
   if (!f) return ` - no event - `;
@@ -47,6 +46,7 @@ export default function SelectEvent({
   const [items, setItems] = useState<EventExtended[]>([]);
   const [selectedValue, setSelectedValue] = useState(preselectedItem);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetFilter = useCallback(
     debounce(v => setDebouncedFilter(v), 250),
     [setDebouncedFilter],
@@ -94,7 +94,7 @@ export default function SelectEvent({
   );
 
   const onSelectionChangeHandler = useCallback(
-    (x: Key | undefined) => {
+    (x: Key | null) => {
       if (onChange || onEventChange) {
         let newValue = undefined;
         if (typeof x === 'string') newValue = parseInt(x);
@@ -140,7 +140,7 @@ export default function SelectEvent({
         clearButtonProps={{
           onClick: () => {
             setFilter('');
-            onSelectionChangeHandler(undefined);
+            onSelectionChangeHandler(null);
           },
         }}
         name={name}

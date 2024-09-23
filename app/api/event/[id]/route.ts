@@ -1,9 +1,9 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseDate, parseNumber, parseString } from '@/app/api/parsers';
-import { EventExtended, eventExtension, eventPatchExtension } from '@/app/api/event/route';
+import { EventExtended, eventExtension, eventPatchExtension } from '@/app/api/event/getEvents';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);

@@ -1,7 +1,6 @@
 import { useQuery, QueryKey, QueryFunction, skipToken } from '@tanstack/react-query';
 import { QK } from '@/app/api/queryHelpers';
-import { DeckExtended } from '@/app/api/deck/route';
-import { parseDeck } from '@/app/api/deck/getDecks';
+import { DeckExtended, parseDeck } from '@/app/api/deck/getDecks';
 import { Stringify } from '@/app/api/parsers';
 
 export async function getDeck(deckId: number) {

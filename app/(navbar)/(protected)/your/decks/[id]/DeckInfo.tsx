@@ -33,6 +33,7 @@ export default function DeckInfo({ deckId, isAlwaysEditMode = false }: DeckInfoP
 
   useEffect(() => {
     if (isAlwaysEditMode && !isSelected) setSelected();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAlwaysEditMode]);
 
   const onDeleteDeck = useCallback(() => {

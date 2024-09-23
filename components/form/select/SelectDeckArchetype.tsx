@@ -124,6 +124,7 @@ export default function SelectDeckArchetype({
   useEffect(() => {
     const item = items.find(i => i.id === value);
     if (item) setSelectedValue(item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {

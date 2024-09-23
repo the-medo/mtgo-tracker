@@ -2,11 +2,30 @@ import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
 import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
-import { MatchExtended } from '@/app/api/match/route';
 import { parseDate, Stringify } from '@/app/api/parsers';
-import { GameExtended } from '@/app/api/game/route';
-import { parseGame } from '@/app/api/game/getGames';
+import { GameExtended, gameExtension, parseGame } from '@/app/api/game/getGames';
 import { queryClient } from '@/app/providers';
+import { Prisma } from '@prisma/client';
+
+export const matchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
+  include: {
+    MatchTags: true,
+    Games: {
+      ...gameExtension,
+    },
+    deck: true,
+    oppArchetype: true,
+  },
+});
+
+export const matchPatchExtension = Prisma.validator<Prisma.MatchDefaultArgs>()({
+  include: {
+    deck: true,
+    oppArchetype: true,
+  },
+});
+
+export type MatchExtended = Prisma.MatchGetPayload<typeof matchExtension>;
 
 export const parseMatch = (j: Stringify<MatchExtended>): MatchExtended =>
   ({

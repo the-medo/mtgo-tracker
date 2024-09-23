@@ -1,16 +1,44 @@
 import { createQueryApiParams, PrismaQueryApiParams } from '@/types/api-params';
-import {
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  skipToken,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
+import { QueryFunction, QueryKey, skipToken, useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { QK } from '@/app/api/queryHelpers';
-import { DeckExtended } from '@/app/api/deck/route';
 import { queryClient } from '@/app/providers';
 import { parseDate, Stringify } from '@/app/api/parsers';
+import { Prisma } from '@prisma/client';
+
+export const deckExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
+  include: {
+    deckArchetype: true,
+    format: true,
+    formatVersion: true,
+    DeckTags: true,
+    _count: {
+      select: {
+        Events: true,
+      },
+    },
+    Matches: {
+      select: {
+        result: true,
+        Games: {
+          select: {
+            result: true,
+            startingHand: true,
+            oppStartingHand: true,
+          },
+        },
+      },
+    },
+  },
+});
+
+export const deckPatchExtension = Prisma.validator<Prisma.DeckDefaultArgs>()({
+  include: {
+    deckArchetype: true,
+  },
+});
+
+export type DeckExtended = Prisma.DeckGetPayload<typeof deckExtension>;
 
 export const parseDeck = (j: Stringify<DeckExtended>): DeckExtended =>
   ({

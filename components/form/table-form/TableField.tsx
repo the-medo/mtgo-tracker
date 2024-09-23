@@ -10,7 +10,7 @@ import TableFieldSelect, {
   TableFieldSelectProps,
 } from '@/components/form/table-form/TableFieldSelect';
 import useSimplePatch from '@/app/api/useSimplePatch';
-import { QK } from '@/app/api/queryHelpers';
+import { QK, QTypes } from '@/app/api/queryHelpers';
 import TableFieldTags, { TableFieldTagsProps } from '@/components/form/table-form/TableFieldTags';
 import TableFieldBoolean, {
   TableFieldBooleanProps,
@@ -21,7 +21,7 @@ import TableFieldTextarea, {
 
 export type TableFieldProps = {
   tableId: string;
-  qk: QK;
+  qk: keyof QTypes;
   id: number;
   fieldName: string;
   label: string;

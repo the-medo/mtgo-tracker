@@ -1,10 +1,10 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { parseNumber, parseString } from '@/app/api/parsers';
 import { parseQueryApiParamsForPrisma } from '@/types/api-params';
-import { Prisma } from '@prisma/client';
+import { GameExtended, gameExtension } from '@/app/api/game/getGames';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -30,17 +30,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Only logged user can add new game!' }, { status: 403 });
   }
 }
-
-export const gameExtension = Prisma.validator<Prisma.GameDefaultArgs>()({
-  include: {
-    GameTags: true,
-    match: true,
-  },
-});
-
-export const gamePatchExtension = Prisma.validator<Prisma.GameDefaultArgs>()({});
-
-export type GameExtended = Prisma.GameGetPayload<typeof gameExtension>;
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);

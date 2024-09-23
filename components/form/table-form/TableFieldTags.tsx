@@ -90,7 +90,7 @@ export default function TableFieldTags({
         });
       }
     },
-    [selectedKeys, deleteTag, id, assignTag],
+    [selectedKeys, deleteTag, id, assignTag, tagType],
   );
 
   const selectRow = useCallback(() => {

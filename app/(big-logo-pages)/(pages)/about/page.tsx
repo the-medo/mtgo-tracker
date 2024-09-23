@@ -2,6 +2,7 @@ import { Bebas_Neue } from 'next/font/google';
 
 const displayFont = Bebas_Neue({
   weight: '400',
+  subsets: ['latin'],
 });
 
 export default function About() {
