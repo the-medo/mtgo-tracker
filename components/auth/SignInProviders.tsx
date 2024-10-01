@@ -22,7 +22,7 @@ export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
   }
 
   return (
-    <div className="flex flex-col p-10 gap-5 justify-center items-center">
+    <div className="flex flex-col p-5 gap-5 justify-center items-center">
       <Button
         variant="shadow"
         size="lg"

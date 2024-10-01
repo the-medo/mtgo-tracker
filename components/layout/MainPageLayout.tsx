@@ -9,7 +9,7 @@ interface MainPageLayoutProps extends PropsWithChildren {
 export default function MainPageLayout({ children, redirectToDashboard }: MainPageLayoutProps) {
   return (
     <>
-      <main className="flex md:flex-row flex-col w-full md:h-full bg-red-50 bg-cover bg-center opacity-100 bg-[url('https://imagedelivery.net/zchNIWFramhipgMjPiGPQQ/72b180ff-ae0a-4f1e-5225-2de7c6f82700/original')]">
+      <main className="flex md:flex-row flex-col w-full md:min-h-full bg-red-50 bg-cover bg-center opacity-100 bg-[url('https://imagedelivery.net/zchNIWFramhipgMjPiGPQQ/72b180ff-ae0a-4f1e-5225-2de7c6f82700/original')]">
         <NavInfoLeft redirectToDashboard={redirectToDashboard} />
         {children ? <InfoPage>{children}</InfoPage> : null}
       </main>

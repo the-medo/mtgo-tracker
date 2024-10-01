@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'FetchBook - MTG tracker',
   description: 'Winrates and stuff',
+  icons: '/fetchbook-logo2.png',
 };
 
 export default function RootLayout({
@@ -19,9 +20,6 @@ export default function RootLayout({
   return (
     <AuthProvider>
       <html lang="en" className="light">
-        <head>
-          <link rel="icon" href="/fetchbook-logo2.png" />
-        </head>
         <body className={inter.className}>
           <Providers>{children}</Providers>
         </body>
