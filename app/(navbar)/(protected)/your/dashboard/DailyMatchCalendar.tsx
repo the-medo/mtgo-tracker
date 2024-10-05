@@ -48,7 +48,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
 
   return (
     <>
-      <div className={cn(`flex flex-col h-[200px] w-1/2 min-w-[400px] gap-2`)}>
+      <div className={cn(`flex flex-col h-[200px] w-1/2 min-w-[330px] gap-2`)}>
         <div className="flex flex-row justify-between">
           <Title title="Matches - 2024" />
           {dailyMatches ? (

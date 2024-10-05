@@ -21,7 +21,7 @@ export default function DeckMatches({ deckId }: DeckMatchesProps) {
   return (
     <div className="flex flex-col gap-4">
       {items.map(i => (
-        <MatchBox key={i.id} matchId={i.id} eventId={null} compact whiteBackground />
+        <MatchBox key={i.id} matchId={i.id} eventId={null} compact whiteBackground smallMatchRow />
       ))}
       {!isFetching && hasNextPage && <InfiniteScrollObserver runOnObserve={fetchNextPage} />}
     </div>

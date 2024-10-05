@@ -112,12 +112,12 @@ export default function StatModal({ matchData }: StatModalProps) {
                       })}
                     >
                       <StatSettings />
-                      <div className="h-[400px] min-w-[400px]">
+                      <div className="h-[400px] min-w-[350px]">
                         <StatBarChart />
                       </div>
                     </div>
                     <div
-                      className={cn('flex flex-row grow min-w-[400px] h-[calc(100vh-100px)]', {
+                      className={cn('flex flex-row grow min-w-[350px] h-[calc(100vh-100px)]', {
                         'w-1/3': breakpoint !== 'sm' && breakpoint !== 'xs',
                         'w-full': breakpoint === 'sm' || breakpoint === 'xs',
                       })}

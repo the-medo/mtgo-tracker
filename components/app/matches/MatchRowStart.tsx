@@ -10,7 +10,7 @@ interface MatchRowStartProps {
   roundNumber?: number;
   itemsCenter?: boolean;
   compact?: boolean;
-  insideAnotherBox?: boolean;
+  small?: boolean;
 }
 
 const baseClassNames = 'pt-2 rounded-tl-md rounded-bl-md flex flex-col h-full grow-0 shrink-0';
@@ -20,7 +20,7 @@ export default function MatchRowStart({
   roundNumber,
   itemsCenter,
   compact,
-  insideAnotherBox,
+  small,
 }: MatchRowStartProps) {
   const { data: match } = useMatch(matchId);
 
@@ -32,14 +32,14 @@ export default function MatchRowStart({
         'items-center': itemsCenter,
         'p-4': !compact,
         'p-2': compact,
-        'w-24': !insideAnotherBox,
-        'w-16': insideAnotherBox,
+        'w-24': !small,
+        'w-16': small,
       })}
     >
       {roundNumber && !compact ? (
         <div className="text-xs text-default-700">ROUND {roundNumber}</div>
       ) : null}
-      <MatchResultChip matchId={matchId} size={insideAnotherBox ? 'sm' : 'lg'} />
+      <MatchResultChip matchId={matchId} size={small ? 'sm' : 'lg'} />
     </div>
   );
 }

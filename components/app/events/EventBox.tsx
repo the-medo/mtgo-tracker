@@ -119,7 +119,7 @@ export default function EventBox({
                 />
               </>
             ) : (
-              <div className="flex flex-col gap-1 min-w-[calc(300px-theme(spacing.24))]">
+              <div className="flex flex-col gap-1 min-w-[calc(220px-theme(spacing.24))]">
                 <p className="text-md">
                   <Link href={`/your/events/${eventId}`}>
                     {event?.name ?? '- empty event name -'}
@@ -140,7 +140,7 @@ export default function EventBox({
 
           <div className="flex flex-row flex-wrap gap-4 items-center">
             {eventTags.length > 0 || eventEditMode ? (
-              <div className="flex flex-row items-center w-[200px]">
+              <div className="flex flex-row items-center min-w-[150px]">
                 <TableField
                   qk={QK.EVENT}
                   type="tags"

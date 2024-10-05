@@ -22,7 +22,7 @@ export default function DashboardEvents({}: DashboardEventsProps) {
   const items = data?.pages?.flat() ?? [];
 
   return (
-    <div className="flex flex-col gap-4 w-1/3 min-w-[450px] grow">
+    <div className="flex flex-col gap-4 w-1/3 min-w-[320px] grow">
       <div className="flex flex-row gap-4 items-center">
         <Title title="Recent events" />
         <Link href="/your/events" size="sm">

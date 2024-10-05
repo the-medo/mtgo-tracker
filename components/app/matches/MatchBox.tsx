@@ -33,6 +33,7 @@ interface MatchBoxProps {
   whiteBackground?: boolean;
   showDeckName?: boolean;
   insideAnotherBox?: boolean;
+  smallMatchRow?: boolean;
 }
 
 export const matchBoxIdentificator = `MatchContent`;
@@ -44,6 +45,7 @@ export default function MatchBox({
   whiteBackground,
   showDeckName,
   insideAnotherBox,
+  smallMatchRow,
 }: MatchBoxProps) {
   const breakpoint = useStore(state => state.breakpoint);
   const { data: match, isLoading } = useMatch(matchId);
@@ -191,7 +193,7 @@ export default function MatchBox({
         itemsCenter={!matchEditMode}
         roundNumber={match?.round ?? undefined}
         compact={compact}
-        insideAnotherBox={insideAnotherBox}
+        small={insideAnotherBox || smallMatchRow}
       />
       <div
         className={cn(`flex flex-col w-full gap-2 relative`, {
@@ -276,13 +278,13 @@ export default function MatchBox({
                 >
                   {showDeckName && (
                     <>
-                      <div className="flex flex-col gap-1 w-[200px]">
+                      <div className="flex flex-col gap-1 min-w-[150px]">
                         <p className="text-md text-primary-dark">{match?.deck?.name}</p>
                       </div>
                       <p className="text-xs text-default-500">vs.</p>
                     </>
                   )}
-                  <div className="flex flex-col gap-1 w-[200px]">
+                  <div className="flex flex-col gap-1 min-w-[150px]">
                     <p className="text-md">{match?.oppArchetype?.name}</p>
                     {match?.oppArchetypeNote && (
                       <p className="text-xs text-default-500">{match?.oppArchetypeNote}</p>
@@ -295,12 +297,12 @@ export default function MatchBox({
 
           {!matchEditMode && (
             <>
-              <div className="flex flex-row flex-wrap gap-2 items-center min-w-[220px]">
+              <div className="flex flex-row flex-wrap gap-2 items-center min-w-[150px]">
                 {match?.Games.sort((a, b) => a.gameNumber - b.gameNumber).map(g => (
                   <GameResultChip key={g.id} gameId={g.id} />
                 ))}
               </div>
-              {match?.notes && <div className="italic text-xs min-w-[200px]">{match.notes}</div>}
+              {match?.notes && <div className="italic text-xs min-w-[150px]">{match.notes}</div>}
             </>
           )}
 
