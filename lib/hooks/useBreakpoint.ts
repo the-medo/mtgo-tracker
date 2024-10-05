@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useStore from '@/store/store';
 
-const breakpoints = {
+export const breakpoints = {
   xs: 0,
   sm: 640,
   md: 768,

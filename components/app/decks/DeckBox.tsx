@@ -54,7 +54,7 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
           'bg-default-100': !deckEditMode,
         })}
       >
-        <div className={cn(`p-4 flex flex-row flex-wrap w-full gap-2 justify-between`)}>
+        <div className={cn(`p-2 md:p-4 flex flex-row flex-wrap w-full gap-2 justify-between`)}>
           <div className="flex flex-row flex-wrap gap-2 items-center">
             {deckEditMode ? (
               <>
@@ -128,7 +128,7 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
 
           <div className="flex flex-row flex-wrap gap-4 items-center">
             {deckTags.length > 0 || deckEditMode ? (
-              <div className="flex flex-row items-center w-[200px]">
+              <div className="flex flex-row items-center min-w-[150px]">
                 <TableField
                   qk={QK.DECK}
                   type="tags"
@@ -197,7 +197,7 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
           </div>
         </div>
         {expandType && (
-          <div className={`flex flex-col gap-2 p-4`}>
+          <div className={`flex flex-col gap-2 p-2 md:p-4`}>
             {expandType === DeckBoxExpandType.EVENTS && <DeckEvents deckId={deckId} />}
             {expandType === DeckBoxExpandType.MATCHES && <DeckMatches deckId={deckId} />}
           </div>

@@ -22,8 +22,8 @@ export default function DashboardDecks({}: DashboardDecksProps) {
   const items = data?.pages?.flat() ?? [];
 
   return (
-    <div className="flex flex-col gap-4 w-1/3 min-w-[320px] grow">
-      <div className="flex flex-row gap-4 items-center">
+    <div className="flex flex-col gap-2 md:gap-4 w-1/3 min-w-[320px] grow">
+      <div className="flex flex-row gap-2 md:gap-4 items-center">
         <Title title="Recent decks" />
         <Link href="/your/decks" size="sm">
           view all

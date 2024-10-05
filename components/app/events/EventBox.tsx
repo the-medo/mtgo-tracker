@@ -138,7 +138,7 @@ export default function EventBox({
             )}
           </div>
 
-          <div className="flex flex-row flex-wrap gap-4 items-center">
+          <div className="flex flex-row flex-wrap gap-2 md:gap-4 items-center">
             {eventTags.length > 0 || eventEditMode ? (
               <div className="flex flex-row items-center min-w-[150px]">
                 <TableField
@@ -171,7 +171,7 @@ export default function EventBox({
           </div>
         </div>
         {displayMatches && (
-          <div className={`flex flex-col gap-2 p-4`}>
+          <div className={`flex flex-col gap-2 p-2 md:p-4`}>
             {event?.Matches.sort((m1, m2) => (m1.round ?? 0) - (m2.round ?? 0)).map(i => (
               <MatchBox
                 key={i.id}

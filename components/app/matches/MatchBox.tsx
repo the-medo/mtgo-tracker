@@ -204,11 +204,11 @@ export default function MatchBox({
         })}
       >
         <div
-          className={cn(`flex flex-row flex-wrap w-full gap-4`, {
+          className={cn(`flex flex-row flex-wrap w-full gap-2 md:gap-4`, {
             'items-start': matchEditMode,
             'items-center': !matchEditMode,
-            'p-4': !compact,
-            'p-2 px-4': compact,
+            'p-2 md:p-4': !compact,
+            'p-2 px-2 md:px-4': compact,
           })}
         >
           <div
@@ -217,7 +217,7 @@ export default function MatchBox({
               'items-center': !matchEditMode,
             })}
           >
-            <div className={cn(`flex flex-row gap-4 items-center w-[min(100%,500px)]`)}>
+            <div className={cn(`flex flex-row gap-2 md:gap-4 items-center w-[min(100%,500px)]`)}>
               {matchEditMode ? (
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row flex-wrap gap-2">
@@ -357,7 +357,7 @@ export default function MatchBox({
         </div>
 
         {(matchEditMode || !match?.result) && !compact && (
-          <div className={`p-4 flex flex-row flex-wrap w-full gap-4 items-start`}>
+          <div className={`p-2 md:p-4 flex flex-row flex-wrap w-full gap-2 md:gap-4 items-start`}>
             {isLoading || (!isLoading && matchGameDisplayInfo.length === 0) ? (
               <Spinner />
             ) : (

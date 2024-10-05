@@ -47,7 +47,7 @@ export default function MatchGameCreationForm({ matchId, gameNumber }: MatchGame
 
   return (
     <form
-      className="flex flex-col w-full gap-4 max-w-md align-middle items-center"
+      className="flex flex-col w-full gap-2 md:gap-4 max-w-md align-middle items-center"
       onSubmit={submitHandler}
     >
       <Title title={`Game ${gameNumber}`} />

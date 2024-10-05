@@ -19,7 +19,7 @@ export default function DeckEvents({ deckId }: DeckEventsProps) {
   const items = data?.pages?.flat() ?? [];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2 md:gap-4">
       {items.map(i => (
         <EventBox key={i.id} eventId={i.id} whiteBackground compact />
       ))}

@@ -120,7 +120,7 @@ export default function GameContent({ matchId, gameId }: GameContentProps) {
   );
 
   return (
-    <div className={`flex flex-col w-full gap-4 items-center`}>
+    <div className={`flex flex-col w-full gap-2 md:gap-4 items-center`}>
       <div className={`flex flex-row w-full justify-between`}>
         <Title title={`Game ${game?.gameNumber}`} />
         {editMode ? (
