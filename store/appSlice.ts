@@ -25,7 +25,7 @@ export type AppActions = {
 export type AppSlice = AppState & AppActions;
 
 export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, get) => ({
-  breakpoint: getBreakpoint(window.innerWidth),
+  breakpoint: 'md',
   isMenuOpen: false,
   isStatModalOpen: false,
   isUpToBreakpoint: (upTo: Breakpoint) => {
