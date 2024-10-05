@@ -22,9 +22,9 @@ export function UserDropdown() {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">
-          <DropdownItem key="settings">
+          {/*<DropdownItem key="settings">
             <Link href={`/settings`}>My Settings</Link>
-          </DropdownItem>
+          </DropdownItem>*/}
           <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Logout
           </DropdownItem>

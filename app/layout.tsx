@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'FetchBook - MTG tracker',
   description: 'Winrates and stuff',
-  icons: '/fetchbook-logo2.png',
+  icons: '/favicon.png',
 };
 
 export default function RootLayout({
