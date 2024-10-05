@@ -1,6 +1,6 @@
 {
   "name": "mtgo-tracker",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
@@ -18,6 +18,7 @@
     "@tanstack/react-query": "^5.54.1",
     "@tanstack/react-query-devtools": "^5.54.1",
     "classnames": "^2.5.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.4.0",
     "lodash.debounce": "^4.0.8",
     "next": "14.2.13",
