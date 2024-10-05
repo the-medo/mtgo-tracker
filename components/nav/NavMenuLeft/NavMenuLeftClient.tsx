@@ -1,17 +1,15 @@
 'use client';
 
-import { TbMenu2 } from 'react-icons/tb';
 import cn from 'classnames';
 import useStore from '@/store/store';
-import { useState } from 'react';
-import NavMenuLeftContent from '@/components/nav/NavMenuLeft/NavMenuLeftContent';
+import { PropsWithChildren } from 'react';
+import { LeftMenuType } from '@/store/appSlice';
 
-interface Props {
-  isAuthenticated?: boolean;
-  isAdmin?: boolean;
+interface NavMenuLeftClientProps extends PropsWithChildren {
+  type: LeftMenuType;
 }
 
-export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
+export default function NavMenuLeftClient({ type, children }: NavMenuLeftClientProps) {
   const breakpoint = useStore(state => state.breakpoint);
   const isMenuOpen = useStore(state => state.isMenuOpen);
 
@@ -20,43 +18,45 @@ export default function NavMenuLeftClient({ isAuthenticated, isAdmin }: Props) {
       <>
         <div
           className={cn(
-            'z-30 fixed bottom-0 top-16 left-0 bg-white transition-transform duration-300 ease-in-out',
-            isMenuOpen ? 'translate-y-0' : '-translate-y-full',
-            {
-              'right-0': breakpoint === 'xs',
-              'w-[250px]': breakpoint === 'sm',
-            },
+            'z-30 fixed bottom-0 top-16 left-0 bg-white transition-transform duration-300 ease-in-out right-0',
+            isMenuOpen === type ? 'translate-y-0' : '-translate-y-full',
           )}
         >
           <div
             className={cn('flex flex-row w-full h-full', {
-              'w-[250px]': breakpoint === 'sm',
-              'w-full': breakpoint === 'xs',
+              // 'w-[250px]': breakpoint === 'sm',
+              // 'w-full': breakpoint === 'xs',
             })}
           >
             <div
               className={cn(
-                'flex-shrink-0 h-full border-r-1 flex flex-col p-4 text-default-600 overflow-y-auto',
+                'flex-shrink-0 h-full border-r-1 flex flex-col p-4 text-default-600 overflow-y-auto w-full',
                 {
-                  'w-[250px]': breakpoint === 'sm',
-                  'w-[200px]': breakpoint === 'xs',
+                  // 'w-[250px]': breakpoint === 'sm',
+                  // 'w-[200px]': breakpoint === 'xs',
                 },
               )}
             >
-              <NavMenuLeftContent isAuthenticated={isAuthenticated} isAdmin={isAdmin} />
+              {children}
             </div>
-            {breakpoint === 'xs' && (
-              <div className="flex-grow min-w-0 overflow-y-auto" id="left-menu-portal-target"></div>
-            )}
+            {/*<div className="flex-grow min-w-0 overflow-y-auto" id="left-menu-portal-target"></div>*/}
           </div>
         </div>
       </>
     );
   }
 
+  if (type === LeftMenuType.NAVIGATION) {
+    return (
+      <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600 overflow-y-auto">
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div className="w-[200px] border-r-1 flex flex-col p-4 text-default-600 overflow-y-auto">
-      <NavMenuLeftContent isAuthenticated={isAuthenticated} isAdmin={isAdmin} />
+    <div className="p-4 w-[250px] min-w-[250px] border-r-1 flex flex-col gap-4 overflow-y-auto">
+      {children}
     </div>
   );
 }

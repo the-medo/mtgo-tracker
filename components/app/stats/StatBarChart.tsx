@@ -13,9 +13,11 @@ import { ResponsiveBar } from '@nivo/bar';
 import useStore from '@/store/store';
 import StatBarChartTooltip from '@/components/app/stats/StatBarChartTooltip';
 
-interface StatBarChartProps {}
+interface StatBarChartProps {
+  smallScreen?: boolean;
+}
 
-export default function StatBarChart({}: StatBarChartProps) {
+export default function StatBarChart({ smallScreen }: StatBarChartProps) {
   const statGrouping = useStore(state => state.statGrouping);
   const setStatSelectedArchetypeId = useStore(state => state.setStatSelectedArchetypeId);
   const isStatDiverging = useStore(state => state.isStatDiverging);
@@ -27,7 +29,8 @@ export default function StatBarChart({}: StatBarChartProps) {
     const dvgMultiplicator = isStatDiverging ? -1 : 1;
     const result: StatBarChartData[] = [];
 
-    archetypeList.forEach(a => {
+    archetypeList.forEach((a, i) => {
+      if (i >= 20) return;
       const arch = archetypeMap[a];
       const adist = byArchetype[a];
       if (arch && adist) {
@@ -137,6 +140,7 @@ export default function StatBarChart({}: StatBarChartProps) {
   }, [
     isStatDiverging,
     archetypeList,
+    smallScreen,
     archetypeMap,
     byArchetype,
     statGrouping,
@@ -158,15 +162,43 @@ export default function StatBarChart({}: StatBarChartProps) {
     [],
   );
 
-  const axisBottom = useMemo(
+  const axisArchetypes = useMemo(
     () => ({
       tickSize: 0,
       tickPadding: 5,
-      tickRotation: 60,
+      tickRotation: smallScreen ? 30 : 60,
       truncateTickAt: 0,
       format: (x: number) => archetypeMap[x]?.name ?? '- unknown archetype -',
     }),
-    [archetypeMap],
+    [smallScreen, archetypeMap],
+  );
+
+  const axisCounts = useMemo(
+    () => ({
+      tickSize: 1,
+      tickPadding: 5,
+      tickRotation: 0,
+      truncateTickAt: 0,
+    }),
+    [],
+  );
+
+  const margin = useMemo(
+    () =>
+      smallScreen
+        ? {
+            top: 50,
+            bottom: 50,
+            left: 100,
+            right: 50,
+          }
+        : {
+            top: 50,
+            bottom: 100,
+            left: 50,
+            right: 50,
+          },
+    [smallScreen],
   );
 
   const onClickHandler = useCallback(
@@ -177,27 +209,25 @@ export default function StatBarChart({}: StatBarChartProps) {
   );
 
   return (
-    <ResponsiveBar<StatBarChartData>
-      data={chartData}
-      indexBy="archetype"
-      colorBy="id"
-      keys={barKeys}
-      colors={barColors}
-      padding={0.3}
-      valueScale={{ type: 'linear' }}
-      indexScale={{ type: 'band', round: true }}
-      margin={{ top: 50, bottom: 100, left: 50, right: 50 }}
-      axisTop={null}
-      axisRight={null}
-      axisBottom={axisBottom}
-      axisLeft={{
-        tickSize: 1,
-        tickPadding: 5,
-        tickRotation: 0,
-        truncateTickAt: 0,
-      }}
-      onClick={onClickHandler}
-      tooltip={tooltip}
-    />
+    <div className="h-[600px] md:h-[400px] min-w-[350px]">
+      <ResponsiveBar<StatBarChartData>
+        data={chartData}
+        indexBy="archetype"
+        colorBy="id"
+        layout={smallScreen ? 'horizontal' : 'vertical'}
+        keys={barKeys}
+        colors={barColors}
+        padding={0.3}
+        valueScale={{ type: 'linear' }}
+        indexScale={{ type: 'band', round: true }}
+        margin={margin}
+        axisTop={null}
+        axisRight={null}
+        axisBottom={smallScreen ? axisCounts : axisArchetypes}
+        axisLeft={smallScreen ? axisArchetypes : axisCounts}
+        onClick={onClickHandler}
+        tooltip={tooltip}
+      />
+    </div>
   );
 }

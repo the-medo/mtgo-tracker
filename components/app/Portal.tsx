@@ -21,6 +21,8 @@ const Portal: React.FC<PortalProps> = ({ children, targetId }) => {
       setTargetElement(newElement);
     };
 
+    checkForElement();
+
     window.addEventListener('resize', checkForElement);
 
     return () => {

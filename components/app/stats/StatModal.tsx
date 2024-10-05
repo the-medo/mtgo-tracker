@@ -86,6 +86,8 @@ export default function StatModal({ matchData }: StatModalProps) {
     setStatData(r);
   }, [matchData, setStatData]);
 
+  const smallScreen = ['xs', 'sm'].includes(breakpoint);
+
   return (
     <>
       <Button
@@ -94,15 +96,15 @@ export default function StatModal({ matchData }: StatModalProps) {
         isIconOnly
         radius="full"
         onPress={onOpen}
-        className="absolute right-4 bottom-4 z-20"
+        className="absolute right-4 bottom-16 z-20"
       >
         <TbChartBar size={28} />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="full">
-        <ModalContent className="p-2 pt-6 overflow-x-hidden overflow-y-auto">
+        <ModalContent className="p-2 md:p-4 pt-6 overflow-x-hidden overflow-y-auto">
           {onClose => (
             <>
-              <ModalBody>
+              <ModalBody className="px-0">
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row flex-wrap gap-4">
                     <div
@@ -111,18 +113,16 @@ export default function StatModal({ matchData }: StatModalProps) {
                         'w-full': breakpoint === 'sm' || breakpoint === 'xs',
                       })}
                     >
-                      <StatSettings />
-                      <div className="h-[400px] min-w-[350px]">
-                        <StatBarChart />
-                      </div>
+                      <StatSettings smallScreen={smallScreen} />
+                      <StatBarChart smallScreen={smallScreen} />
                     </div>
                     <div
-                      className={cn('flex flex-row grow min-w-[350px] h-[calc(100vh-100px)]', {
+                      className={cn('flex flex-row grow min-w-[300px] md:h-[calc(100vh-130px)]', {
                         'w-1/3': breakpoint !== 'sm' && breakpoint !== 'xs',
                         'w-full': breakpoint === 'sm' || breakpoint === 'xs',
                       })}
                     >
-                      <div className="flex flex-col w-full gap-2 overflow-y-auto">
+                      <div className="flex flex-col w-full gap-2 md:overflow-y-auto">
                         <StatArchetypeMatches />
                       </div>
                     </div>

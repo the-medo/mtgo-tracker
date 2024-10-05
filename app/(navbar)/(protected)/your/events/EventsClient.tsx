@@ -26,7 +26,7 @@ export default function EventsClient({}: Props) {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 md:gap-4">
         <Checkbox onValueChange={changeHandler}>Open event matches</Checkbox>
         <hr />
         {isFetching && <Spinner />}

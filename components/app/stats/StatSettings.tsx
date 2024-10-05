@@ -4,7 +4,11 @@ import Title from '@/components/typography/Title';
 import useStore from '@/store/store';
 import { Key, useCallback, useMemo } from 'react';
 
-export default function StatSettings() {
+interface StatSettingsProps {
+  smallScreen?: boolean;
+}
+
+export default function StatSettings({ smallScreen }: StatSettingsProps) {
   const statGrouping = useStore(state => state.statGrouping);
   const isStatDiverging = useStore(state => state.isStatDiverging);
   const isByStartingPlayer = useStore(state => state.isStatByStartingPlayer);
@@ -14,6 +18,8 @@ export default function StatSettings() {
   const toggleIsStatDiverging = useStore(state => state.toggleIsStatDiverging);
   const toggleIsByStartingPlayer = useStore(state => state.toggleIsStatByStartingPlayer);
   const toggleIsByOpeningHand = useStore(state => state.toggleIsStatByOpeningHand);
+
+  const tabsSize = smallScreen ? 'sm' : 'md';
 
   const handleGroupingChange = useCallback(
     (k: Key) => setGrouping(k as StatGrouping),
@@ -34,6 +40,7 @@ export default function StatSettings() {
             aria-label="Options"
             selectedKey={statGrouping}
             onSelectionChange={handleGroupingChange}
+            size={tabsSize}
           >
             <Tab key={StatGrouping.MATCH} title="Matches" />
             <Tab key={StatGrouping.GAME} title="Games" />
@@ -44,6 +51,7 @@ export default function StatSettings() {
             aria-label="Options"
             selectedKey={isStatDiverging ? 'true' : 'false'}
             onSelectionChange={toggleIsStatDiverging}
+            size={tabsSize}
           >
             <Tab key="true" title="Diverging" />
             <Tab key="false" title="No" />
@@ -54,6 +62,7 @@ export default function StatSettings() {
             aria-label="Options"
             selectedKey={isByStartingPlayer ? 'true' : 'false'}
             onSelectionChange={toggleIsByStartingPlayer}
+            size={tabsSize}
           >
             <Tab key="true" title="Starting player" />
             <Tab key="false" title="No" />
@@ -65,6 +74,7 @@ export default function StatSettings() {
             selectedKey={isByOpeningHand ? 'true' : 'false'}
             onSelectionChange={toggleIsByOpeningHand}
             disabledKeys={openingHandDisabledKeys}
+            size={tabsSize}
           >
             <Tab key="true" title="Opening hand size" />
             <Tab key="false" title="No" />

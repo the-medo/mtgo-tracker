@@ -6,9 +6,10 @@ import { UserDropdown } from '@/components/auth/UserDropdown';
 import { Bebas_Neue } from 'next/font/google';
 import { LOGO_URL } from '@/lib/constants';
 import NavMenuTopActionButtons from '@/components/nav/NavMenuTop/NavMenuTopActionButtons';
-import { TbMenu2, TbX } from 'react-icons/tb';
+import { TbFilter, TbMenu2, TbX } from 'react-icons/tb';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
+import { LeftMenuType } from '@/store/appSlice';
 
 const displayFont = Bebas_Neue({
   weight: '400',
@@ -33,12 +34,16 @@ export default function NavMenuTop() {
           <Button
             isIconOnly
             size="md"
-            onClick={toggleIsMenuOpen}
+            onClick={() => toggleIsMenuOpen(LeftMenuType.NAVIGATION)}
             radius="full"
             variant="light"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <TbX className="w-6 h-6" /> : <TbMenu2 className="w-6 h-6" />}
+            {isMenuOpen === LeftMenuType.NAVIGATION ? (
+              <TbX className="w-6 h-6" />
+            ) : (
+              <TbMenu2 className="w-6 h-6" />
+            )}
           </Button>
         </NavbarItem>
         <NavbarItem className="hidden md:flex">

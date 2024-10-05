@@ -3,7 +3,7 @@
 import cn from 'classnames';
 import { DailyMatch, useDailyMatches } from '@/app/api/dashboard/daily/matches/useDailyMatches';
 import { CalendarDatum, CalendarTooltipProps, ResponsiveTimeRange } from '@nivo/calendar';
-import { useCallback, useMemo} from 'react';
+import { useCallback, useMemo } from 'react';
 import DailyMatchCalendarTooltip from '@/app/(navbar)/(protected)/your/dashboard/DailyMatchCalendarTooltip';
 import Title from '@/components/typography/Title';
 import { Chip } from '@nextui-org/chip';
@@ -80,7 +80,7 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
     <>
       <div className={cn(`flex flex-col h-[200px] grow min-w-[330px] gap-2`)}>
         <div className="flex flex-row justify-between">
-          <Title title="Matches - 2024" />
+          <Title title="Matches" />
           {dailyMatches ? (
             <Chip variant="solid" color="default">
               Total: {total.wins}W {total.losses}L{total.draws > 0 ? ` ${total.draws}D` : ''}

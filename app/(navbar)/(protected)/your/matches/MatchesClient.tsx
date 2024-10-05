@@ -139,7 +139,7 @@ export default function MatchesClient({}: Props) {
   const items = data?.pages?.flat() ?? [];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2 md:gap-4">
       {isFetching && <Spinner />}
       {!isFetching && items.length === 0 ? <Title title="No matches found" /> : null}
       {items.map(i => (

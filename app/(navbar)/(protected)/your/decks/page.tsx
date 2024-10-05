@@ -10,7 +10,7 @@ export default function YourDecks() {
         <DecksLeftNav />
       </Portal>
       <ContentWFull>
-        <main className="flex flex-col gap-4">
+        <main className="flex flex-col gap-2 md:gap-4">
           <Decks />
         </main>
       </ContentWFull>

@@ -1,10 +1,15 @@
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { Breakpoint, breakpoints, isUpToBreakpoint } from '@/lib/hooks/useBreakpoint';
+import { Breakpoint, breakpoints, getBreakpoint } from '@/lib/breakpoints';
+
+export enum LeftMenuType {
+  NAVIGATION = 'navigation',
+  SUBMENU = 'submenu',
+}
 
 export type AppState = {
   breakpoint: Breakpoint;
-  isMenuOpen: boolean;
+  isMenuOpen: LeftMenuType | false;
   isStatModalOpen: boolean;
 };
 
@@ -13,14 +18,14 @@ type AppStateType = keyof AppState;
 export type AppActions = {
   setBreakpoint: (value: Breakpoint) => void;
   isUpToBreakpoint: (upTo: Breakpoint) => boolean;
-  toggleIsMenuOpen: () => void;
+  toggleIsMenuOpen: (menuType: LeftMenuType) => void;
   toggleIsStatModalOpen: () => void;
 };
 
 export type AppSlice = AppState & AppActions;
 
 export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, get) => ({
-  breakpoint: 'md',
+  breakpoint: getBreakpoint(window.innerWidth),
   isMenuOpen: false,
   isStatModalOpen: false,
   isUpToBreakpoint: (upTo: Breakpoint) => {
@@ -32,10 +37,10 @@ export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, g
       breakpoint: value,
     }));
   },
-  toggleIsMenuOpen: () => {
+  toggleIsMenuOpen: (menuType: LeftMenuType) => {
     set(state => ({
       ...state,
-      isMenuOpen: !state.isMenuOpen,
+      isMenuOpen: state.isMenuOpen === menuType ? false : menuType,
     }));
   },
   toggleIsStatModalOpen: () => {

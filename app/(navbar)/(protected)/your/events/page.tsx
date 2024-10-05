@@ -12,7 +12,7 @@ export default function YourEvents() {
         <EventsLeftNav />
       </Portal>
       <ContentWFull>
-        <main className="flex flex-col gap-4">
+        <main className="flex flex-col gap-2 md:gap-4">
           <EventsClient />
         </main>
       </ContentWFull>
