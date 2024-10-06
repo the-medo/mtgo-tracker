@@ -7,9 +7,10 @@ import { LeftMenuType } from '@/store/appSlice';
 
 interface NavMenuLeftClientProps extends PropsWithChildren {
   type: LeftMenuType;
+  size?: 'md' | 'lg';
 }
 
-export default function NavMenuLeftClient({ type, children }: NavMenuLeftClientProps) {
+export default function NavMenuLeftClient({ type, children, size = 'md' }: NavMenuLeftClientProps) {
   const breakpoint = useStore(state => state.breakpoint);
   const isMenuOpen = useStore(state => state.isMenuOpen);
 
@@ -55,7 +56,12 @@ export default function NavMenuLeftClient({ type, children }: NavMenuLeftClientP
   }
 
   return (
-    <div className="p-4 w-[250px] min-w-[250px] border-r-1 flex flex-col gap-4 overflow-y-auto">
+    <div
+      className={cn('p-4  border-r-1 flex flex-col gap-4 overflow-y-auto', {
+        'w-[250px] min-w-[250px]': size === 'md',
+        'w-[300px] min-w-[300px]': size === 'lg',
+      })}
+    >
       {children}
     </div>
   );

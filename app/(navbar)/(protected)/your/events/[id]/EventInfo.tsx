@@ -13,11 +13,16 @@ import { useRouter } from 'next/navigation';
 interface EventInfoProps {
   eventId: number;
   isAlwaysEditMode?: boolean;
+  compact?: boolean;
 }
 
 export const eventInfoIdentificator = `EventInfo`;
 
-export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventInfoProps) {
+export default function EventInfo({
+  eventId,
+  isAlwaysEditMode = false,
+  compact = false,
+}: EventInfoProps) {
   const router = useRouter();
   const { mutate: deleteEvent, isPending } = useSimpleDelete(QK.EVENT);
   const { data } = useEvent(eventId);
@@ -62,7 +67,7 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventIn
   }
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-2 md:gap-4">
       <TableField
         qk={QK.EVENT}
         type="string"
@@ -95,17 +100,19 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventIn
         value={data.formatId ?? undefined}
         isLabelledView={true}
       />
-      <TableField
-        qk={QK.EVENT}
-        selectType={QK.FORMAT_VERSIONS}
-        type="select"
-        tableId={eventInfoIdentificator}
-        id={data.id}
-        fieldName="formatVersionId"
-        label="Format version"
-        value={data.formatVersionId ?? undefined}
-        isLabelledView={true}
-      />
+      {!compact ? (
+        <TableField
+          qk={QK.EVENT}
+          selectType={QK.FORMAT_VERSIONS}
+          type="select"
+          tableId={eventInfoIdentificator}
+          id={data.id}
+          fieldName="formatVersionId"
+          label="Format version"
+          value={data.formatVersionId ?? undefined}
+          isLabelledView={true}
+        />
+      ) : null}
       <TableField
         qk={QK.EVENT}
         selectType={QK.DECK}
@@ -119,67 +126,71 @@ export default function EventInfo({ eventId, isAlwaysEditMode = false }: EventIn
         isLabelledView={true}
         preselectedItem={data.deck ?? undefined}
       />
-      <TableField
-        qk={QK.EVENT}
-        type="number"
-        tableId={eventInfoIdentificator}
-        id={data.id}
-        fieldName="rounds"
-        label="Rounds"
-        value={data.rounds}
-        isLabelledView={true}
-      />
-      <TableField
-        qk={QK.EVENT}
-        type="number"
-        tableId={eventInfoIdentificator}
-        id={data.id}
-        fieldName="entry"
-        label="Entry"
-        value={data.entry ?? undefined}
-        isLabelledView={true}
-      />
-      <TableField
-        qk={QK.EVENT}
-        type="number"
-        tableId={eventInfoIdentificator}
-        id={data.id}
-        fieldName="winnings"
-        label="Winnings"
-        value={data.winnings ?? undefined}
-        isLabelledView={true}
-      />
-      <TableField
-        qk={QK.EVENT}
-        type="tags"
-        tableId={eventInfoIdentificator}
-        id={data.id}
-        fieldName="tags"
-        label="Tags"
-        displaySelect={false}
-        // @ts-ignore
-        values={data.EventTags}
-      />
-      {!isAlwaysEditMode &&
-        (isSelected ? (
-          <Button size="sm" onClick={() => clearTableData(eventInfoIdentificator)}>
-            Close editing
-          </Button>
-        ) : (
-          <div className="flex flex-row gap-2 w-full">
-            <Button size="sm" onClick={setSelected} className="w-full">
-              Edit
-            </Button>
+      {!compact ? (
+        <>
+          <TableField
+            qk={QK.EVENT}
+            type="number"
+            tableId={eventInfoIdentificator}
+            id={data.id}
+            fieldName="rounds"
+            label="Rounds"
+            value={data.rounds}
+            isLabelledView={true}
+          />
+          <TableField
+            qk={QK.EVENT}
+            type="number"
+            tableId={eventInfoIdentificator}
+            id={data.id}
+            fieldName="entry"
+            label="Entry"
+            value={data.entry ?? undefined}
+            isLabelledView={true}
+          />
+          <TableField
+            qk={QK.EVENT}
+            type="number"
+            tableId={eventInfoIdentificator}
+            id={data.id}
+            fieldName="winnings"
+            label="Winnings"
+            value={data.winnings ?? undefined}
+            isLabelledView={true}
+          />
+          <TableField
+            qk={QK.EVENT}
+            type="tags"
+            tableId={eventInfoIdentificator}
+            id={data.id}
+            fieldName="tags"
+            label="Tags"
+            displaySelect={false}
+            // @ts-ignore
+            values={data.EventTags}
+          />
+          {!isAlwaysEditMode &&
+            (isSelected ? (
+              <Button size="sm" onClick={() => clearTableData(eventInfoIdentificator)}>
+                Close editing
+              </Button>
+            ) : (
+              <div className="flex flex-row gap-2 w-full">
+                <Button size="sm" onClick={setSelected} className="w-full">
+                  Edit
+                </Button>
 
-            <ConfirmationModal
-              trigger={deleteButton}
-              title="Delete event"
-              content="All matches of this event will be unassigned."
-              onConfirm={onDeleteEvent}
-              confirmLoading={isPending}
-            />
-          </div>
-        ))}
+                <ConfirmationModal
+                  trigger={deleteButton}
+                  title="Delete event"
+                  content="All matches of this event will be unassigned."
+                  onConfirm={onDeleteEvent}
+                  confirmLoading={isPending}
+                />
+              </div>
+            ))}
+        </>
+      ) : null}
     </div>
   );
 }

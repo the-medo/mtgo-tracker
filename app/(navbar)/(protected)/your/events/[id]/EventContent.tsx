@@ -3,10 +3,9 @@
 import { useEvent } from '@/app/api/event/[id]/getEvent';
 import { useMemo } from 'react';
 import EventMatchSection from '@/components/app/events/EventMatchSection';
-import { GetMatchesRequest, useInfiniteMatches } from '@/app/api/match/getMatches';
 import { Spinner } from '@nextui-org/spinner';
-import { GetGamesRequest, useInfiniteGames } from '@/app/api/game/getGames';
-import { MatchResult } from '@prisma/client';
+import useStore from '@/store/store';
+import EventInfo from '@/app/(navbar)/(protected)/your/events/[id]/EventInfo';
 
 type EventMatchDisplayInfo = {
   round: number;
@@ -19,6 +18,8 @@ interface EventContentProps {
 }
 
 export default function EventContent({ eventId }: EventContentProps) {
+  const breakpoint = useStore(state => state.breakpoint);
+  const compact = ['xs', 'sm'].includes(breakpoint);
   const { data: ev, isLoading } = useEvent(eventId);
 
   const matches = ev?.Matches;
@@ -79,6 +80,12 @@ export default function EventContent({ eventId }: EventContentProps) {
 
   return (
     <div className="flex flex-col w-full gap-2">
+      {compact ? (
+        <>
+          <EventInfo eventId={eventId} compact />
+          <hr />
+        </>
+      ) : null}
       {isLoading || (!isLoading && eventMatchDisplayInfo.result.length === 0) ? (
         <Spinner />
       ) : (
@@ -88,6 +95,7 @@ export default function EventContent({ eventId }: EventContentProps) {
             eventId={eventId}
             eventRound={em.round}
             matchId={em.matchId}
+            compact={compact}
           />
         ))
       )}

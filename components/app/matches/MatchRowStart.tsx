@@ -30,14 +30,17 @@ export default function MatchRowStart({
     <div
       className={cn(baseClassNames, color, {
         'items-center': itemsCenter,
-        'p-4': !compact,
-        'p-2': compact,
+        'p-4': !compact && !small,
+        'p-2': compact || small,
         'w-24': !small,
         'w-16': small,
       })}
     >
       {roundNumber && !compact ? (
-        <div className="text-xs text-default-700">ROUND {roundNumber}</div>
+        <div className="text-xs text-default-700">
+          {small ? 'Rnd ' : 'ROUND '}
+          {roundNumber}
+        </div>
       ) : null}
       <MatchResultChip matchId={matchId} size={small ? 'sm' : 'lg'} />
     </div>

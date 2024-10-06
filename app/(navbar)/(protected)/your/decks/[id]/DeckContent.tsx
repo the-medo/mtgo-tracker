@@ -2,12 +2,16 @@
 
 import { useDeck } from '@/app/api/deck/[id]/getDeck';
 import { ReactEventHandler, useCallback, useEffect } from 'react';
+import useStore from '@/store/store';
+import DeckInfo from '@/app/(navbar)/(protected)/your/decks/[id]/DeckInfo';
 
 interface DeckContentProps {
   deckId: number;
 }
 
 export default function DeckContent({ deckId }: DeckContentProps) {
+  const breakpoint = useStore(state => state.breakpoint);
+  const compact = ['xs', 'sm'].includes(breakpoint);
   const { data } = useDeck(deckId);
 
   const moxfieldOnMessage = useCallback((e: MessageEvent) => {
@@ -39,7 +43,13 @@ export default function DeckContent({ deckId }: DeckContentProps) {
   const url = `https://www.moxfield.com/embed/${data?.serviceDeckId}`;
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-2 md:gap-4">
+      {compact ? (
+        <>
+          <DeckInfo deckId={deckId} compact />
+          <hr />
+        </>
+      ) : null}
       <iframe src={url} id="moxfield-frame-1" width="100%" onLoad={moxfieldOnLoad}></iframe>
     </div>
   );

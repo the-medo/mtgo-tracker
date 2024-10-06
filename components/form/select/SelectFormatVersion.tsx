@@ -8,7 +8,7 @@ import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 
 export function textValueFormatVersion(fv: FormatVersion | undefined): string {
   if (!fv) return ` - no version - `;
-  return `${fv.latestRelease ? `[${fv.latestRelease}]` : ''} ${fv.latestBans}`;
+  return `${fv.latestRelease ? `[${fv.latestRelease}]` : ''} ${fv.latestBans ?? ''}`;
 }
 
 export type SelectFormatVersionPropsOuter = {
