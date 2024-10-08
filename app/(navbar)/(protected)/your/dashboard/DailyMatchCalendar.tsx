@@ -78,8 +78,12 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
 
   return (
     <>
-      <div className={cn(`flex flex-col h-[200px] grow min-w-[330px] gap-2`)}>
-        <div className="flex flex-row justify-between">
+      <div
+        className={cn(
+          `flex flex-col h-[200px] min-w-[330px] gap-2 md:w-[calc(75%-theme(spacing.6))]`,
+        )}
+      >
+        <div className="flex flex-row gap-4">
           <Title title="Matches" />
           {dailyMatches ? (
             <Chip variant="solid" color="default">
