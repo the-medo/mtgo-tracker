@@ -15,7 +15,7 @@ export default function MatchGameSection({ matchId, gameNumber, gameId }: MatchG
   return (
     <div
       className={cn(
-        gameId ? 'bg-zinc-100' : 'bg-white border-2 border-dashed',
+        gameId ? 'bg-default-100' : 'bg-background border-2 border-dashed',
         ` p-2 md:p-4 flex flex-col gap-2 w-full md:w-[280px]`,
       )}
     >

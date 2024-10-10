@@ -31,7 +31,7 @@ export default function StatBarChartTooltip({ data }: StatBarChartTooltipProps) 
   return (
     <div
       className={cn(
-        'p-2 rounded-md flex flex-col items-center justify-center gap-2 z-50 bg-zinc-100',
+        'p-2 rounded-md flex flex-col items-center justify-center gap-2 z-50 bg-default-100',
       )}
     >
       <Title title={archetypeName} size="xl" />

@@ -58,7 +58,7 @@ export default function TableFieldString({
       return (
         <Input
           ref={ref}
-          className="bg-white"
+          className="bg-transparent"
           type={type === 'string' ? 'text' : 'number'}
           label={label}
           size="sm"

@@ -8,7 +8,7 @@ const displayFont = Bebas_Neue({
 export default function About() {
   return (
     <>
-      <p className={`font-bold text-4xl text-inherit ${displayFont.className} text-zinc-800`}>
+      <p className={`font-bold text-4xl text-inherit ${displayFont.className} text-default-800`}>
         About
       </p>
       <p>

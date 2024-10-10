@@ -116,7 +116,7 @@ export default function DeckArchetypesClient({}: Props) {
           items={items}
         >
           {item => (
-            <TableRow key={item.id} className="hover:bg-zinc-50">
+            <TableRow key={item.id} className="hover:bg-default-50">
               {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}

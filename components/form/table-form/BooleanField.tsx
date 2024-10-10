@@ -34,7 +34,7 @@ export default function BooleanField({
   }, [value]);
 
   return (
-    <div className="flex flex-row gap-2 justify-between items-center w-full p-1 hover:bg-zinc-100">
+    <div className="flex flex-row gap-2 justify-between items-center w-full p-1 hover:bg-default-100">
       {label && <span className="pl-1 text-tiny text-foreground-500">{label}</span>}
       <input
         type="hidden"

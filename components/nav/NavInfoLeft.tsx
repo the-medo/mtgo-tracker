@@ -16,13 +16,15 @@ interface NavInfoLeftProps {
 export default function NavInfoLeft({ redirectToDashboard }: NavInfoLeftProps) {
   return (
     <>
-      <div className="flex flex-col min-h-full md:w-[400px] w-full p-5 gap-5 items-center bg-opacity-85 bg-zinc-100">
+      <div className="flex flex-col min-h-full md:w-[400px] w-full p-5 gap-5 items-center bg-opacity-85 bg-default-100">
         <Image src={LOGO_URL} alt="logo" width="150" height="150" />
         <div className="flex flex-col justify-center items-center">
-          <p className={`font-bold text-7xl text-inherit ${displayFont.className} text-zinc-800`}>
+          <p
+            className={`font-bold text-7xl text-inherit ${displayFont.className} text-default-800`}
+          >
             FetchBook
           </p>
-          <p className="text-zinc-700">Manual MTG stat tracker</p>
+          <p className="text-default-700">Manual MTG stat tracker</p>
         </div>
         <SignInProviders redirectToDashboard={redirectToDashboard} />
         <div className="flex flex-col p-0 gap-5 justify-center items-center">

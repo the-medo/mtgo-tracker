@@ -12,12 +12,16 @@ import {
 import { ResponsiveBar } from '@nivo/bar';
 import useStore from '@/store/store';
 import StatBarChartTooltip from '@/components/app/stats/StatBarChartTooltip';
+import useTheme from '@/lib/hooks/useTheme';
+import { Theme } from '@/store/appSlice';
+import { darkThemeNivo } from '@/lib/styles/styles';
 
 interface StatBarChartProps {
   smallScreen?: boolean;
 }
 
 export default function StatBarChart({ smallScreen }: StatBarChartProps) {
+  const { theme } = useTheme();
   const statGrouping = useStore(state => state.statGrouping);
   const setStatSelectedArchetypeId = useStore(state => state.setStatSelectedArchetypeId);
   const isStatDiverging = useStore(state => state.isStatDiverging);
@@ -140,7 +144,6 @@ export default function StatBarChart({ smallScreen }: StatBarChartProps) {
   }, [
     isStatDiverging,
     archetypeList,
-    smallScreen,
     archetypeMap,
     byArchetype,
     statGrouping,
@@ -227,6 +230,7 @@ export default function StatBarChart({ smallScreen }: StatBarChartProps) {
         axisLeft={smallScreen ? axisArchetypes : axisCounts}
         onClick={onClickHandler}
         tooltip={tooltip}
+        theme={theme === Theme.LIGHT ? undefined : darkThemeNivo.BAR_CHART}
       />
     </div>
   );

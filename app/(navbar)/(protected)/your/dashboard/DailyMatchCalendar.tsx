@@ -10,12 +10,16 @@ import { Chip } from '@nextui-org/chip';
 import useStore from '@/store/store';
 import { format, subMonths } from 'date-fns';
 import { TimeRangeSvgProps } from '@nivo/calendar/dist/types/types';
+import useTheme from '@/lib/hooks/useTheme';
+import { Theme } from '@/store/appSlice';
+import { darkThemeNivo } from '@/lib/styles/styles';
 
 export type DailyMatchCalendarData = CalendarDatum & DailyMatch;
 
 interface DailyMatchCalendarProps {}
 
 export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
+  const { theme } = useTheme();
   const breakpoint = useStore(state => state.breakpoint);
   const { data: dailyMatches } = useDailyMatches();
 
@@ -76,6 +80,22 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
     ) : null;
   }, []);
 
+  const { emptyColor, dayBorderColor, timeRangeTheme } = useMemo(
+    () =>
+      theme === Theme.LIGHT
+        ? {
+            emptyColor: '#eeeeee',
+            dayBorderColor: '#ffffff',
+            timeRangeTheme: undefined,
+          }
+        : {
+            emptyColor: '#222222',
+            dayBorderColor: '#111111',
+            timeRangeTheme: darkThemeNivo.TIME_RANGE,
+          },
+    [theme],
+  );
+
   return (
     <>
       <div
@@ -95,16 +115,17 @@ export default function DailyMatchCalendar({}: DailyMatchCalendarProps) {
           from={startDate}
           to={endDate}
           data={data}
-          emptyColor="#eeeeee"
+          emptyColor={emptyColor}
+          dayBorderColor={dayBorderColor}
           colors={['#f47560', '#f47560', '#e8c1a0', '#f4ec97', '#97e3d5', '#61cdbb']}
           margin={{ top: 20 }}
           dayBorderWidth={2}
           tooltip={tooltip}
-          dayBorderColor="#ffffff"
           monthLegendOffset={10}
           firstWeekday="monday"
           weekdayTicks={weekdayTicks}
           weekdayLegendOffset={weekdayLegendOffset}
+          theme={timeRangeTheme}
         />
       </div>
     </>

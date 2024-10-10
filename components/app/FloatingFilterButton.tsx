@@ -15,7 +15,9 @@ export default function FloatingFilterButton({ onPress }: FloatingFilterButtonPr
 
   return (
     <Button
-      className={cn('border-1 z-30 fixed bottom-4 right-4 p-2 rounded-full bg-white md:hidden')}
+      className={cn(
+        'border-1 z-30 fixed bottom-4 right-4 p-2 rounded-full bg-background md:hidden',
+      )}
       onPress={onPress}
       isIconOnly
     >

@@ -44,22 +44,22 @@ export default function Links({ variant }: LinksProps) {
         <div className="flex flex-col gap-2">
           {status === 'authenticated' ? (
             <>
-              <Link href="/your/dashboard" className="text-zinc-800 flex gap-2">
+              <Link href="/your/dashboard" className="text-default-800 flex gap-2">
                 <TbArrowLeft />
                 <span className="text-xl">Back to app</span>
               </Link>
               <span>&nbsp;</span>
             </>
           ) : null}
-          <Link href="/about" className="text-zinc-800 flex gap-2">
+          <Link href="/about" className="text-default-800 flex gap-2">
             <TbArrowRight />
             <span className="text-xl">About</span>
           </Link>
-          <Link href="/privacy-policy" className="text-zinc-800 flex gap-2">
+          <Link href="/privacy-policy" className="text-default-800 flex gap-2">
             <TbArrowRight />
             <span className="text-xl">Privacy policy</span>
           </Link>
-          <Link href="/terms-of-service" className="text-zinc-800 flex gap-2">
+          <Link href="/terms-of-service" className="text-default-800 flex gap-2">
             <TbArrowRight />
             <span className="text-xl">Terms of Service</span>
           </Link>
