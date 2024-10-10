@@ -1,15 +1,27 @@
 import { StateCreator } from 'zustand';
 import { AllSlices } from '@/store/store';
-import { Breakpoint, breakpoints, getBreakpoint } from '@/lib/breakpoints';
+import { Breakpoint, breakpoints } from '@/lib/breakpoints';
 
 export enum LeftMenuType {
   NAVIGATION = 'navigation',
   SUBMENU = 'submenu',
 }
+
 export enum Theme {
   LIGHT = 'light',
   DARK = 'dark',
 }
+
+const getThemeFromLocalStorage = (): Theme => {
+  if (!localStorage) return Theme.LIGHT;
+
+  let lsValue = localStorage.getItem('theme');
+  if (!lsValue || (lsValue !== Theme.LIGHT && lsValue !== Theme.DARK)) {
+    lsValue = Theme.LIGHT;
+    localStorage.setItem('theme', lsValue);
+  }
+  return lsValue as Theme;
+};
 
 export type AppState = {
   theme: Theme;
@@ -31,7 +43,7 @@ export type AppActions = {
 export type AppSlice = AppState & AppActions;
 
 export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, get) => ({
-  theme: Theme.LIGHT,
+  theme: getThemeFromLocalStorage(),
   breakpoint: 'md',
   isMenuOpen: false,
   isStatModalOpen: false,
@@ -39,6 +51,9 @@ export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, g
     return breakpoints[get().breakpoint] <= breakpoints[upTo];
   },
   setTheme: (value: Theme) => {
+    if (localStorage) {
+      localStorage.setItem('theme', value);
+    }
     set(state => ({
       ...state,
       theme: value,
