@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@nextui-org/button';
-import { TbCheck, TbLineDashed, TbQuestionMark, TbSquareOff, TbX } from 'react-icons/tb';
+import { TbCheck, TbSquareOff, TbX } from 'react-icons/tb';
 
 interface BooleanFieldProps {
   name: string;

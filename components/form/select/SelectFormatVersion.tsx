@@ -1,5 +1,7 @@
+'use client';
+
 import { Select, SelectItem } from '@nextui-org/select';
-import { ChangeEventHandler, Key, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFormatVersions } from '@/app/api/format-version/getFormatVersions';
 import { FormatVersion } from '@prisma/client';

@@ -1,5 +1,7 @@
+'use client';
+
 import { Select, SelectItem } from '@nextui-org/select';
-import { Deck, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { OrderByInput, SorterOption } from '@/types/api-params';
 import { TbArrowsSort, TbSortAscendingLetters, TbSortDescendingLetters } from 'react-icons/tb';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';

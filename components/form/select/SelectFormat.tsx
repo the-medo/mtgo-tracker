@@ -1,12 +1,13 @@
+'use client';
+
 import { Select, SelectItem } from '@nextui-org/select';
-import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Format } from '@prisma/client';
 import { QK } from '@/app/api/queryHelpers';
 import { getFormats } from '@/app/api/format/getFormats';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 import { TbTower } from 'react-icons/tb';
-import { parseNumber } from '@/app/api/parsers';
 import useSelect from '@/components/form/select/useSelect';
 
 export function textValueFormat(f: Format | undefined): string {

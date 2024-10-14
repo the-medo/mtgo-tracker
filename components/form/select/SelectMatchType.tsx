@@ -1,9 +1,11 @@
+'use client';
+
 import { Select, SelectItem } from '@nextui-org/select';
 import { MatchType } from '@prisma/client';
 import { BaseSelectProps } from '@/components/form/table-form/TableFieldSelect';
 import useSelect from '@/components/form/select/useSelect';
 import { useMemo } from 'react';
-import { TbBoxMultiple3, TbTrophy } from 'react-icons/tb';
+import { TbBoxMultiple3 } from 'react-icons/tb';
 
 type MatchTypeOption = { id: MatchType; label: string };
 

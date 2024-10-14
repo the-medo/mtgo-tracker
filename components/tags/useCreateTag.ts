@@ -1,4 +1,3 @@
-import { QK } from '@/app/api/queryHelpers';
 import useSimplePost from '@/app/api/useSimplePost';
 import { RefObject, useCallback } from 'react';
 import { TagType } from '@prisma/client';

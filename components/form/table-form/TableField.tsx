@@ -10,7 +10,7 @@ import TableFieldSelect, {
   TableFieldSelectProps,
 } from '@/components/form/table-form/TableFieldSelect';
 import useSimplePatch from '@/app/api/useSimplePatch';
-import { QK, QTypes } from '@/app/api/queryHelpers';
+import { QTypes } from '@/app/api/queryHelpers';
 import TableFieldTags, { TableFieldTagsProps } from '@/components/form/table-form/TableFieldTags';
 import TableFieldBoolean, {
   TableFieldBooleanProps,

@@ -3,7 +3,6 @@
 import MatchGameCreationForm from '@/components/app/matches/MatchGameCreationForm';
 import GameContent from '@/components/app/games/GameContent';
 import cn from 'classnames';
-import useStore from '@/store/store';
 
 interface MatchGameSectionProps {
   matchId: number;
