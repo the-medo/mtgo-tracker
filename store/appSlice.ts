@@ -13,7 +13,7 @@ export enum Theme {
 }
 
 const getThemeFromLocalStorage = (): Theme => {
-  if (!localStorage) return Theme.LIGHT;
+  if (typeof window === 'undefined') return Theme.LIGHT;
 
   let lsValue = localStorage.getItem('theme');
   if (!lsValue || (lsValue !== Theme.LIGHT && lsValue !== Theme.DARK)) {
@@ -51,7 +51,7 @@ export const createAppSlice: StateCreator<AllSlices, [], [], AppSlice> = (set, g
     return breakpoints[get().breakpoint] <= breakpoints[upTo];
   },
   setTheme: (value: Theme) => {
-    if (localStorage) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('theme', value);
     }
     set(state => ({

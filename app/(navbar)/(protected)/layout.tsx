@@ -1,16 +1,24 @@
-import { getServerSession } from 'next-auth/next';
-import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/authOptions';
+'use client';
 
-export default async function ProtectedLayout({
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+export default function ProtectedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (!session) {
-    redirect('/');
+  useEffect(() => {
+    if (status === 'loading') return; // Do nothing while loading
+    if (!session) router.push('/'); // When session not found then redirect
+  }, [session, router, status]);
+
+  if (status === 'loading') {
+    return null; // or return a loading spinner
   }
 
   return children;

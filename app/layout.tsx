@@ -1,13 +1,8 @@
-import type { Metadata } from 'next';
+'use client';
+
 import './globals.css';
 import AuthProvider from '@/app/AuthProvider';
 import { Html } from '@/app/html';
-
-export const metadata: Metadata = {
-  title: 'FetchBook - MTG tracker',
-  description: 'Winrates and stuff',
-  icons: '/favicon.png',
-};
 
 export default function RootLayout({
   children,
