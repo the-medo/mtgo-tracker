@@ -5,15 +5,8 @@ import { Theme } from '@/store/appSlice';
 import { Providers } from '@/app/providers';
 import useTheme from '@/lib/hooks/useTheme';
 import { Inter } from 'next/font/google';
-import Head from 'next/head';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata = {
-  title: 'FetchBook - MTG tracker',
-  description: 'Winrates and stuff',
-  icons: '/favicon.png',
-};
 
 export function Html({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
@@ -26,11 +19,6 @@ export function Html({ children }: { children: React.ReactNode }) {
         dark: theme === Theme.DARK,
       })}
     >
-      <Head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <link rel="icon" href={metadata.icons} />
-      </Head>
       <body className={cn(inter.className)}>
         <Providers>{children}</Providers>
       </body>

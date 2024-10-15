@@ -5,6 +5,7 @@ import { Theme } from '@/store/appSlice';
 const useTheme = () => {
   const theme = useStore(state => state.theme);
   const setTheme = useStore(state => state.setTheme);
+
   const toggleTheme = useCallback(() => {
     if (theme === Theme.LIGHT) {
       setTheme(Theme.DARK);
