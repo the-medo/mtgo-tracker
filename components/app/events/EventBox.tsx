@@ -64,7 +64,7 @@ export default function EventBox({
         className={cn(`flex flex-col w-full gap-2`, {
           'bg-default-50 border-default-200 border-1': eventEditMode,
           'bg-default-100': !eventEditMode && !whiteBackground,
-          'bg-white': whiteBackground,
+          'bg-background': whiteBackground,
           'rounded-tr-md rounded-br-md': compact,
         })}
       >

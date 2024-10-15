@@ -1,7 +1,9 @@
-import Decks from '@/app/(navbar)/(protected)/your/decks/Decks';
+'use client';
+
 import ContentWFull from '@/components/layout/ContentWFull';
 import DecksLeftNav from '@/app/(navbar)/(protected)/your/decks/DecksLeftNav';
 import Portal from '@/components/app/Portal';
+import DecksClient from '@/app/(navbar)/(protected)/your/decks/DecksClient';
 
 export default function YourDecks() {
   return (
@@ -11,7 +13,7 @@ export default function YourDecks() {
       </Portal>
       <ContentWFull>
         <main className="flex flex-col gap-2 md:gap-4">
-          <Decks />
+          <DecksClient />
         </main>
       </ContentWFull>
     </div>

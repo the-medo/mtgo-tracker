@@ -19,7 +19,7 @@ export default function NavMenuLeftClient({ type, children, size = 'md' }: NavMe
       <>
         <div
           className={cn(
-            'z-30 fixed bottom-0 top-16 left-0 bg-white transition-transform duration-300 ease-in-out right-0',
+            'z-30 fixed bottom-0 top-16 left-0 bg-background transition-transform duration-300 ease-in-out right-0',
             isMenuOpen === type ? 'translate-y-0' : '-translate-y-full',
           )}
         >

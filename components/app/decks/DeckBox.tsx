@@ -147,9 +147,9 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
           <div className={`flex flex-row flex-wrap gap-2`}>
             <div
               className={cn(
-                'flex flex-col items-center rounded-md gap-1 px-2 py-0 hover:bg-zinc-300 cursor-pointer',
+                'flex flex-col items-center rounded-md gap-1 px-2 py-0 hover:bg-default-300 cursor-pointer',
                 {
-                  'bg-zinc-300': expandType === DeckBoxExpandType.EVENTS,
+                  'bg-default-300': expandType === DeckBoxExpandType.EVENTS,
                 },
               )}
               onClick={() => setExpandType(DeckBoxExpandType.EVENTS)}
@@ -162,9 +162,9 @@ export default function DeckBox({ deckId }: DeckBoxProps) {
 
             <div
               className={cn(
-                'flex flex-col items-center rounded-md gap-1 px-2 py-0 hover:bg-zinc-300 cursor-pointer',
+                'flex flex-col items-center rounded-md gap-1 px-2 py-0 hover:bg-default-300 cursor-pointer',
                 {
-                  'bg-zinc-300': expandType === DeckBoxExpandType.MATCHES,
+                  'bg-default-300': expandType === DeckBoxExpandType.MATCHES,
                 },
               )}
               onClick={() => setExpandType(DeckBoxExpandType.MATCHES)}

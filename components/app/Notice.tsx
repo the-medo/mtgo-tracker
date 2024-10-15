@@ -12,7 +12,7 @@ export default function Notice({ children, variant }: NoticeProps) {
         'bg-warning-100 border-warning-400': variant === 'warning',
         'bg-danger-100 border-danger-400': variant === 'danger',
         'bg-success-100 border-success-400': variant === 'success',
-        'bg-blue-100 border-blue-400': variant === 'info',
+        'bg-blue-100 border-blue-400 dark:bg-blue-600 dark:border-blue-800': variant === 'info',
       })}
     >
       {children}

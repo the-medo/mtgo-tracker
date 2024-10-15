@@ -2,7 +2,6 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/button';
-import { Link } from '@nextui-org/link';
 import { User } from '@nextui-org/user';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
 

@@ -21,7 +21,7 @@ export default function EventMatchSection({
   }
 
   return (
-    <div className={`bg-white border-dashed p-2 md:p-4 flex flex-col gap-2 border-2`}>
+    <div className={`bg-background border-dashed p-2 md:p-4 flex flex-col gap-2 border-2`}>
       <EventMatchCreationForm eventId={eventId} eventRound={eventRound} />
     </div>
   );

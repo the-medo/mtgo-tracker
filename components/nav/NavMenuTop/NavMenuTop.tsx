@@ -6,10 +6,11 @@ import { UserDropdown } from '@/components/auth/UserDropdown';
 import { Bebas_Neue } from 'next/font/google';
 import { LOGO_URL } from '@/lib/constants';
 import NavMenuTopActionButtons from '@/components/nav/NavMenuTop/NavMenuTopActionButtons';
-import { TbFilter, TbMenu2, TbX } from 'react-icons/tb';
+import { TbMenu2, TbMoon, TbSun, TbX } from 'react-icons/tb';
 import useStore from '@/store/store';
 import { Button } from '@nextui-org/button';
-import { LeftMenuType } from '@/store/appSlice';
+import { LeftMenuType, Theme } from '@/store/appSlice';
+import useTheme from '@/lib/hooks/useTheme';
 
 const displayFont = Bebas_Neue({
   weight: '400',
@@ -17,6 +18,7 @@ const displayFont = Bebas_Neue({
 });
 
 export default function NavMenuTop() {
+  const { theme, toggleTheme } = useTheme();
   const isMenuOpen = useStore(state => state.isMenuOpen);
   const toggleIsMenuOpen = useStore(state => state.toggleIsMenuOpen);
 
@@ -30,6 +32,18 @@ export default function NavMenuTop() {
         <NavMenuTopActionButtons />
       </NavbarContent>
       <NavbarContent justify="end">
+        <NavbarItem className="flex">
+          <Button
+            isIconOnly
+            size="md"
+            onClick={toggleTheme}
+            radius="full"
+            variant="light"
+            aria-label="Toggle menu"
+          >
+            {theme === Theme.LIGHT ? <TbMoon className="w-6 h-6" /> : <TbSun className="w-6 h-6" />}
+          </Button>
+        </NavbarItem>
         <NavbarItem className="flex md:hidden">
           <Button
             isIconOnly

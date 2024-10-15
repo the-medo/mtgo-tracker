@@ -27,7 +27,7 @@ const InfiniteScrollObserver: React.FC<InfiniteScrollObserverProps> = ({ runOnOb
   }, [observerTarget, runOnObserve]);
 
   return (
-    <div className="border-t-2 border-zinc-300" ref={observerTarget}>
+    <div className="border-t-2 border-default-300" ref={observerTarget}>
       &nbsp;
     </div>
   );

@@ -13,7 +13,7 @@ export default function MainPageLayout({ children, redirectToDashboard }: MainPa
         <NavInfoLeft redirectToDashboard={redirectToDashboard} />
         {children ? <InfoPage>{children}</InfoPage> : null}
       </main>
-      <main className="w-full bg-zinc-200 p-4">
+      <main className="w-full bg-default-200 p-4">
         <p className="text-sm">
           Wizards of the Coast, Magic: The Gathering, and their logos are trademarks of Wizards of
           the Coast LLC. © 1995-2024 Wizards. All rights reserved. FetchBook is not affiliated with

@@ -2,11 +2,10 @@
 
 import { TableFieldProps } from '@/components/form/table-form/TableField';
 import useStore from '@/store/store';
-import { Key, useCallback, useMemo } from 'react';
-import { Tag } from '@prisma/client';
+import { useCallback, useMemo } from 'react';
 import { Chip } from '@nextui-org/chip';
 import { Select, SelectItem } from '@nextui-org/select';
-import { emptyRequest, qkToTagType, useTags } from '@/app/api/tag/getTags';
+import { qkToTagType, useTags } from '@/app/api/tag/getTags';
 import { TbTag } from 'react-icons/tb';
 import { MultipleSelection, Selection } from '@react-types/shared/src/selection';
 import useTagAssignmentPost from '@/app/api/tag-assignment/useTagAssignmentPost';

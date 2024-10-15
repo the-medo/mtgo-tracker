@@ -199,7 +199,7 @@ export default function MatchBox({
         className={cn(`flex flex-col w-full gap-2 relative`, {
           'bg-default-50 border-default-200 border-1': matchEditMode,
           'bg-default-100': !matchEditMode && !whiteBackground,
-          'bg-white': whiteBackground,
+          'bg-background': whiteBackground,
           'rounded-tr-md rounded-br-md': compact,
         })}
       >

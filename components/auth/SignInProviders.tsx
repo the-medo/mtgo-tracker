@@ -26,7 +26,7 @@ export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
       <Button
         variant="shadow"
         size="lg"
-        className="w-[300px] bg-zinc-400 text-zinc-800"
+        className="w-[300px] bg-default-400 text-default-800"
         onClick={() => signIn('google')}
         startContent={
           // eslint-disable-next-line @next/next/no-img-element
@@ -43,7 +43,7 @@ export function SignInProviders({ redirectToDashboard }: SignInProvidersProps) {
       <Button
         variant="shadow"
         size="lg"
-        className="w-[300px] bg-zinc-400 text-zinc-800"
+        className="w-[300px] bg-default-400 text-default-800"
         onClick={() => signIn('github')}
         startContent={
           // eslint-disable-next-line @next/next/no-img-element

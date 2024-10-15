@@ -1,7 +1,6 @@
 'use client';
 
-import { Input } from '@nextui-org/input';
-import { ChangeEventHandler, FormEventHandler, useCallback, useState } from 'react';
+import { FormEventHandler, useCallback, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import Title from '@/components/typography/Title';
 import { useMatch } from '@/app/api/match/[id]/getMatch';

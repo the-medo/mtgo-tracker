@@ -78,7 +78,7 @@ export default function FormatsClient({}: Props) {
         </TableHeader>
         <TableBody items={data ?? []}>
           {item => (
-            <TableRow key={item.id} className="hover:bg-zinc-50">
+            <TableRow key={item.id} className="hover:bg-default-50">
               {columnKey => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}

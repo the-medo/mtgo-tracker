@@ -2,8 +2,7 @@
 
 import { TableFieldProps } from '@/components/form/table-form/TableField';
 import { Checkbox } from '@nextui-org/react';
-import { ChangeEventHandler, useCallback, useMemo, useRef } from 'react';
-import debounce from 'lodash.debounce';
+import { useCallback, useMemo, useRef } from 'react';
 import useStore from '@/store/store';
 import FieldCircularProgress from '@/components/form/table-form/FieldCircularProgress';
 import LabelledValue from '@/components/typography/LabelledValue';

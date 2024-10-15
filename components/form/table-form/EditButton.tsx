@@ -1,10 +1,10 @@
+'use client';
+
 import { useCallback } from 'react';
-import { TbEdit, TbTrash, TbX } from 'react-icons/tb';
+import { TbEdit, TbX } from 'react-icons/tb';
 import { Button } from '@nextui-org/button';
-import useSimpleDelete from '@/app/api/useSimpleDelete';
 import { QK } from '@/app/api/queryHelpers';
 import useStore from '@/store/store';
-import { on } from 'next/dist/client/components/react-dev-overlay/pages/bus';
 
 interface EditButtonProps {
   tableId: string;

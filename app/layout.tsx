@@ -1,10 +1,7 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { Providers } from './providers';
 import AuthProvider from '@/app/AuthProvider';
-
-const inter = Inter({ subsets: ['latin'] });
+import { Html } from '@/app/html';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'FetchBook - MTG tracker',
@@ -19,11 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <AuthProvider>
-      <html lang="en" className="light">
-        <body className={inter.className}>
-          <Providers>{children}</Providers>
-        </body>
-      </html>
+      <Html>{children}</Html>
     </AuthProvider>
   );
 }
