@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { DailyMatch } from '@/app/api/dashboard/daily/matches/useDailyMatches';
+import { subMonths } from 'date-fns';
 
 export async function GET(req: Request, { params }: { params: {} }) {
   const session = await getServerSession(authOptions);
@@ -12,8 +13,7 @@ export async function GET(req: Request, { params }: { params: {} }) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const today = new Date();
-  const startDate = new Date(`${today.getFullYear()}-01-01`);
+  const startDate = subMonths(new Date(), 6);
 
   const data = await prisma.$queryRaw`
     SELECT 
