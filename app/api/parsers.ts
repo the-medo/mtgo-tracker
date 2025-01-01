@@ -40,8 +40,8 @@ export function parseDatePickerToIso(
 }
 
 /*
-  //https://www.moxfield.com/decks/NGXLX-zQk0KMgxziaUyc5g#paper
-  //https://www.mtggoldfish.com/deck/6395126#paper
+  //https://(www.)moxfield.com/decks/NGXLX-zQk0KMgxziaUyc5g#paper
+  //https://(www.)mtggoldfish.com/deck/6395126#paper
   //https://melee.gg/Decklist/View/381376
  */
 export function parseDeckLink(
@@ -52,11 +52,11 @@ export function parseDeckLink(
   // Patterns to match each service and extract deck IDs
   const patterns = [
     {
-      regex: /https:\/\/www\.moxfield\.com\/decks\/([^#?]+)/,
+      regex: /https:\/\/(www\.)?moxfield\.com\/decks\/([^#?]+)/,
       service: DeckServiceType.MOXFIELD,
     },
     {
-      regex: /https:\/\/www\.mtggoldfish\.com\/deck\/(\d+)/,
+      regex: /https:\/\/(www\.)?mtggoldfish\.com\/deck\/(\d+)/,
       service: DeckServiceType.GOLDFISH,
     },
     {
